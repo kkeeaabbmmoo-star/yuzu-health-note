@@ -71,7 +71,7 @@ nav button.on{color:var(--pd)}
 <label>歩数</label><input type="range" id="steps" min="0" max="30000" step="100"><div class="val" id="stepsV"></div>
 <label>距離（歩数から自動・調整OK）</label><input type="range" id="dist" min="0" max="25" step="0.1"><div class="val" id="distV"></div>
 <label>その他の運動</label><select id="exType"></select>
-<input type="range" id="exMin" min="0" max="180" step="5"><div class="val" id="exV"></div>
+<input type="range" id="exAmt" min="0" max="180" step="5"><div class="row"><span class="val" id="exV"></span><span class="val" id="exK"></span></div><button class="big" id="exAdd">＋ 運動を追加</button><ul id="exList" style="margin-top:8px"></ul>
 <div class="small" id="burnInfo"></div></div>
 <div class="card"><h2>💗 からだ</h2>
 <label>体重</label><input type="range" id="wt" min="40" max="130" step="0.1"><div class="val" id="wtV"></div>
@@ -136,7 +136,7 @@ function get(d){return JSON.parse(localStorage.getItem(key(d))||"null")||{foods:
 function put(d,o){localStorage.setItem(key(d),JSON.stringify(o))}
 function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),1400)}
 const intake=o=>o.foods.reduce((a,f)=>a+f.kcal,0);
-function burn(o){const w=o.wt||S.w;const walk=w*o.steps*0.0005;const ex=EX[o.ex][1]*w*(o.exMin/60)*1.05;return{walk,ex,base:S.b*1.2,total:S.b*1.2+walk+ex}}
+function burn(o){const w=o.wt||S.w;const walk=w*o.steps*0.0005;const ex=(o.exMin?EX[o.ex][1]*w*(o.exMin/60)*1.05:0)+(o.exList||[]).reduce((a,e)=>a+exKcal(e,w),0);return{walk,ex,base:S.b*1.2,total:S.b*1.2+walk+ex}}
 const stride=()=>S.h*0.45/100000;
 // UI build
 MEALS.forEach((m,i)=>{const b=document.createElement("button");b.textContent=m;b.onclick=()=>{meal=i;segOn("meal",i)};$("meal").appendChild(b)});
@@ -147,7 +147,18 @@ function fillFood(){const sel=$("food"),old=sel.value;sel.innerHTML="";const g=d
  FOODS.forEach((f,i)=>sel.add(new Option(f[0]+(f[2]=="kcal"?"（自由入力）":"（"+f[2]+"）"),i)));sel.value=old&&[...sel.options].some(o=>o.value==old)?old:"0"}
 fillFood();
 if(0)FOODS.forEach((f,i)=>$("food").add(new Option(f[0]+(f[2]=="kcal"?"（自由入力）":"（"+f[2]+"）"),i)));
-EX.forEach((e,i)=>$("exType").add(new Option(e[0]+(e[1]?"（"+e[1]+"METs）":""),i)));
+// [名前, METs or kcal/回(70kg), 単位]
+const EX2=[["ウォーキング",3.5,"分"],["腕立て伏せ",0.45,"回"],["腹筋",0.28,"回"],["散歩(ゆっくり)",3,"分"],["自転車",4,"分"],["筋トレ",3.5,"分"],["ジョギング",7,"分"],["水泳",6,"分"]];
+function exKcal(e,w){const t=EX2[e.t];return t[2]=="回"?t[1]*(w/70)*e.n:t[1]*w*(e.n/60)*1.05}
+const exTot=o=>(o.exMin||0)+(o.exList||[]).filter(e=>EX2[e.t][2]=="分").reduce((a,e)=>a+e.n,0);
+const exReps=o=>(o.exList||[]).filter(e=>EX2[e.t][2]=="回").reduce((a,e)=>a+e.n,0);
+EX2.forEach((e,i)=>$("exType").add(new Option(e[0]+(e[2]=="回"?"（回数）":"（"+e[1]+"METs）"),i)));
+function setEx(){const t=EX2[$("exType").value],a=$("exAmt");if(t[2]=="回"){a.min=0;a.max=300;a.step=5;a.value=20}else{a.min=0;a.max=180;a.step=5;a.value=30}exLive()}
+function exLive(){const t=EX2[$("exType").value],n=+$("exAmt").value,o=get(cur);$("exV").textContent=n+" "+t[2];$("exK").textContent="約"+Math.round(exKcal({t:+$("exType").value,n},o.wt||S.w))+" kcal"}
+function exRender(){const o=get(cur),w=o.wt||S.w,l=$("exList");l.innerHTML="";
+ if(o.exMin){const li=document.createElement("li");li.innerHTML=`<span class="m">前の記録</span><span>${EX[o.ex][0]} ${o.exMin}分</span><span class="k">${Math.round(EX[o.ex][1]*w*(o.exMin/60)*1.05)}kcal</span>`;const b=document.createElement("button");b.textContent="🗑";b.onclick=()=>{upd(o=>{o.exMin=0});exRender()};li.appendChild(b);l.appendChild(li)}
+ (o.exList||[]).forEach((e,i)=>{const li=document.createElement("li");li.innerHTML=`<span>${EX2[e.t][0]} ${e.n}${EX2[e.t][2]}</span><span class="k">${Math.round(exKcal(e,w))}kcal</span>`;const b=document.createElement("button");b.textContent="🗑";b.onclick=()=>{upd(o=>o.exList.splice(i,1));exRender()};li.appendChild(b);l.appendChild(li)});
+ if(!l.children.length)l.innerHTML='<li class="small">まだ運動の記録がないよ💪</li>'}
 FACES.forEach((f,i)=>{const b=document.createElement("button");b.textContent=f;b.onclick=()=>{const o=get(cur);o.cond=i;put(cur,o);segOn("cond",i)};$("cond").appendChild(b)});
 function segOn(id,i){[...$(id).children].forEach((b,j)=>b.classList.toggle("on",j===i))}
 function setFood(){const f=curFood(),a=$("amt");a.min=f[3];a.max=f[4];a.step=f[5];a.value=f[6];$("customBox").style.display=f[2]=="kcal"&&!f.pre?"block":"none";$("amtLbl").textContent=f[2]=="kcal"?"カロリー":"量";live()}
@@ -162,16 +173,17 @@ function render(){const o=get(cur);$("date").value=cur;segOn("meal",meal);
   const b=document.createElement("button");b.textContent="🗑";b.onclick=()=>{o.foods.splice(i,1);put(cur,o);render()};li.appendChild(b);l.appendChild(li)});
  if(!o.foods.length)l.innerHTML='<li class="small">まだ記録がないよ。上のスライダーで追加してね🍙</li>';
  $("sumIn").textContent=intake(o)+" kcal";
- $("steps").value=o.steps;$("dist").value=o.dist;$("exType").value=o.ex;$("exMin").value=o.exMin;
+ $("steps").value=o.steps;$("dist").value=o.dist;exRender();exLive();
  $("wt").value=o.wt||S.w;$("sleep").value=o.sleep??7;segOn("cond",o.cond);actTxt();
  $("sW").value=S.w;$("sH").value=S.h;$("sT").value=S.t;$("sB").value=S.b;draw()}
 function actTxt(){const o=get(cur),b=burn(o);$("stepsV").textContent=(+o.steps).toLocaleString()+" 歩";$("distV").textContent=(+o.dist).toFixed(1)+" km";
- $("exV").textContent=o.exMin+" 分";$("wtV").textContent=(o.wt?o.wt:S.w).toFixed(1)+" kg"+(o.wt?"":"（未記録）");$("sleepV").textContent=o.sleep!=null?o.sleep+" 時間":"未記録";
+ $("wtV").textContent=(o.wt?o.wt:S.w).toFixed(1)+" kg"+(o.wt?"":"（未記録）");$("sleepV").textContent=o.sleep!=null?o.sleep+" 時間":"未記録";
  $("burnInfo").textContent=`消費の目安：歩行 ${Math.round(b.walk)} kcal ＋ 運動 ${Math.round(b.ex)} kcal（＋生活 ${Math.round(b.base)} kcal）`}
 function upd(fn){const o=get(cur);fn(o);put(cur,o);actTxt()}
 $("steps").oninput=e=>upd(o=>{o.steps=+e.target.value;if(!o.distManual)o.dist=+(o.steps*stride()).toFixed(1);$("dist").value=o.dist});
 $("dist").oninput=e=>upd(o=>{o.dist=+e.target.value;o.distManual=true});
-$("exType").onchange=e=>upd(o=>o.ex=+e.target.value);$("exMin").oninput=e=>upd(o=>o.exMin=+e.target.value);
+$("exType").onchange=setEx;$("exAmt").oninput=exLive;
+$("exAdd").onclick=()=>{const n=+$("exAmt").value;if(!n)return;upd(o=>{o.exList=o.exList||[];o.exList.push({t:+$("exType").value,n})});exRender();toast("追加したよ💪")};
 $("wt").oninput=e=>upd(o=>o.wt=+e.target.value);$("sleep").oninput=e=>upd(o=>o.sleep=+e.target.value);
 $("date").onchange=e=>{if(e.target.value){cur=e.target.value;render()}};
 function shift(n){const d=new Date(cur+"T12:00");d.setDate(d.getDate()+n);cur=ds(d);render()}
@@ -227,11 +239,11 @@ function drawMonth(){const c=cur.slice(0,7);if(!mon)mon=c;const[y,m]=mon.split("
  const first=new Date(y,m-1,1).getDay(),n=new Date(y,m,0).getDate(),today=ds(new Date());for(let i=0;i<first;i++){const e=document.createElement("div");e.className="d e";g.appendChild(e)}
  let rd=0,ki=[],st=[],ws=[],ex=0;
  for(let d=1;d<=n;d++){const k=y+"-"+pad(m)+"-"+pad(d),raw=localStorage.getItem(key(k)),o=get(k),inn=intake(o);
-  const rec=!!raw&&(o.foods.length||o.steps||o.exMin||o.wt!=null||o.cond!=null||o.sleep!=null);
+  const rec=!!raw&&(o.foods.length||o.steps||o.exMin||(o.exList||[]).length||o.wt!=null||o.cond!=null||o.sleep!=null);
   const e=document.createElement("div");e.className="d"+(rec?" r":"")+(k==today?" t":"")+(k==cur?" s":"");
-  e.innerHTML="<b>"+d+(rec?" ♡":"")+"</b>"+(inn?"🍚"+inn+"<br>":"")+(o.steps?"👟"+(o.steps/1000).toFixed(1)+"k<br>":"")+(o.wt?"⚖️"+o.wt.toFixed(1)+"<br>":"")+(o.exMin?"🏃"+o.exMin+"分":"");
+  e.innerHTML="<b>"+d+(rec?" ♡":"")+"</b>"+(inn?"🍚"+inn+"<br>":"")+(o.steps?"👟"+(o.steps/1000).toFixed(1)+"k<br>":"")+(o.wt?"⚖️"+o.wt.toFixed(1)+"<br>":"")+(exTot(o)?"🏃"+exTot(o)+"分<br>":"")+(exReps(o)?"💪"+exReps(o)+"回":"");
   e.onclick=()=>{cur=k;document.querySelector('nav button[data-t="food"]').click()};g.appendChild(e);
-  if(rec)rd++;if(inn)ki.push(inn);if(o.steps)st.push(o.steps);if(o.wt)ws.push(o.wt);ex+=o.exMin||0}
+  if(rec)rd++;if(inn)ki.push(inn);if(o.steps)st.push(o.steps);if(o.wt)ws.push(o.wt);ex+=exTot(o)}
  const av=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
  $("mSum").innerHTML="記録した日："+rd+" / "+n+" 日<br>平均摂取："+(ki.length?Math.round(av(ki))+" kcal":"—")+"　平均歩数："+(st.length?Math.round(av(st)).toLocaleString()+" 歩":"—")+"<br>体重："+(ws.length?ws[0].toFixed(1)+" → "+ws[ws.length-1].toFixed(1)+" kg":"—")+"　運動合計："+ex+" 分"}
 const mShift=n=>{const[y,m]=(mon||cur.slice(0,7)).split("-").map(Number),d=new Date(y,m-1+n,1);mon=d.getFullYear()+"-"+pad(d.getMonth()+1);drawMonth()};
@@ -253,5 +265,5 @@ preUI();
 $("preSave").onclick=()=>{P=P.map((q,i)=>{const n=$("pn"+i).value.trim(),k=Math.max(0,Math.round(+$("pk"+i).value||0));return n?{name:n,kcal:k}:{}});localStorage.setItem("yz_presets",JSON.stringify(P));fillFood();setFood();preUI();toast("保存したよ♡")};
 $("preGo").onclick=e=>{e.preventDefault();document.querySelector('nav button[data-t="set"]').click();$("preEd").scrollIntoView({block:"center"})};
 $("food").value="0";
-setFood();render();
+setEx();setFood();render();
 </script><script>if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});</script></body></html>
