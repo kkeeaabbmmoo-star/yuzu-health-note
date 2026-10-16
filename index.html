@@ -48,8 +48,11 @@ nav button.on{color:var(--pd)}
 .cal .d{min-height:74px;border-radius:10px;background:#fff8fa;border:2px solid var(--pl);padding:2px;font-size:9.5px;line-height:1.35;overflow:hidden}
 .cal .d.r{background:var(--pl)}.cal .d.t{border-color:var(--pd)}.cal .d.s{box-shadow:0 0 0 2px var(--p)}.cal .d b{font-size:12px;display:block}.cal .d.e{visibility:hidden}
 .ms{margin-top:10px;font-size:14px;line-height:1.7}
+.av{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:8px}.av label{margin:0;display:flex;flex-direction:column;align-items:center;font-size:11px;color:#fff;cursor:pointer}
+.av img,.av .ph{width:52px;height:52px;border-radius:50%;border:3px solid #fff;object-fit:cover;background:#fff8;display:flex;align-items:center;justify-content:center;font-size:24px}.av .hz{font-size:20px}
 </style></head><body>
 <header><h1>🍑 ゆずの健康ノート</h1>
+<div class="av"><label><span id="av_eiji" class="ph">👦</span>エイジ<input type="file" accept="image/*" data-k="eiji" style="display:none"></label><span class="hz">💗</span><label><span id="av_yuzu" class="ph">👧</span>ゆず<input type="file" accept="image/*" data-k="yuzu" style="display:none"></label></div>
 <div class="dr"><button id="prev">‹</button><input type="date" id="date"><button id="next">›</button></div></header>
 
 <section class="tab on" id="t-food">
@@ -94,6 +97,7 @@ nav button.on{color:var(--pd)}
 <button class="big sub" id="calcB">体重から基礎代謝を推定</button>
 <button class="big" id="saveS">保存</button>
 <div class="small">基礎代謝の推定＝体重×22.5（厚労省「基礎代謝基準値」30〜49歳男性）。</div></div>
+<div class="card"><h2>📷 アイコン写真</h2><div class="small">上のまるいアイコンをタップすると写真を選べるよ</div><button class="big sub" id="rmE">エイジの写真を消す</button><button class="big sub" id="rmY">ゆずの写真を消す</button></div>
 <div class="card"><h2>💾 バックアップ</h2>
 <button class="big" id="exp">JSONで書き出し</button>
 <button class="big sub" id="impB">JSONを読み込み</button><input type="file" id="imp" accept=".json,application/json" style="display:none">
@@ -227,5 +231,13 @@ const mShift=n=>{const[y,m]=(mon||cur.slice(0,7)).split("-").map(Number),d=new D
 $("mPrev").onclick=()=>mShift(-1);$("mNext").onclick=()=>mShift(1);
 const _draw=draw;draw=function(){if($("t-sum").classList.contains("on")){if(mon==null)mon=cur.slice(0,7);drawMonth()}_draw()};
 document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.t!="sum")mon=null}));
+
+// avatars
+const PH={eiji:"👦",yuzu:"👧"};
+function showAv(k){const el=$("av_"+k),d=localStorage.getItem("yz_avatar_"+k);if(d){const i=document.createElement("img");i.id=el.id;i.src=d;el.replaceWith(i)}else{const sp=document.createElement("span");sp.id=el.id;sp.className="ph";sp.textContent=PH[k];el.replaceWith(sp)}}
+document.querySelectorAll('.av input').forEach(inp=>inp.onchange=()=>{const f=inp.files[0];if(!f)return;const img=new Image();img.onload=()=>{const c=document.createElement("canvas");c.width=c.height=200;const m=Math.min(img.width,img.height);
+ c.getContext("2d").drawImage(img,(img.width-m)/2,(img.height-m)/2,m,m,0,0,200,200);try{localStorage.setItem("yz_avatar_"+inp.dataset.k,c.toDataURL("image/jpeg",0.85))}catch(e){alert("保存できませんでした")}showAv(inp.dataset.k);URL.revokeObjectURL(img.src);inp.value=""};img.src=URL.createObjectURL(f)});
+$("rmE").onclick=()=>{localStorage.removeItem("yz_avatar_eiji");showAv("eiji");toast("消したよ")};$("rmY").onclick=()=>{localStorage.removeItem("yz_avatar_yuzu");showAv("yuzu");toast("消したよ")};
+showAv("eiji");showAv("yuzu");
 setFood();render();
 </script><script>if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});</script></body></html>
