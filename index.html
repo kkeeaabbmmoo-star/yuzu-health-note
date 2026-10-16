@@ -50,6 +50,8 @@ nav button.on{color:var(--pd)}
 .ms{margin-top:10px;font-size:14px;line-height:1.7}
 .av{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:8px}.av label{margin:0;display:flex;flex-direction:column;align-items:center;font-size:11px;color:#fff;cursor:pointer}
 .av img,.av .ph{width:52px;height:52px;border-radius:50%;border:3px solid #fff;object-fit:cover;background:#fff8;display:flex;align-items:center;justify-content:center;font-size:24px}.av .hz{font-size:20px}
+.cal .w:first-child,.cal .d.hol b{color:#e5484d}.cal .w:nth-child(7),.cal .d.sat b{color:#3b7dd8}.cal .d.hol{background:#fff0f0}.cal .d.sat{background:#f0f6ff}.cal .d.r.hol,.cal .d.r.sat{background:var(--pl)}.cal .wx{float:right;font-size:12px}
+header.bgp{background-size:cover;background-position:center}header.bgp h1,header.bgp .av label{text-shadow:0 1px 3px #e85d88aa}
 </style></head><body>
 <header><h1>🍑 ゆずの健康ノート</h1>
 <div class="av"><label><span id="av_eiji" class="ph">👦</span>エイジ<input type="file" accept="image/*" data-k="eiji" style="display:none"></label><span class="hz">💗</span><label><span id="av_yuzu" class="ph">👧</span>ゆず<input type="file" accept="image/*" data-k="yuzu" style="display:none"></label></div>
@@ -98,7 +100,7 @@ nav button.on{color:var(--pd)}
 <button class="big" id="saveS">保存</button>
 <div class="small">基礎代謝の推定＝体重×22.5（厚労省「基礎代謝基準値」30〜49歳男性）。</div></div>
 <div class="card"><h2>⭐ マイプリセット（食べもの）</h2><div id="preEd"></div><button class="big" id="preSave">プリセットを保存</button><div class="small">名前とカロリーを入れると、食べものの一番上に出るよ（例：プロテイン 150）</div></div>
-<div class="card"><h2>📷 アイコン写真</h2><div class="small">上のまるいアイコンをタップすると写真を選べるよ</div><button class="big sub" id="rmE">エイジの写真を消す</button><button class="big sub" id="rmY">ゆずの写真を消す</button></div>
+<div class="card"><h2>📷 アイコン写真</h2><div class="small">上のまるいアイコンをタップすると写真を選べるよ</div><button class="big sub" id="rmE">エイジの写真を消す</button><button class="big sub" id="rmY">ゆずの写真を消す</button><button class="big" id="hbSet">ヘッダーの背景写真をえらぶ</button><button class="big sub" id="hbRm">背景写真を消す</button><input type="file" id="hbIn" accept="image/*" style="display:none"></div>
 <div class="card"><h2>💾 バックアップ</h2>
 <button class="big" id="exp">JSONで書き出し</button>
 <button class="big sub" id="impB">JSONを読み込み</button><input type="file" id="imp" accept=".json,application/json" style="display:none">
@@ -240,12 +242,12 @@ function drawMonth(){const c=cur.slice(0,7);if(!mon)mon=c;const[y,m]=mon.split("
  let rd=0,ki=[],st=[],ws=[],ex=0;
  for(let d=1;d<=n;d++){const k=y+"-"+pad(m)+"-"+pad(d),raw=localStorage.getItem(key(k)),o=get(k),inn=intake(o);
   const rec=!!raw&&(o.foods.length||o.steps||o.exMin||(o.exList||[]).length||o.wt!=null||o.cond!=null||o.sleep!=null);
-  const e=document.createElement("div");e.className="d"+(rec?" r":"")+(k==today?" t":"")+(k==cur?" s":"");
-  e.innerHTML="<b>"+d+(rec?" ♡":"")+"</b>"+(inn?"🍚"+inn+"<br>":"")+(o.steps?"👟"+(o.steps/1000).toFixed(1)+"k<br>":"")+(o.wt?"⚖️"+o.wt.toFixed(1)+"<br>":"")+(exTot(o)?"🏃"+exTot(o)+"分<br>":"")+(exReps(o)?"💪"+exReps(o)+"回":"");
+  const e=document.createElement("div");const dw=new Date(y,m-1,d).getDay(),hn=holName(k);e.className="d"+(rec?" r":"")+(dw==0||hn?" hol":dw==6?" sat":"")+(k==today?" t":"")+(k==cur?" s":"");
+  if(hn)e.title=hn;e.innerHTML=(WX[k]!=null?"<span class=wx>"+wxIcon(WX[k])+"</span>":"")+"<b>"+d+(rec?" ♡":"")+"</b>"+(inn?"🍚"+inn+"<br>":"")+(o.steps?"👟"+(o.steps/1000).toFixed(1)+"k<br>":"")+(o.wt?"⚖️"+o.wt.toFixed(1)+"<br>":"")+(exTot(o)?"🏃"+exTot(o)+"分<br>":"")+(exReps(o)?"💪"+exReps(o)+"回":"");
   e.onclick=()=>{cur=k;document.querySelector('nav button[data-t="food"]').click()};g.appendChild(e);
   if(rec)rd++;if(inn)ki.push(inn);if(o.steps)st.push(o.steps);if(o.wt)ws.push(o.wt);ex+=exTot(o)}
  const av=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
- $("mSum").innerHTML="記録した日："+rd+" / "+n+" 日<br>平均摂取："+(ki.length?Math.round(av(ki))+" kcal":"—")+"　平均歩数："+(st.length?Math.round(av(st)).toLocaleString()+" 歩":"—")+"<br>体重："+(ws.length?ws[0].toFixed(1)+" → "+ws[ws.length-1].toFixed(1)+" kg":"—")+"　運動合計："+ex+" 分"}
+ $("mSum").innerHTML="記録した日："+rd+" / "+n+" 日<br>平均摂取："+(ki.length?Math.round(av(ki))+" kcal":"—")+"　平均歩数："+(st.length?Math.round(av(st)).toLocaleString()+" 歩":"—")+"<br>体重："+(ws.length?ws[0].toFixed(1)+" → "+ws[ws.length-1].toFixed(1)+" kg":"—")+"　運動合計："+ex+" 分";loadWx(y,m)}
 const mShift=n=>{const[y,m]=(mon||cur.slice(0,7)).split("-").map(Number),d=new Date(y,m-1+n,1);mon=d.getFullYear()+"-"+pad(d.getMonth()+1);drawMonth()};
 $("mPrev").onclick=()=>mShift(-1);$("mNext").onclick=()=>mShift(1);
 const _draw=draw;draw=function(){if($("t-sum").classList.contains("on")){if(mon==null)mon=cur.slice(0,7);drawMonth()}_draw()};
@@ -265,5 +267,40 @@ preUI();
 $("preSave").onclick=()=>{P=P.map((q,i)=>{const n=$("pn"+i).value.trim(),k=Math.max(0,Math.round(+$("pk"+i).value||0));return n?{name:n,kcal:k}:{}});localStorage.setItem("yz_presets",JSON.stringify(P));fillFood();setFood();preUI();toast("保存したよ♡")};
 $("preGo").onclick=e=>{e.preventDefault();document.querySelector('nav button[data-t="set"]').click();$("preEd").scrollIntoView({block:"center"})};
 $("food").value="0";
+
+// holidays (祝日法, 振替休日・国民の休日を含む)
+const _hc={};
+function holsOf(y){if(_hc[y])return _hc[y];const H={},f=(m,d,n)=>H[y+"-"+pad(m)+"-"+pad(d)]=n,nth=(m,k)=>{const w=new Date(y,m-1,1).getDay();return 1+((8-w)%7)+(k-1)*7};
+ f(1,1,"元日");f(1,nth(1,2),"成人の日");f(2,11,"建国記念の日");if(y>=2020)f(2,23,"天皇誕生日");
+ f(3,Math.floor(20.8431+0.242194*(y-1980))-Math.floor((y-1980)/4),"春分の日");f(4,29,"昭和の日");f(5,3,"憲法記念日");f(5,4,"みどりの日");f(5,5,"こどもの日");
+ if(y==2021){f(7,22,"海の日");f(7,23,"スポーツの日");f(8,8,"山の日")}else if(y==2020){f(7,23,"海の日");f(7,24,"スポーツの日");f(8,10,"山の日")}else{f(7,nth(7,3),"海の日");f(8,11,"山の日");f(10,nth(10,2),"スポーツの日")}
+ f(9,nth(9,3),"敬老の日");f(9,Math.floor(23.2488+0.242194*(y-1980))-Math.floor((y-1980)/4),"秋分の日");f(11,3,"文化の日");f(11,23,"勤労感謝の日");
+ const ks=Object.keys(H).sort();ks.forEach(k=>{const d=new Date(k+"T12:00");if(d.getDay()==0){do d.setDate(d.getDate()+1);while(H[ds(d)]);H[ds(d)]="振替休日"}});
+ for(const k of ks){const d=new Date(k+"T12:00");d.setDate(d.getDate()+2);if(H[ds(d)]){d.setDate(d.getDate()-1);const t=ds(d);if(!H[t]&&d.getDay()!=0)H[t]="国民の休日"}}
+ return _hc[y]=H}
+const holName=k=>holsOf(+k.slice(0,4))[k];
+// weather (甲斐市, Open-Meteo)
+let WX=JSON.parse(localStorage.getItem("yz_weather")||"{}");const _wl={};
+const wxIcon=c=>c<=1?"☀️":c==2?"⛅":c==3?"☁️":c==45||c==48?"🌫️":(c>=71&&c<=77)||c==85||c==86?"❄️":c>=95?"⛈️":"🌧️";
+function saveWx(j){if(!j||!j.daily)return;j.daily.time.forEach((t,i)=>{if(j.daily.weathercode[i]!=null)WX[t]=j.daily.weathercode[i]});try{localStorage.setItem("yz_weather",JSON.stringify(WX))}catch(e){}}
+const LL="latitude=35.66&longitude=138.52&daily=weathercode&timezone=Asia%2FTokyo";
+function loadWx(y,m){if(!navigator.onLine)return;const today=ds(new Date()),mk=y+"-"+pad(m),re=()=>{if(mon==mk&&$("t-sum").classList.contains("on"))drawMonth()};
+ if(!_wl.f){_wl.f=1;fetch("https://api.open-meteo.com/v1/forecast?"+LL+"&past_days=92&forecast_days=16").then(r=>r.json()).then(j=>{saveWx(j);re()}).catch(()=>_wl.f=0)}
+ const st=mk+"-01";if(st>=today||_wl[mk])return;const n=new Date(y,m,0).getDate();
+ const e2=new Date();e2.setDate(e2.getDate()-3);let miss=false;for(let d=1;d<=n;d++){const k=mk+"-"+pad(d);if(k<ds(e2)&&WX[k]==null)miss=true}if(!miss)return;
+ _wl[mk]=1;let en=mk+"-"+pad(n);if(en>ds(e2))en=ds(e2);
+ fetch("https://archive-api.open-meteo.com/v1/archive?"+LL+"&start_date="+st+"&end_date="+en).then(r=>r.json()).then(j=>{saveWx(j);re()}).catch(()=>_wl[mk]=0)}
+
+// header background
+function showHB(){const h=document.querySelector("header"),d=localStorage.getItem("yz_header_bg");
+ if(d){h.style.backgroundImage="linear-gradient(135deg,rgba(255,159,184,.55),rgba(255,183,201,.55)),url("+d+")";h.classList.add("bgp")}else{h.style.backgroundImage="";h.classList.remove("bgp")}}
+$("hbSet").onclick=()=>$("hbIn").click();
+document.querySelector("header").addEventListener("click",e=>{if(e.target.tagName=="HEADER"||e.target.tagName=="H1")$("hbIn").click()});
+$("hbIn").onchange=()=>{const f=$("hbIn").files[0];if(!f)return;const img=new Image();img.onload=()=>{let ok=false;
+ for(const [W,q] of [[1000,.8],[800,.65],[600,.55]]){const sc=Math.min(1,W/img.width),c=document.createElement("canvas");c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);
+  c.getContext("2d").drawImage(img,0,0,c.width,c.height);try{localStorage.setItem("yz_header_bg",c.toDataURL("image/jpeg",q));ok=true;break}catch(e){}}
+ URL.revokeObjectURL(img.src);$("hbIn").value="";if(ok){showHB();toast("背景にしたよ♡")}else alert("容量がいっぱいで保存できませんでした。別の写真をためしてね")};img.src=URL.createObjectURL(f)};
+$("hbRm").onclick=()=>{localStorage.removeItem("yz_header_bg");showHB();toast("消したよ")};
+showHB();
 setEx();setFood();render();
 </script><script>if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});</script></body></html>
