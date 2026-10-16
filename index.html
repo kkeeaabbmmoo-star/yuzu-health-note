@@ -58,7 +58,7 @@ nav button.on{color:var(--pd)}
 <section class="tab on" id="t-food">
 <div class="card"><h2>🍚 食べたもの</h2>
 <div class="seg" id="meal"></div>
-<label>食べもの</label><select id="food"></select>
+<label>食べもの <a href="#" id="preGo" style="float:right;color:var(--pd);font-size:13px">⭐ プリセット編集</a></label><select id="food"></select>
 <div id="customBox" style="display:none"><label>名前</label><input type="text" id="cname" placeholder="例：カレーライス"></div>
 <label id="amtLbl">量</label><input type="range" id="amt">
 <div class="row"><span class="val" id="amtV"></span><span class="val" id="kcalV"></span></div>
@@ -97,6 +97,7 @@ nav button.on{color:var(--pd)}
 <button class="big sub" id="calcB">体重から基礎代謝を推定</button>
 <button class="big" id="saveS">保存</button>
 <div class="small">基礎代謝の推定＝体重×22.5（厚労省「基礎代謝基準値」30〜49歳男性）。</div></div>
+<div class="card"><h2>⭐ マイプリセット（食べもの）</h2><div id="preEd"></div><button class="big" id="preSave">プリセットを保存</button><div class="small">名前とカロリーを入れると、食べものの一番上に出るよ（例：プロテイン 150）</div></div>
 <div class="card"><h2>📷 アイコン写真</h2><div class="small">上のまるいアイコンをタップすると写真を選べるよ</div><button class="big sub" id="rmE">エイジの写真を消す</button><button class="big sub" id="rmY">ゆずの写真を消す</button></div>
 <div class="card"><h2>💾 バックアップ</h2>
 <button class="big" id="exp">JSONで書き出し</button>
@@ -139,15 +140,21 @@ function burn(o){const w=o.wt||S.w;const walk=w*o.steps*0.0005;const ex=EX[o.ex]
 const stride=()=>S.h*0.45/100000;
 // UI build
 MEALS.forEach((m,i)=>{const b=document.createElement("button");b.textContent=m;b.onclick=()=>{meal=i;segOn("meal",i)};$("meal").appendChild(b)});
-FOODS.forEach((f,i)=>$("food").add(new Option(f[0]+(f[2]=="kcal"?"（自由入力）":"（"+f[2]+"）"),i)));
+let P=JSON.parse(localStorage.getItem("yz_presets")||"null")||[{},{},{},{}];
+function curFood(){const v=$("food").value;if(v[0]=="p"){const q=P[+v.slice(1)]||{},k=q.kcal||0,f=[q.name||"カスタム"+(+v.slice(1)+1),1,"kcal",0,Math.max(1500,Math.ceil(k*2/5)*5),5,k];f.pre=1;return f}return FOODS[v]}
+function fillFood(){const sel=$("food"),old=sel.value;sel.innerHTML="";const g=document.createElement("optgroup");g.label="⭐ マイプリセット";
+ P.forEach((q,i)=>g.appendChild(new Option(q.name?"⭐ "+q.name+"（"+q.kcal+"kcal）":"⭐ カスタム"+(i+1)+"（未設定）","p"+i)));sel.appendChild(g);
+ FOODS.forEach((f,i)=>sel.add(new Option(f[0]+(f[2]=="kcal"?"（自由入力）":"（"+f[2]+"）"),i)));sel.value=old&&[...sel.options].some(o=>o.value==old)?old:"0"}
+fillFood();
+if(0)FOODS.forEach((f,i)=>$("food").add(new Option(f[0]+(f[2]=="kcal"?"（自由入力）":"（"+f[2]+"）"),i)));
 EX.forEach((e,i)=>$("exType").add(new Option(e[0]+(e[1]?"（"+e[1]+"METs）":""),i)));
 FACES.forEach((f,i)=>{const b=document.createElement("button");b.textContent=f;b.onclick=()=>{const o=get(cur);o.cond=i;put(cur,o);segOn("cond",i)};$("cond").appendChild(b)});
 function segOn(id,i){[...$(id).children].forEach((b,j)=>b.classList.toggle("on",j===i))}
-function setFood(){const f=FOODS[$("food").value],a=$("amt");a.min=f[3];a.max=f[4];a.step=f[5];a.value=f[6];$("customBox").style.display=f[2]=="kcal"?"block":"none";$("amtLbl").textContent=f[2]=="kcal"?"カロリー":"量";live()}
-function live(){const f=FOODS[$("food").value],v=+$("amt").value;$("amtV").textContent=f[2]=="kcal"?"":v+" "+f[2];$("kcalV").textContent=Math.round(v*f[1])+" kcal"}
+function setFood(){const f=curFood(),a=$("amt");a.min=f[3];a.max=f[4];a.step=f[5];a.value=f[6];$("customBox").style.display=f[2]=="kcal"&&!f.pre?"block":"none";$("amtLbl").textContent=f[2]=="kcal"?"カロリー":"量";live()}
+function live(){const f=curFood(),v=+$("amt").value;$("amtV").textContent=f[2]=="kcal"?"":v+" "+f[2];$("kcalV").textContent=Math.round(v*f[1])+" kcal"}
 $("food").onchange=setFood;$("amt").oninput=live;
-$("add").onclick=()=>{const f=FOODS[$("food").value],v=+$("amt").value,o=get(cur);
- const name=f[2]=="kcal"?($("cname").value||"カスタム"):f[0];
+$("add").onclick=()=>{const f=curFood(),v=+$("amt").value,o=get(cur);
+ const name=f.pre?f[0]:f[2]=="kcal"?($("cname").value||"カスタム"):f[0];
  o.foods.push({meal,name,amt:f[2]=="kcal"?null:v,unit:f[2],kcal:Math.round(v*f[1])});put(cur,o);render();toast("追加したよ♡")};
 function render(){const o=get(cur);$("date").value=cur;segOn("meal",meal);
  const l=$("list");l.innerHTML="";
@@ -239,5 +246,12 @@ document.querySelectorAll('.av input').forEach(inp=>inp.onchange=()=>{const f=in
  c.getContext("2d").drawImage(img,(img.width-m)/2,(img.height-m)/2,m,m,0,0,200,200);try{localStorage.setItem("yz_avatar_"+inp.dataset.k,c.toDataURL("image/jpeg",0.85))}catch(e){alert("保存できませんでした")}showAv(inp.dataset.k);URL.revokeObjectURL(img.src);inp.value=""};img.src=URL.createObjectURL(f)});
 $("rmE").onclick=()=>{localStorage.removeItem("yz_avatar_eiji");showAv("eiji");toast("消したよ")};$("rmY").onclick=()=>{localStorage.removeItem("yz_avatar_yuzu");showAv("yuzu");toast("消したよ")};
 showAv("eiji");showAv("yuzu");
+
+// presets editor
+function preUI(){$("preEd").innerHTML=P.map((q,i)=>`<div class="row" style="margin-top:8px"><input type="text" id="pn${i}" placeholder="カスタム${i+1}の名前" value="${(q.name||"").replace(/"/g,"&quot;")}" style="flex:2"><input type="number" id="pk${i}" inputmode="numeric" placeholder="kcal" value="${q.kcal||""}" style="flex:1"></div>`).join("")}
+preUI();
+$("preSave").onclick=()=>{P=P.map((q,i)=>{const n=$("pn"+i).value.trim(),k=Math.max(0,Math.round(+$("pk"+i).value||0));return n?{name:n,kcal:k}:{}});localStorage.setItem("yz_presets",JSON.stringify(P));fillFood();setFood();preUI();toast("保存したよ♡")};
+$("preGo").onclick=e=>{e.preventDefault();document.querySelector('nav button[data-t="set"]').click();$("preEd").scrollIntoView({block:"center"})};
+$("food").value="0";
 setFood();render();
 </script><script>if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});</script></body></html>
