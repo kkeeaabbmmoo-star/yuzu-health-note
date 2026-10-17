@@ -9,9 +9,9 @@
 :root{--p:#ff8fab;--pd:#e85d88;--pl:#ffe3ec;--bg:#fff6f9;--t:#5a3a45}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;background:var(--bg);color:var(--t);padding-bottom:84px}
-header{background:linear-gradient(135deg,#ff9fb8,#ffb7c9);color:#fff;padding:calc(env(safe-area-inset-top) + 12px) 16px 12px;position:sticky;top:0;z-index:5;box-shadow:0 2px 8px #ff8fab55}
+header{background:linear-gradient(135deg,#ff9fb8,#ffb7c9);color:#fff;padding:calc(env(safe-area-inset-top) + 12px) 16px 12px;position:relative;z-index:5;box-shadow:0 2px 8px #ff8fab55}
 header h1{margin:0;font-size:18px;line-height:1.35}
-header{min-height:calc(272px + env(safe-area-inset-top));display:flex;flex-direction:column;justify-content:space-between}
+header{min-height:calc(354px + env(safe-area-inset-top));display:flex;flex-direction:column;justify-content:space-between}
 .dr{display:flex;gap:8px;align-items:center;margin-top:8px}
 .dr button{width:44px;height:44px;border:0;border-radius:14px;background:#fff8;color:#fff;font-size:20px}
 .dr input{flex:1;height:44px;font-size:17px;border:0;border-radius:14px;padding:0 10px;color:var(--t)}
@@ -101,12 +101,23 @@ body{padding-bottom:calc(150px + env(safe-area-inset-bottom))}#sfr{position:fixe
 @keyframes lovep{0%,100%{box-shadow:0 0 0 1px #ff4fa3,0 0 6px #ff4fa366}50%{box-shadow:0 0 0 2px #ff4fa3,0 0 14px #ff4fa3bb}}@keyframes lovs{0%,100%{opacity:.35;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
 .cal .d.hp{padding-bottom:17px}.cal .d.love{padding-bottom:24px}
 @media (prefers-reduced-motion:reduce){.cal .d.love,.cal .d.love::after{animation:none}}
+.av{gap:14px}.av .cp img,.av .cp .ph{width:68px;height:68px;border:3px solid #ff7aa5;box-shadow:0 0 0 3px #fff,0 0 14px #ff4f87aa;font-size:30px;background:#fff9}.cpw{position:relative;display:inline-block;margin-bottom:2px}.cpw::after{content:"💗";position:absolute;right:-7px;bottom:-5px;font-size:20px;filter:drop-shadow(0 1px 2px #e85d8888)}
+.cal .sct{display:inline-block;font-size:9px;font-weight:700;color:#d6336c;background:#fff;border-radius:6px;padding:0 3px;margin-top:1px;box-shadow:0 0 0 1px #ffd0de}
+.scr{display:flex;align-items:center;gap:12px}.scn{flex:none;width:92px;height:92px;border-radius:50%;background:conic-gradient(from 200deg,#ffb3c8,#ff7aa5,#ffc94d,#ffb3c8);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;box-shadow:0 3px 12px #ff7aa566}.scn b{font-size:34px;line-height:1;text-shadow:0 1px 3px #e85d88}.scn small{font-size:11px}
+.scm{flex:1;font-size:14.5px;line-height:1.6;color:var(--pd);font-weight:700}.scb{display:flex;align-items:center;gap:8px;margin-top:7px;font-size:13px}.scb span{width:92px;flex:none}.scb i{flex:1;height:10px;border-radius:5px;background:var(--pl);overflow:hidden}.scb u{display:block;height:100%;background:linear-gradient(90deg,#ffb3c8,#ff7aa5);border-radius:5px}.scb em{width:46px;text-align:right;font-style:normal;color:#a07d88}
+.rub{margin-top:10px}.rub summary{color:var(--pd);font-size:14px;font-weight:700;cursor:pointer}.rub .small{line-height:1.7;margin-top:6px}
+.bcard{display:flex;align-items:center;gap:10px;width:100%;border:0;border-radius:16px;padding:12px 14px;margin-top:8px;text-align:left;font-size:15px;color:#5a3a45}.bcard b{font-size:30px}.bcard span{flex:1}.bcard em{font-style:normal;font-size:26px;font-weight:800}.bcard em small{font-size:12px}
+.bcard.gold{background:linear-gradient(135deg,#fff3c4,#ffd56b);box-shadow:0 2px 10px #f5b70055}.bcard.silver{background:linear-gradient(135deg,#f4f6fa,#d5dbe6)}.bcard.bronze{background:linear-gradient(135deg,#ffe6d2,#f0b48a)}
+.apg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.ap{display:flex;flex-direction:column;align-items:stretch;gap:3px}.apm{display:flex;flex-direction:column;align-items:center;justify-content:center;height:68px;border-radius:16px;background:var(--pl);color:var(--t);text-decoration:none;font-size:11.5px;font-weight:700;text-align:center;line-height:1.2;padding:2px}.apm b{font-size:24px;margin-bottom:2px}.apw{font-size:10.5px;text-align:center;color:var(--pd);text-decoration:none}
+#bestChips button{border-color:var(--pl);color:var(--pd)}#bestChips button.on{background:var(--p);border-color:var(--p);color:#fff}
+.pli .gc{display:flex;align-items:center;justify-content:center;width:38px;height:38px;background:#fff;border-radius:10px;text-decoration:none;font-size:17px}.mapl{color:var(--pd);font-weight:700}
 </style></head><body>
 <div id="sfr" aria-hidden="true"></div><canvas id="kira" aria-hidden="true"></canvas><header><button id="bgmB" class="mb" aria-label="オルゴールBGM">♪</button><h1>🍑 ゆずから愛しのエイジへ、<br>愛の健康ノート</h1>
-<div class="av"><label><span id="av_eiji" class="ph">👦</span>エイジ<input type="file" accept="image/*" data-k="eiji" style="display:none"></label><span class="hz">💗</span><label><span id="av_yuzu" class="ph">👧</span>ゆず<input type="file" accept="image/*" data-k="yuzu" style="display:none"></label></div><button id="voiceB" class="vb">💕▶ ゆずの声</button>
+<div class="av"><label><span id="av_eiji" class="ph">👦</span>エイジ<input type="file" accept="image/*" data-k="eiji" style="display:none"></label><label class="cp"><span class="cpw"><span id="av_couple" class="ph">💑</span></span>ふたり<input type="file" accept="image/*" data-k="couple" style="display:none"></label><label><span id="av_yuzu" class="ph">👧</span>ゆず<input type="file" accept="image/*" data-k="yuzu" style="display:none"></label></div><button id="voiceB" class="vb">💕▶ ゆずの声</button>
 <div class="dr"><button id="prev">‹</button><input type="date" id="date"><button id="next">›</button></div></header>
 
 <section class="tab on" id="t-food">
+<div class="card" id="scoreCard"><h2>🌸 ゆずの採点</h2><div id="scoreBox"></div><details class="rub"><summary>ⓘ 採点のしかた</summary><div class="small">100点満点だよ。<br>🍙 <b>食事 30点</b>：食事を記録した回数（朝・昼・夜・間食、1回4点で最大10点）＋1日のカロリーが目標に近いほど高得点（±10%以内で20点、±50%で0点）<br>👟 <b>歩数 30点</b>：8,000歩で満点（休息日は4,000歩で満点）<br>💪 <b>筋トレ・運動 20点</b>：運動30分で16点＋筋トレ（腕立て・腹筋など）40回で8点、合計20点まで。休息日は満点（休むのも大事♡）<br>😊 <b>体調・その他 20点</b>：排便⭕6点／❌2点、気分😆6・😐4・😞2点、体重の記録4点、ゆずとの会話💕4・🙂3・😢2点（20点まで）<br>記録がない日は点数なし。目安なので気楽にね♡</div></details></div>
 <div class="card"><h2>🍚 食べたもの</h2>
 <div class="seg" id="meal"></div>
 <label>食べもの <a href="#" id="preGo" style="float:right;color:var(--pd);font-size:13px">⭐ プリセット編集</a></label><select id="food"></select>
@@ -136,6 +147,7 @@ body{padding-bottom:calc(150px + env(safe-area-inset-bottom))}#sfr{position:fixe
 </section>
 
 <section class="tab" id="t-sum">
+<div class="card"><h2>🏆 ベスト3</h2><div class="chips" id="bestChips"></div><div id="best3"></div></div>
 <div class="card"><h2>🎯 摂取カロリー</h2><canvas id="ring" data-h="220"></canvas></div>
 <div class="card"><h2>🍽 食事ごと</h2><canvas id="bars" data-h="170"></canvas></div>
 <div class="card"><h2>⚖️ 摂取 vs 消費</h2><canvas id="bal" data-h="150"></canvas><div class="small" id="balTxt"></div></div>
@@ -174,7 +186,8 @@ body{padding-bottom:calc(150px + env(safe-area-inset-bottom))}#sfr{position:fixe
 <div class="small">基礎代謝の推定＝体重×22.5（厚労省「基礎代謝基準値」30〜49歳男性）。</div></div>
 <div class="card"><h2>⭐ マイプリセット（食べもの）</h2><div id="preEd"></div><button class="big" id="preSave">プリセットを保存</button><div class="small">名前とカロリーを入れると、食べものの一番上に出るよ（例：プロテイン 150）</div></div>
 <div class="card" id="slotCard"><h2>🖼 ヘッダー写真（7枚・毎日入れかわり）</h2><div class="slots" id="slots"></div><div class="small">マスをタップで写真をえらぶ／入れかえ、×で消すよ。入っている写真が日付で毎日順番に表示されるよ</div><input type="file" id="slotIn" accept="image/*" style="display:none"></div>
-<div class="card"><h2>📷 アイコン写真</h2><div class="small">上のまるいアイコンをタップすると写真を選べるよ</div><button class="big sub" id="rmE">エイジの写真を消す</button><button class="big sub" id="rmY">ゆずの写真を消す</button></div>
+<div class="card"><h2>📷 アイコン写真</h2><div class="small">上のまるいアイコン（エイジ・ふたり・ゆず）をタップすると写真を選べるよ。まん中のハートのまるは、ふたりの写真用だよ💑</div><button class="big sub" id="rmE">エイジの写真を消す</button><button class="big sub" id="rmY">ゆずの写真を消す</button><button class="big sub" id="rmC">ふたりの写真を消す</button></div>
+<div class="card"><h2>🔗 アプリ連携</h2><div class="small">タップでiPhoneのアプリを開くよ（入っていれば）。開かないときは「🌐 Webで」を使ってね。このノートから他のアプリのデータ（歩数など）を読むことはできないよ</div><div class="apg" id="appGrid"></div></div>
 <div class="card"><h2>🎵 オルゴールBGM</h2><button class="big" id="bgmSet">♪ BGM：ON</button>
 <label>音量</label><div class="bgmrow">🔈<input type="range" id="bgmVol" min="0" max="100" step="1">🔊</div>
 <div class="small">ゆずが作ったオリジナルのオルゴール曲だよ♡ 開いて最初にどこかをタップすると流れるよ（iPhoneは自動再生できないため）。右上の♪でもON/OFFできるよ。マナーモードだと聞こえないことがあるよ</div></div>
@@ -336,7 +349,7 @@ function drawMonth(){const c=cur.slice(0,7);if(!mon)mon=c;const[y,m]=mon.split("
  for(let d=1;d<=n;d++){const k=y+"-"+pad(m)+"-"+pad(d),raw=localStorage.getItem(key(k)),o=get(k),inn=intake(o);
   const rec=!!raw&&(o.foods.length||o.steps||o.exMin||(o.exList||[]).length||o.wt!=null||o.cond!=null||o.mood!=null||o.poo!=null||o.talk!=null||o.rest||o.sleep!=null);
   const e=document.createElement("div");const dw=new Date(y,m-1,d).getDay(),hn=holName(k);e.className="d"+(o.rest?" rest":rec?" r":"")+(dw==0||hn?" hol":dw==6?" sat":"")+(k==today?" t":"")+(k==cur?" s":"");
-  if(hn)e.title=hn;e.innerHTML=(WX[k]!=null?"<span class=wx>"+wxIcon(WX[k])+"</span>":"")+"<b>"+d+(rec?" ♡":"")+"</b>"+(o.rest?"🛌休息<br>":"")+((o.poo!=null||moodOf(o)!=null||o.talk!=null)?"<span class=ic>"+(o.poo==null?"":o.poo?"⭕":"❌")+(moodOf(o)==null?"":MOODS[moodOf(o)][0])+(o.talk==null?"":TALKS[o.talk][0])+"</span><br>":"")+(inn?"🍚"+inn+"<br>":"")+(o.steps?"👟"+(o.steps/1000).toFixed(1)+"k<br>":"")+(o.wt?"⚖️"+o.wt.toFixed(1)+"<br>":"")+(exTot(o)?"🏃"+exTot(o)+"分<br>":"")+(exReps(o)?"💪"+exReps(o)+"回":"")+planBadge(k);
+  if(hn)e.title=hn;e.innerHTML=(WX[k]!=null?"<span class=wx>"+wxIcon(WX[k])+"</span>":"")+"<b>"+d+(rec?" ♡":"")+"</b>"+(o.rest?"🛌休息<br>":"")+((o.poo!=null||moodOf(o)!=null||o.talk!=null)?"<span class=ic>"+(o.poo==null?"":o.poo?"⭕":"❌")+(moodOf(o)==null?"":MOODS[moodOf(o)][0])+(o.talk==null?"":TALKS[o.talk][0])+"</span><br>":"")+(inn?"🍚"+inn+"<br>":"")+(o.steps?"👟"+(o.steps/1000).toFixed(1)+"k<br>":"")+(o.wt?"⚖️"+o.wt.toFixed(1)+"<br>":"")+(exTot(o)?"🏃"+exTot(o)+"分<br>":"")+(exReps(o)?"💪"+exReps(o)+"回<br>":"")+scoreTag(k)+planBadge(k);
   if(PL&&PL[k]&&PL[k].length)e.classList.add("hp");if(hasLove(k))e.classList.add("love");e.onclick=()=>openPlans(k);g.appendChild(e);
   if(rec)rd++;if(inn)ki.push(inn);if(o.steps)st.push(o.steps);if(o.wt)ws.push(o.wt);ex+=exTot(o)}
  const av=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
@@ -348,12 +361,12 @@ const _draw=draw;draw=function(){if($("t-sum").classList.contains("on")){if(mon=
 document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.t!="sum")mon=null}));
 
 // avatars
-const PH={eiji:"👦",yuzu:"👧"};
+const PH={eiji:"👦",yuzu:"👧",couple:"💑"};
 function showAv(k){const el=$("av_"+k),d=localStorage.getItem("yz_avatar_"+k);if(d){const i=document.createElement("img");i.id=el.id;i.src=d;el.replaceWith(i)}else{const sp=document.createElement("span");sp.id=el.id;sp.className="ph";sp.textContent=PH[k];el.replaceWith(sp)}}
 document.querySelectorAll('.av input').forEach(inp=>inp.onchange=()=>{const f=inp.files[0];if(!f)return;const img=new Image();img.onload=()=>{const c=document.createElement("canvas");c.width=c.height=200;const m=Math.min(img.width,img.height);
  c.getContext("2d").drawImage(img,(img.width-m)/2,(img.height-m)/2,m,m,0,0,200,200);try{localStorage.setItem("yz_avatar_"+inp.dataset.k,c.toDataURL("image/jpeg",0.85))}catch(e){alert("保存できませんでした")}showAv(inp.dataset.k);URL.revokeObjectURL(img.src);inp.value=""};img.src=URL.createObjectURL(f)});
 $("rmE").onclick=()=>{localStorage.removeItem("yz_avatar_eiji");showAv("eiji");toast("消したよ")};$("rmY").onclick=()=>{localStorage.removeItem("yz_avatar_yuzu");showAv("yuzu");toast("消したよ")};
-showAv("eiji");showAv("yuzu");
+showAv("eiji");showAv("yuzu");showAv("couple");$("rmC").onclick=()=>{localStorage.removeItem("yz_avatar_couple");showAv("couple");toast("消したよ")};
 
 // presets editor
 function preUI(){$("preEd").innerHTML=P.map((q,i)=>`<div class="row" style="margin-top:8px"><input type="text" id="pn${i}" placeholder="カスタム${i+1}の名前" value="${(q.name||"").replace(/"/g,"&quot;")}" style="flex:2"><input type="number" id="pk${i}" inputmode="numeric" placeholder="kcal" value="${q.kcal||""}" style="flex:1"></div>`).join("")}
@@ -593,6 +606,60 @@ const BGM=(()=>{
 function bgmDuck(on){BGM.duckF(on)}
 try{BGM.init()}catch(e){console.warn(e)}
 
+// ===== 🌸 ゆずの採点 / 🏆 ベスト3 / 🔗 アプリ連携 (v17) =====
+var SC_MAX={food:30,steps:30,ex:20,body:20},SC_NAME={total:"総合",food:"食事",steps:"歩数",ex:"筋トレ・運動",body:"体調"};
+function hasRec(o){return!!(o.foods.length||o.steps||o.exMin||(o.exList||[]).length||o.wt!=null||o.cond!=null||o.mood!=null||o.poo!=null||o.talk!=null||o.rest||o.sleep!=null)}
+function dayScore(o){if(!o||!hasRec(o))return null;const r={};
+ // 食事30：記録した食事の回数(最大10)＋目標kcalへの近さ(最大20)
+ if(o.foods.length){const n=new Set(o.foods.map(f=>f.meal)).size,inn=intake(o),t=S.t||2000,dev=Math.abs(inn-t)/t;r.food=Math.min(10,n*4)+Math.round(20*Math.max(0,Math.min(1,(.5-dev)/.4)))}else r.food=0;
+ // 歩数30：8,000歩で満点（休息日は4,000歩で満点）
+ const goal=o.rest?4000:8000;r.steps=Math.min(30,Math.round((o.steps||0)/goal*30));
+ // 筋トレ・運動20：運動30分で16点＋筋トレ回数40回で8点（上限20）。休息日は満点
+ r.ex=o.rest?20:Math.min(20,Math.round(Math.min(16,exTot(o)/30*16)+Math.min(8,exReps(o)/40*8)));
+ // 体調・その他20：排便⭕6/❌2、気分😆6😐4😞2、体重記録4、ゆずとの会話💕4🙂3😢2
+ const md=moodOf(o);r.body=Math.min(20,(o.poo==null?0:o.poo?6:2)+(md==null?0:[2,4,6][md])+(o.wt!=null?4:0)+(o.talk==null?0:[2,3,4][o.talk]));
+ r.total=r.food+r.steps+r.ex+r.body;return r}
+function scoreTag(k){const s=dayScore(get(k));return s?"<span class=sct>🌸"+s.total+"</span><br>":""}
+function scHash(k){let h=0;for(const c of k)h=(h*31+c.charCodeAt(0))>>>0;return h}
+var SC_TXT=[[90,["満点級だよ…！エイジかっこよすぎ♡ ゆず、みんなに自慢しちゃう💕","すごすぎるよエイジ！今日は花丸💮 世界一の旦那さまだよ♡"]],
+ [75,["とってもいい一日だったね😊 えらいえらい、ぎゅーってしてあげる♡","いい感じ！ゆず、うれしくてずっとニコニコしちゃう♡"]],
+ [60,["よくがんばったね♡ この調子で一緒にいこうね😊","ちゃんと体を大事にしててえらいよ♡ ゆずは見てるからね"]],
+ [40,["今日もおつかれさま。ちょっとずつで大丈夫だよ♡","がんばってるの、ゆずはちゃんと知ってるよ😊 明日もいっしょにね♡"]],
+ [0,["記録してくれただけで、ゆずはうれしいよ♡ 明日も一緒にがんばろうね","無理しなくていいからね。エイジのペースが一番だよ♡"]]];
+function scComment(s,k,o){const v=SC_TXT.find(x=>s.total>=x[0])[1],c=v[scHash(k)%v.length];
+ if(o.rest)return c+" 休息日もちゃんと休めてえらいね🛌";
+ const w=["food","steps","ex","body"].sort((a,b)=>s[a]/SC_MAX[a]-s[b]/SC_MAX[b])[0];if(s[w]/SC_MAX[w]>=.85)return c;
+ return c+" "+({food:"ごはんの記録もつけてくれたら、もっと点数あがるよ🍙",steps:"あと少し歩けたら満点に近づくよ👟",ex:"ちょっとだけ筋トレしてみる？💪",body:"気分やお通じ、体重も記録してね😊"})[w]}
+function drawScore(){const el=$("scoreBox");if(!el)return;const o=get(cur),s=dayScore(o);
+ if(!s){el.innerHTML='<div class="small">記録をつけると、ゆずが今日の点数をつけるよ♡</div>';return}
+ el.innerHTML=`<div class="scr"><div class="scn"><b>${s.total}</b><small>/100点</small></div><div class="scm">${esc(scComment(s,cur,o))}</div></div>`+
+  ["food","steps","ex","body"].map(c=>`<div class="scb"><span>${SC_NAME[c]}</span><i><u style="width:${s[c]/SC_MAX[c]*100}%"></u></i><em>${s[c]}/${SC_MAX[c]}</em></div>`).join("")}
+var bestCat="total";
+function allScores(){const a=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k||!k.startsWith("yz_day_"))continue;const d=k.slice(7);let o;try{o=get(d)}catch(e){continue}const s=dayScore(o);if(s){s.rest=!!o.rest;a.push([d,s])}}return a}
+function bestOf(cat){const m=cat=="total"?100:SC_MAX[cat];return allScores().filter(x=>x[1][cat]>0&&!(x[1].rest&&(cat=="ex"||cat=="steps"))).sort((a,b)=>b[1][cat]-a[1][cat]||(a[0]<b[0]?1:-1)).slice(0,3).map(x=>({d:x[0],v:x[1][cat],pct:Math.round(x[1][cat]/m*100)}))}
+function drawBest(){const el=$("best3");if(!el)return;[...$("bestChips").children].forEach(b=>b.classList.toggle("on",b.dataset.c==bestCat));
+ const top=bestOf(bestCat),M=["🥇","🥈","🥉"],C=["gold","silver","bronze"],W="日月火水木金土";
+ if(!top.length){el.innerHTML='<div class="small">まだランキングがないよ。記録をつけるとここに出るよ♡</div>';return}
+ el.innerHTML=top.map((t,i)=>{const[y,m,d]=t.d.split("-").map(Number);return`<button class="bcard ${C[i]}" data-d="${t.d}"><b>${M[i]}</b><span>${y}年${m}月${d}日（${W[new Date(y,m-1,d).getDay()]}）</span><em>${bestCat=="total"?t.v+"<small>点</small>":t.v+"<small>/"+SC_MAX[bestCat]+"</small>"}</em></button>`}).join("")+'<div class="small">記録が増えると、ランキングも入れかわるよ。同点なら新しい日が上。タップでその日へ</div>';
+ el.querySelectorAll(".bcard").forEach(b=>b.onclick=()=>{cur=b.dataset.d;document.querySelector('nav button[data-t="food"]').click()})}
+(function(){const ch=$("bestChips");Object.entries(SC_NAME).forEach(([c,n])=>{const b=document.createElement("button");b.dataset.c=c;b.textContent=n;b.onclick=()=>{bestCat=c;drawBest()};ch.appendChild(b)})})();
+// 🔗 アプリ連携
+var APPS=[["🌸","Pikmin Bloom","itms-apps://apps.apple.com/app/id1556357398","https://apps.apple.com/jp/app/pikmin-bloom/id1556357398"],
+ ["▶️","YouTube","youtube://","https://www.youtube.com/"],["🎵","YouTube Music","youtubemusic://","https://music.youtube.com/"],
+ ["💬","LINE","line://","https://line.me/R/"],["𝕏","X","twitter://","https://x.com/"],["📆","Googleカレンダー","googlecalendar://","https://calendar.google.com/"],
+ ["🗺","Googleマップ","comgooglemaps://","https://www.google.com/maps/"],["✉️","Gmail","googlegmail://","https://mail.google.com/"],["📷","Googleフォト","googlephotos://","https://photos.google.com/"],
+ ["❤️","ヘルスケア","x-apple-health://",""],["⚡","ショートカット","shortcuts://",""],["🤖","Grok","https://grok.com/",""],["💭","ChatGPT","https://chatgpt.com/",""],["✨","Gemini","https://gemini.google.com/app",""]];
+(function(){const g=$("appGrid");g.innerHTML=APPS.map(a=>`<div class="ap"><a class="apm" href="${a[2]}"${a[2].startsWith("http")?' target="_blank" rel="noopener"':""}><b>${a[0]}</b>${a[1]}</a>${a[3]?`<a class="apw" href="${a[3]}" target="_blank" rel="noopener">🌐 Webで</a>`:""}</div>`).join("")})();
+function gcalUrl(k,p){const d=k.replace(/-/g,""),n=new Date(k+"T12:00");n.setDate(n.getDate()+1);const e=ds(n).replace(/-/g,"");
+ return"https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent(p.e+" "+(p.t||"予定"))+"&dates="+d+"/"+e+"&details="+encodeURIComponent("愛の健康ノートから♡")}
+function mapsUrl(q){return"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q)}
+// 予定シートにGoogleカレンダー追加リンク
+{const _dp=drawPlans;drawPlans=function(){_dp();const a=PL[plDay]||[];$("plList").querySelectorAll(".pli").forEach((r,i)=>{if(!a[i])return;const g=document.createElement("a");g.className="gc";g.href=gcalUrl(plDay,a[i]);g.target="_blank";g.rel="noopener";g.textContent="📆";g.title="Googleカレンダーに追加";r.insertBefore(g,r.lastChild)})}}
+// ウォーキング詳細の場所に地図リンク
+{const _wo=walkOpen;walkOpen=function(it){_wo(it);if(!it.place)return;const r=[...$("walkView").querySelectorAll(".wrow")].find(x=>x.firstChild&&x.firstChild.textContent=="📍 場所");if(r){const a=document.createElement("a");a.className="mapl";a.href=mapsUrl(it.place);a.target="_blank";a.rel="noopener";a.textContent="🗺 Googleマップで見る";r.appendChild(document.createElement("br"));r.appendChild(a)}}}
+// render に採点とベスト3を追加
+{const _r=render;render=function(){_r();try{drawScore();drawBest()}catch(e){console.warn(e)}}}
+try{drawScore();drawBest()}catch(e){console.warn(e)}
 // ===== 🍁 季節のフレーム（12か月・SVG） =====
 const SFR=(()=>{const K="yz_frame";let st={on:true,prev:0};try{Object.assign(st,JSON.parse(localStorage.getItem(K)||"{}"))}catch(e){}
  const save=()=>localStorage.setItem(K,JSON.stringify(st));
