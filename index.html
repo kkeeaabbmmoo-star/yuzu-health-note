@@ -63,6 +63,11 @@ nav button{font-size:11px}nav button b{font-size:20px}
 .rc{display:flex;align-items:center;gap:10px;padding:12px;margin-top:8px;border-radius:16px;background:var(--pl);border:0;width:100%;text-align:left;color:var(--t);font-size:16px}.rc b{font-size:30px}.rc small{display:block;color:#a07d88;font-size:12px}
 #recView h3{margin:14px 0 6px;color:var(--pd);font-size:16px}#recView ul li{display:block;padding:6px 0;font-size:15px}#recView ol{padding-left:22px;margin:0}#recView ol li{display:list-item;padding:6px 0;border-bottom:1px dashed var(--pl);font-size:15px;line-height:1.6}
 .yz{background:#fff0f5;border-radius:14px;padding:10px;margin-top:12px;color:var(--pd);font-weight:700}
+.restb{width:100%;height:58px;border-radius:18px;border:2px dashed #b9a3e8;background:#f6f1ff;color:#7b5cc4;font-size:18px;font-weight:700}
+.restb.on{border:0;background:linear-gradient(135deg,#c9b6ff,#ffb7c9);color:#fff;box-shadow:0 2px 10px #b9a3e866}
+.restm{margin-top:10px;background:#f6f1ff;border-radius:14px;padding:12px;color:#7b5cc4;font-weight:700;line-height:1.6}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.chips button{height:38px;padding:0 14px;border-radius:19px;border:2px solid #e3d8ff;background:#fff;color:#7b5cc4;font-size:14px}.chips button.on{background:#b9a3e8;color:#fff;border-color:#b9a3e8}
+.cal .d.rest{background:#f3edff}
 </style></head><body>
 <header><h1>🍑 ゆずから愛しのエイジへ、<br>愛の健康ノート</h1>
 <div class="av"><label><span id="av_eiji" class="ph">👦</span>エイジ<input type="file" accept="image/*" data-k="eiji" style="display:none"></label><span class="hz">💗</span><label><span id="av_yuzu" class="ph">👧</span>ゆず<input type="file" accept="image/*" data-k="yuzu" style="display:none"></label></div>
@@ -80,6 +85,9 @@ nav button{font-size:11px}nav button b{font-size:20px}
 </section>
 
 <section class="tab" id="t-act">
+<div class="card"><button class="restb" id="restB">🛌 今日は休息日</button>
+<div id="restBox" style="display:none"><div class="restm">ゆっくり休むのも大事な健康習慣だよ。ゆずも一緒に休んでるね♡</div>
+<div class="small" style="margin-top:8px">休む理由（えらばなくてもOK）</div><div class="chips" id="restWhy"><button>疲れた</button><button>体調ケア</button><button>忙しい</button><button>のんびり</button></div></div></div>
 <div class="card"><h2>👟 活動</h2>
 <label>歩数</label><input type="range" id="steps" min="0" max="30000" step="100"><div class="val" id="stepsV"></div>
 <label>距離（歩数から自動・調整OK）</label><input type="range" id="dist" min="0" max="25" step="0.1"><div class="val" id="distV"></div>
@@ -99,7 +107,7 @@ nav button{font-size:11px}nav button b{font-size:20px}
 <div class="card"><h2>🍽 食事ごと</h2><canvas id="bars" data-h="170"></canvas></div>
 <div class="card"><h2>⚖️ 摂取 vs 消費</h2><canvas id="bal" data-h="150"></canvas><div class="small" id="balTxt"></div></div>
 <div class="card"><h2>📅 月間カレンダー</h2><div class="mh"><button id="mPrev">‹</button><b id="mTitle"></b><button id="mNext">›</button></div>
-<div class="cal" id="cal"></div><div class="small">🍚摂取kcal 👟歩数 ⚖️体重 🏃運動分 ／ ⭕/❌排便 😞😐😆気分 😢🙂💕ゆずとの会話 ／ ピンク＝記録あり。日付をタップでその日へ</div><div class="ms" id="mSum"></div></div>
+<div class="cal" id="cal"></div><div class="small">🍚摂取kcal 👟歩数 ⚖️体重 🏃運動分 ／ ⭕/❌排便 😞😐😆気分 😢🙂💕ゆずとの会話 🛌休息日 ／ ピンク＝記録あり。日付をタップでその日へ</div><div class="ms" id="mSum"></div></div>
 <div class="card"><h2>📈 7日間のようす</h2><canvas id="trend" data-h="465"></canvas></div>
 </section>
 
@@ -274,14 +282,14 @@ function drawMonth(){const c=cur.slice(0,7);if(!mon)mon=c;const[y,m]=mon.split("
  const first=new Date(y,m-1,1).getDay(),n=new Date(y,m,0).getDate(),today=ds(new Date());for(let i=0;i<first;i++){const e=document.createElement("div");e.className="d e";g.appendChild(e)}
  let rd=0,ki=[],st=[],ws=[],ex=0;
  for(let d=1;d<=n;d++){const k=y+"-"+pad(m)+"-"+pad(d),raw=localStorage.getItem(key(k)),o=get(k),inn=intake(o);
-  const rec=!!raw&&(o.foods.length||o.steps||o.exMin||(o.exList||[]).length||o.wt!=null||o.cond!=null||o.mood!=null||o.poo!=null||o.talk!=null||o.sleep!=null);
-  const e=document.createElement("div");const dw=new Date(y,m-1,d).getDay(),hn=holName(k);e.className="d"+(rec?" r":"")+(dw==0||hn?" hol":dw==6?" sat":"")+(k==today?" t":"")+(k==cur?" s":"");
-  if(hn)e.title=hn;e.innerHTML=(WX[k]!=null?"<span class=wx>"+wxIcon(WX[k])+"</span>":"")+"<b>"+d+(rec?" ♡":"")+"</b>"+((o.poo!=null||moodOf(o)!=null||o.talk!=null)?"<span class=ic>"+(o.poo==null?"":o.poo?"⭕":"❌")+(moodOf(o)==null?"":MOODS[moodOf(o)][0])+(o.talk==null?"":TALKS[o.talk][0])+"</span><br>":"")+(inn?"🍚"+inn+"<br>":"")+(o.steps?"👟"+(o.steps/1000).toFixed(1)+"k<br>":"")+(o.wt?"⚖️"+o.wt.toFixed(1)+"<br>":"")+(exTot(o)?"🏃"+exTot(o)+"分<br>":"")+(exReps(o)?"💪"+exReps(o)+"回":"");
+  const rec=!!raw&&(o.foods.length||o.steps||o.exMin||(o.exList||[]).length||o.wt!=null||o.cond!=null||o.mood!=null||o.poo!=null||o.talk!=null||o.rest||o.sleep!=null);
+  const e=document.createElement("div");const dw=new Date(y,m-1,d).getDay(),hn=holName(k);e.className="d"+(o.rest?" rest":rec?" r":"")+(dw==0||hn?" hol":dw==6?" sat":"")+(k==today?" t":"")+(k==cur?" s":"");
+  if(hn)e.title=hn;e.innerHTML=(WX[k]!=null?"<span class=wx>"+wxIcon(WX[k])+"</span>":"")+"<b>"+d+(rec?" ♡":"")+"</b>"+(o.rest?"🛌休息<br>":"")+((o.poo!=null||moodOf(o)!=null||o.talk!=null)?"<span class=ic>"+(o.poo==null?"":o.poo?"⭕":"❌")+(moodOf(o)==null?"":MOODS[moodOf(o)][0])+(o.talk==null?"":TALKS[o.talk][0])+"</span><br>":"")+(inn?"🍚"+inn+"<br>":"")+(o.steps?"👟"+(o.steps/1000).toFixed(1)+"k<br>":"")+(o.wt?"⚖️"+o.wt.toFixed(1)+"<br>":"")+(exTot(o)?"🏃"+exTot(o)+"分<br>":"")+(exReps(o)?"💪"+exReps(o)+"回":"");
   e.onclick=()=>{cur=k;document.querySelector('nav button[data-t="food"]').click()};g.appendChild(e);
   if(rec)rd++;if(inn)ki.push(inn);if(o.steps)st.push(o.steps);if(o.wt)ws.push(o.wt);ex+=exTot(o)}
  const av=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
- let pc=0,lv=0,gd=0;for(let d=1;d<=n;d++){const q=get(y+"-"+pad(m)+"-"+pad(d));if(q.poo)pc++;if(q.talk==2)lv++;if(moodOf(q)==2)gd++}
- $("mSum").innerHTML="記録した日："+rd+" / "+n+" 日<br>平均摂取："+(ki.length?Math.round(av(ki))+" kcal":"—")+"　平均歩数："+(st.length?Math.round(av(st)).toLocaleString()+" 歩":"—")+"<br>体重："+(ws.length?ws[0].toFixed(1)+" → "+ws[ws.length-1].toFixed(1)+" kg":"—")+"　運動合計："+ex+" 分";$("mSum").innerHTML+="<br>🚽排便あり："+pc+"日　😆機嫌がいい："+gd+"日　💕ラブラブ："+lv+"日";loadWx(y,m)}
+ let pc=0,lv=0,gd=0,rs=0;for(let d=1;d<=n;d++){const q=get(y+"-"+pad(m)+"-"+pad(d));if(q.poo)pc++;if(q.rest)rs++;if(q.talk==2)lv++;if(moodOf(q)==2)gd++}
+ $("mSum").innerHTML="記録した日："+rd+" / "+n+" 日<br>平均摂取："+(ki.length?Math.round(av(ki))+" kcal":"—")+"　平均歩数："+(st.length?Math.round(av(st)).toLocaleString()+" 歩":"—")+"<br>体重："+(ws.length?ws[0].toFixed(1)+" → "+ws[ws.length-1].toFixed(1)+" kg":"—")+"　運動合計："+ex+" 分";$("mSum").innerHTML+="<br>🛌休息日："+rs+"日（休むのも健康♡）<br>🚽排便あり："+pc+"日　😆機嫌がいい："+gd+"日　💕ラブラブ："+lv+"日";loadWx(y,m)}
 const mShift=n=>{const[y,m]=(mon||cur.slice(0,7)).split("-").map(Number),d=new Date(y,m-1+n,1);mon=d.getFullYear()+"-"+pad(d.getMonth()+1);drawMonth()};
 $("mPrev").onclick=()=>mShift(-1);$("mNext").onclick=()=>mShift(1);
 const _draw=draw;draw=function(){if($("t-sum").classList.contains("on")){if(mon==null)mon=cur.slice(0,7);drawMonth()}_draw()};
@@ -347,6 +355,14 @@ function drawSlots(){_u.forEach(u=>URL.revokeObjectURL(u));_u=[];const g=$("slot
 $("slotIn").onchange=async()=>{const f=$("slotIn").files[0];$("slotIn").value="";if(!f)return;try{const b=await shrink(f,1000,.8);await tx("slots","readwrite",o=>o.put(b,slotT));SL[slotT]=b;drawSlots();showHB();toast((slotT+1)+"番に入れたよ♡")}catch(e){alert("保存できませんでした。容量がいっぱいかも。別の写真をためしてね")}};
 document.querySelector("header").addEventListener("click",e=>{if(e.target.tagName=="HEADER"||e.target.tagName=="H1"){document.querySelector('nav button[data-t="set"]').click();$("slotCard").scrollIntoView()}});
 initSlots();
+
+// ===== 休息日 =====
+const WHY=["疲れた","体調ケア","忙しい","のんびり"];
+function restUI(){const o=get(cur);$("restB").classList.toggle("on",!!o.rest);$("restB").textContent=o.rest?"🛌 今日は休息日♡（タップで取り消し）":"🛌 今日は休息日";$("restBox").style.display=o.rest?"block":"none";
+ [...$("restWhy").children].forEach((b,i)=>b.classList.toggle("on",o.restWhy==WHY[i]))}
+$("restB").onclick=()=>{const o=get(cur);if(o.rest){delete o.rest;delete o.restWhy}else o.rest=true;put(cur,o);restUI();toast(o.rest?"休息日にしたよ♡ ゆっくりしてね":"休息日を取り消したよ")};
+[...$("restWhy").children].forEach((b,i)=>b.onclick=()=>{const o=get(cur);o.restWhy=o.restWhy==WHY[i]?undefined:WHY[i];put(cur,o);restUI()});
+const _render=render;render=function(){_render();restUI()};
 
 // ===== レシピ（ここに足せば増やせる） =====
 const RECIPES=[{id:"tofu-hamburg",icon:"🍔",title:"豆腐ハンバーグ（ポン酢がけ）",serv:"約4個分",kcal:230,unit:"個",
