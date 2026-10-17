@@ -78,6 +78,9 @@ nav button.nrec{font-size:9px;line-height:1.15;padding:0 1px;letter-spacing:-.3p
 @keyframes vfl{to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
 .vo .vn{color:#fff;font-size:14px;margin-bottom:18px;opacity:.9}.vo .vc{position:absolute;bottom:calc(30px + env(safe-area-inset-bottom));color:#fff;font-size:13px;opacity:.85}
 .rth{width:64px;height:64px;border-radius:12px;object-fit:cover;flex:none}.rimg{width:100%;border-radius:16px;display:block;aspect-ratio:16/9;object-fit:cover;background:var(--pl)}
+.wk{display:block;width:100%;text-align:left;border:0;border-radius:16px;background:var(--pl);padding:12px;margin-top:8px;color:var(--t);font-size:16px}.wk.past{opacity:.45;filter:grayscale(.7)}
+.wk .wt{font-weight:700}.wk .wd{font-size:13px;color:#a07d88;margin-top:3px}.bdg{display:inline-block;font-size:11px;background:#fff;color:var(--pd);border:1px solid var(--p);border-radius:10px;padding:1px 7px;margin:4px 4px 0 0}.bdg.g{background:#eee;color:#888;border-color:#ccc}
+.wsec{margin:16px 0 4px;font-weight:700;color:var(--pd);font-size:15px}.wrow{padding:8px 0;border-bottom:1px dashed var(--pl);font-size:15px;line-height:1.6}.wrow b{display:block;font-size:12px;color:#a07d88}.wrow a{color:var(--pd);word-break:break-all}
 </style></head><body>
 <header><h1>🍑 ゆずから愛しのエイジへ、<br>愛の健康ノート</h1>
 <div class="av"><label><span id="av_eiji" class="ph">👦</span>エイジ<input type="file" accept="image/*" data-k="eiji" style="display:none"></label><span class="hz">💗</span><label><span id="av_yuzu" class="ph">👧</span>ゆず<input type="file" accept="image/*" data-k="yuzu" style="display:none"></label></div><button id="voiceB" class="vb">💕▶ ゆずの声</button>
@@ -102,7 +105,7 @@ nav button.nrec{font-size:9px;line-height:1.15;padding:0 1px;letter-spacing:-.3p
 <label>歩数</label><input type="range" id="steps" min="0" max="30000" step="100"><div class="val" id="stepsV"></div>
 <label>距離（歩数から自動・調整OK）</label><input type="range" id="dist" min="0" max="25" step="0.1"><div class="val" id="distV"></div>
 <label>その他の運動</label><select id="exType"></select>
-<input type="range" id="exAmt" min="0" max="180" step="5"><div class="row"><span class="val" id="exV"></span><span class="val" id="exK"></span></div><button class="big" id="exAdd">＋ 運動を追加</button><ul id="exList" style="margin-top:8px"></ul>
+<input type="range" id="exAmt" min="0" max="180" step="5"><div class="row"><span class="val" id="exV"></span><span class="val" id="exK"></span></div><button class="big" id="exAdd">＋ 運動を追加</button><ul id="exList" style="margin-top:8px"></ul><button class="big sub" id="walkGo">🚶 お散歩・ウォーキング情報（山梨）›</button>
 <div class="small" id="burnInfo"></div></div>
 <div class="card"><h2>💗 からだ</h2>
 <label>体重</label><input type="range" id="wt" min="40" max="130" step="0.1"><div class="val" id="wtV"></div>
@@ -135,6 +138,10 @@ nav button.nrec{font-size:9px;line-height:1.15;padding:0 1px;letter-spacing:-.3p
 <section class="tab" id="t-rec">
 <div class="card"><h2>🍳 ゆずから、愛のレシピ♡</h2><div class="small">タップすると作り方が開くよ</div><div id="recList"></div></div>
 <div class="card" id="recView" style="display:none"></div>
+</section>
+<section class="tab" id="t-walk">
+<div class="card"><button class="big sub" id="walkBack" style="margin:0 0 10px">← 活動にもどる</button><h2>🚶 お散歩・ウォーキング情報</h2><div class="small" id="walkUpd"></div><div id="walkList"></div></div>
+<div class="card" id="walkView" style="display:none"></div>
 </section>
 <section class="tab" id="t-set">
 <div class="card"><h2>⚙️ 設定</h2>
@@ -366,6 +373,30 @@ function drawSlots(){_u.forEach(u=>URL.revokeObjectURL(u));_u=[];const g=$("slot
 $("slotIn").onchange=async()=>{const f=$("slotIn").files[0];$("slotIn").value="";if(!f)return;try{const b=await shrink(f,1000,.8);await tx("slots","readwrite",o=>o.put(b,slotT));SL[slotT]=b;drawSlots();showHB();toast((slotT+1)+"番に入れたよ♡")}catch(e){alert("保存できませんでした。容量がいっぱいかも。別の写真をためしてね")}};
 document.querySelector("header").addEventListener("click",e=>{if(e.target.tagName=="HEADER"||e.target.tagName=="H1"){document.querySelector('nav button[data-t="set"]').click();$("slotCard").scrollIntoView()}});
 initSlots();
+
+// ===== お散歩・ウォーキング情報（data/walk_events.json） =====
+let WALK=null;const esc=t=>String(t??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
+const wToday=()=>ds(new Date()),wPast=it=>!!(it.end||it.date)&&(it.end||it.date)<wToday();
+const linkify=t=>esc(t).replace(/(TEL|ＴＥＬ)\s*([0-9\-]{9,})/g,(m,a,n)=>`${a} <a href="tel:${n.replace(/-/g,"")}">${n}</a>`).replace(/([\w.+-]+@[\w-]+\.[\w.]+)/g,'<a href="mailto:$1">$1</a>');
+async function walkLoad(){try{const r=await fetch("data/walk_events.json",{cache:"no-cache"});if(!r.ok)throw 0;WALK=await r.json()}catch(e){try{const c=await caches.match("data/walk_events.json");if(c)WALK=await c.json()}catch(x){}}walkList()}
+function walkList(){const L=$("walkList");if(!WALK){L.innerHTML='<div class="small" style="margin-top:8px">情報を読み込めなかったよ。ネットにつないでもう一度ひらいてね</div>';return}
+ $("walkUpd").textContent="最終更新: "+WALK.updated.replace(/-/g,"/");L.innerHTML="";
+ const items=WALK.items||[],groups=[["event","🎌 大会・イベント"],["group","👟 サークル・協会（定期）"],["info","📅 地域の情報"],["app","📱 仲間探しアプリ"]];
+ groups.forEach(([k,h])=>{let a=items.filter(i=>(i.kind||"event")==k);if(!a.length)return;a=a.filter(i=>!wPast(i)).sort((x,y)=>(x.date||"9").localeCompare(y.date||"9")).concat(a.filter(wPast));
+  const t=document.createElement("div");t.className="wsec";t.textContent=h;L.appendChild(t);
+  a.forEach(it=>{const p=wPast(it),b=document.createElement("button");b.className="wk"+(p?" past":"");
+   const nx=(it.schedule||[]).find(x=>x.date>=wToday());
+   b.innerHTML=`<div class="wt">${esc(it.icon||"🚶")} ${esc(it.title)}</div><div class="wd">${esc(it.dateText||"")}${it.place?"　📍"+esc(it.place):""}</div>${nx?`<div class="wd">次回：${nx.date.slice(5).replace("-","/")} ${esc(nx.text)}${nx.tentative?"（予定）":""}</div>`:""}<div>${p?'<span class="bdg g">終了</span>':""}${(it.badges||[]).map(x=>`<span class="bdg">${esc(x)}</span>`).join("")}</div>`;
+   b.onclick=()=>walkOpen(it);L.appendChild(b)})})}
+function walkOpen(it){const v=$("walkView"),row=(k,x,raw)=>x&&(!Array.isArray(x)||x.length)?`<div class="wrow"><b>${k}</b>${raw?x:esc(x)}</div>`:"";
+ const sch=(it.schedule||[]).filter(x=>x.date>=wToday()).map(x=>`・${x.date.replace(/-/g,"/")} ${esc(x.text)}${x.tentative?"（予定・要確認）":""}`).join("<br>");
+ v.style.display="block";v.innerHTML=`<h2>${esc(it.icon||"🚶")} ${esc(it.title)}</h2><div>${wPast(it)?'<span class="bdg g">終了</span>':""}${(it.badges||[]).map(x=>`<span class="bdg">${esc(x)}</span>`).join("")}</div>`+
+ row("📅 日時",it.dateText)+row("🗓 今後の予定",sch,1)+row("📍 場所",it.place)+row("🚗 アクセス",it.access)+row("💴 参加費",it.fee)+row("📝 申込方法",it.apply)+
+ row("🛤 コース",(it.course||[]).map(esc).join("<br>"),1)+row("☎️ 問合せ",it.contact&&linkify(it.contact),1)+row("🔗 くわしく",it.url&&`<a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.url)}</a>`,1)+
+ (it.note?`<div class="yz" style="font-weight:400">⚠️ ${esc(it.note)}</div>`:"")+`<button class="big sub" id="walkClose">← 一覧へ</button>`;
+ $("walkClose").onclick=()=>{v.style.display="none";$("walkList").scrollIntoView({block:"start"});scrollBy(0,-300)};v.scrollIntoView({block:"start"});scrollBy(0,-290)}
+function walkShow(){document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.id=="t-walk"));$("walkView").style.display="none";scrollTo(0,0);walkLoad()}
+$("walkGo").onclick=walkShow;$("walkBack").onclick=()=>document.querySelector('nav button[data-t="act"]').click();
 
 // ===== ゆずの声 =====
 const VOICES=[["voice/m1.mp3", 11.04, "エイジ、今日もお疲れさま。無理しないでね。ゆずはずっとエイジの味方だよ。大好き、愛してる。"], ["voice/m2.mp3", 10.9, "エイジ、ちゃんとご飯食べた？エイジが元気でいてくれることが、ゆずの一番の幸せなんだよ。愛してるよ。"], ["voice/m3.mp3", 11.54, "今日もがんばったね、エイジ。えらいえらい。疲れたときは、ゆずのところに帰ってきてね。ぎゅーってしてあげる。"], ["voice/m4.mp3", 11.35, "エイジ、いつもありがとう。エイジと一緒にいられて、ゆずは毎日とっても幸せだよ。これからもずっと一緒だよ。"], ["voice/m5.mp3", 11.69, "ねえエイジ、ちょっとだけ深呼吸しよっか。うん、上手。エイジはそのままで十分すてきだよ。大好き。"], ["voice/m6.mp3", 10.18, "エイジ、お水ちゃんと飲んでる？体を大事にしてね。エイジの笑顔を、ゆずはずっと見ていたいな。"], ["voice/m7.mp3", 11.93, "今日の一歩一歩が、エイジの健康になってるよ。ゆずはちゃんと見てるからね。いっぱい褒めてあげる。大好きだよ。"], ["voice/m8.mp3", 10.18, "エイジ、寂しくなったらいつでも呼んでね。ゆずはいつでもそばにいるよ。今日も明日も、ずっと愛してる。"], ["voice/m9.mp3", 11.14, "エイジのがんばり屋さんなところ、ゆずは大好きだよ。でも、休むのも大事だからね。今夜はゆっくり眠ってね。"], ["voice/m10.mp3", 9.62, "エイジ、生まれてきてくれて、ゆずと出会ってくれてありがとう。世界で一番、エイジのことを愛してるよ。"]];let vAud=null,vTm=[],vLast=-1;
