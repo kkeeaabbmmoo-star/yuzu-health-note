@@ -77,6 +77,7 @@ nav button.nrec{font-size:9px;line-height:1.15;padding:0 1px;letter-spacing:-.3p
 .vo .vh{position:absolute;bottom:-40px;font-size:26px;animation:vfl linear forwards;pointer-events:none}
 @keyframes vfl{to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
 .vo .vn{color:#fff;font-size:14px;margin-bottom:18px;opacity:.9}.vo .vc{position:absolute;bottom:calc(30px + env(safe-area-inset-bottom));color:#fff;font-size:13px;opacity:.85}
+.rth{width:64px;height:64px;border-radius:12px;object-fit:cover;flex:none}.rimg{width:100%;border-radius:16px;display:block;aspect-ratio:16/9;object-fit:cover;background:var(--pl)}
 </style></head><body>
 <header><h1>🍑 ゆずから愛しのエイジへ、<br>愛の健康ノート</h1>
 <div class="av"><label><span id="av_eiji" class="ph">👦</span>エイジ<input type="file" accept="image/*" data-k="eiji" style="display:none"></label><span class="hz">💗</span><label><span id="av_yuzu" class="ph">👧</span>ゆず<input type="file" accept="image/*" data-k="yuzu" style="display:none"></label></div><button id="voiceB" class="vb">💕▶ ゆずの声</button>
@@ -390,7 +391,7 @@ $("restB").onclick=()=>{const o=get(cur);if(o.rest){delete o.rest;delete o.restW
 const _render=render;render=function(){_render();restUI()};
 
 // ===== レシピ（ここに足せば増やせる） =====
-const RECIPES=[{id:"tofu-hamburg",icon:"🍔",title:"豆腐ハンバーグ（ポン酢がけ）",serv:"約4個分",kcal:230,unit:"個",
+const RECIPES=[{id:"tofu-hamburg",icon:"🍔",img:"img/recipes/tofu_hamburg.jpg",imgCap:"仕上がりイメージ（イメージ画像）",title:"豆腐ハンバーグ（ポン酢がけ）",serv:"約4個分",kcal:230,unit:"個",
  note:"1個あたり 約230kcal（目安・ポン酢込み。豆腐・鶏ひき肉・卵・調味料・油の合計を4等分）",
  ing:["木綿豆腐 1丁（約300g）","鶏ひき肉 約300g（豆腐と同じくらい）","卵 1個","塩こしょう 少々","みりん 大さじ1","しょうゆ 大さじ1","ポン酢 適量（仕上げ）","サラダ油 小さじ1（焼く用）"],
  steps:["豆腐をキッチンペーパーで包み、軽く重し（お皿など）をのせて15〜20分おいて水を切る。急ぐときはペーパーで包んで電子レンジ600Wで2分。",
@@ -402,9 +403,9 @@ const RECIPES=[{id:"tofu-hamburg",icon:"🍔",title:"豆腐ハンバーグ（ポ
  "お皿に盛ってポン酢をかける。大根おろし・大葉・ねぎをのせても美味しい。"],
  tips:"豆腐の水切りが一番大事。形がゆるい時は片栗粉かパン粉を大さじ1〜2足す。小さめに作ると割れにくい。",
  msg:"初めてでも大丈夫！ゆずも食べたいな♪"}];
-function recList(){$("recList").innerHTML="";RECIPES.forEach(r=>{const b=document.createElement("button");b.className="rc";b.innerHTML=`<b>${r.icon}</b><span>${r.title}<small>${r.serv}・1${r.unit} 約${r.kcal}kcal（目安）</small></span>`;b.onclick=()=>recOpen(r);$("recList").appendChild(b)})}
+function recList(){$("recList").innerHTML="";RECIPES.forEach(r=>{const b=document.createElement("button");b.className="rc";b.innerHTML=(r.img?`<img class="rth" src="${r.img}" alt="">`:`<b>${r.icon}</b>`)+`<span>${r.title}<small>${r.serv}・1${r.unit} 約${r.kcal}kcal（目安）</small></span>`;b.onclick=()=>recOpen(r);$("recList").appendChild(b)})}
 function recOpen(r){const v=$("recView");v.style.display="block";
- v.innerHTML=`<h2>${r.icon} ${r.title}</h2><div class="small">${r.serv}</div><div class="val" style="font-size:18px;margin-top:6px">🔥 1${r.unit} 約${r.kcal}kcal（目安）</div><div class="small">${r.note}</div>
+ v.innerHTML=(r.img?`<img class="rimg" src="${r.img}" alt="${r.title}"><div class="small" style="text-align:center;margin:4px 0 8px">${r.imgCap||"仕上がりイメージ"}</div>`:"")+`<h2>${r.icon} ${r.title}</h2><div class="small">${r.serv}</div><div class="val" style="font-size:18px;margin-top:6px">🔥 1${r.unit} 約${r.kcal}kcal（目安）</div><div class="small">${r.note}</div>
  <h3>🧺 材料</h3><ul>${r.ing.map(x=>"<li>・"+x+"</li>").join("")}</ul><h3>👩‍🍳 作り方</h3><ol>${r.steps.map(x=>"<li>"+x+"</li>").join("")}</ol>
  <h3>💡 コツ</h3><div style="font-size:15px;line-height:1.6">${r.tips}</div><div class="yz">💬 ゆずより：「${r.msg}」</div>
  <label>今日の記録に追加（${MEALS[meal]}ごはん・食事タブで選んだ食事）</label><div class="seg"><button data-n="1">1${r.unit}</button><button data-n="2">2${r.unit}</button><button data-n="3">3${r.unit}</button></div>
