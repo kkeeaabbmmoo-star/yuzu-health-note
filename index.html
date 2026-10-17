@@ -52,6 +52,7 @@ nav button.on{color:var(--pd)}
 .av img,.av .ph{width:52px;height:52px;border-radius:50%;border:3px solid #fff;object-fit:cover;background:#fff8;display:flex;align-items:center;justify-content:center;font-size:24px}.av .hz{font-size:20px}
 .cal .w:first-child,.cal .d.hol b{color:#e5484d}.cal .w:nth-child(7),.cal .d.sat b{color:#3b7dd8}.cal .d.hol{background:#fff0f0}.cal .d.sat{background:#f0f6ff}.cal .d.r.hol,.cal .d.r.sat{background:var(--pl)}.cal .wx{float:right;font-size:12px}
 header.bgp{background-size:cover;background-position:center}header.bgp h1,header.bgp .av label{text-shadow:0 1px 3px #e85d88aa}
+.faces3 button{font-size:13px;height:60px;line-height:1.3}.faces3 button b{display:block;font-size:24px}.cal .ic{font-size:11px;letter-spacing:-1px}
 </style></head><body>
 <header><h1>🍑 ゆずの健康ノート</h1>
 <div class="av"><label><span id="av_eiji" class="ph">👦</span>エイジ<input type="file" accept="image/*" data-k="eiji" style="display:none"></label><span class="hz">💗</span><label><span id="av_yuzu" class="ph">👧</span>ゆず<input type="file" accept="image/*" data-k="yuzu" style="display:none"></label></div>
@@ -77,7 +78,9 @@ header.bgp{background-size:cover;background-position:center}header.bgp h1,header
 <div class="small" id="burnInfo"></div></div>
 <div class="card"><h2>💗 からだ</h2>
 <label>体重</label><input type="range" id="wt" min="40" max="130" step="0.1"><div class="val" id="wtV"></div>
-<label>体調</label><div class="seg faces" id="cond"></div>
+<label>気分</label><div class="seg faces3" id="cond"></div>
+<label>🚽 今日の排便</label><div class="seg" id="poo"><button>⭕ あった</button><button>❌ なかった</button></div>
+<label>💬 ゆずとの会話</label><div class="seg faces3" id="talk"></div>
 <label>睡眠時間</label><input type="range" id="sleep" min="0" max="12" step="0.5"><div class="val" id="sleepV"></div></div>
 </section>
 
@@ -86,7 +89,7 @@ header.bgp{background-size:cover;background-position:center}header.bgp h1,header
 <div class="card"><h2>🍽 食事ごと</h2><canvas id="bars" data-h="170"></canvas></div>
 <div class="card"><h2>⚖️ 摂取 vs 消費</h2><canvas id="bal" data-h="150"></canvas><div class="small" id="balTxt"></div></div>
 <div class="card"><h2>📅 月間カレンダー</h2><div class="mh"><button id="mPrev">‹</button><b id="mTitle"></b><button id="mNext">›</button></div>
-<div class="cal" id="cal"></div><div class="small">🍚摂取kcal 👟歩数 ⚖️体重 🏃運動分 ／ ピンク＝記録あり。日付をタップでその日へ</div><div class="ms" id="mSum"></div></div>
+<div class="cal" id="cal"></div><div class="small">🍚摂取kcal 👟歩数 ⚖️体重 🏃運動分 ／ ⭕/❌排便 😞😐😆気分 😢🙂💕ゆずとの会話 ／ ピンク＝記録あり。日付をタップでその日へ</div><div class="ms" id="mSum"></div></div>
 <div class="card"><h2>📈 7日間のようす</h2><canvas id="trend" data-h="465"></canvas></div>
 </section>
 
@@ -126,7 +129,9 @@ const FOODS=[
 ["野菜",0.25,"g",20,400,10,100],["果物",0.60,"g",20,400,10,100],["味噌汁",40,"杯",1,3,1,1],
 ["牛乳",0.63,"ml",50,500,10,200],["ビール",0.40,"ml",100,1500,50,350],["お菓子(スナック等)",5.4,"g",10,200,5,30],
 ["コンビニ弁当",700,"個",0.5,2,0.5,1],["カスタム",1,"kcal",0,1500,5,300]];
-const MEALS=["朝","昼","夜","間食"],FACES=["😣","😟","😐","🙂","😄"];
+const MEALS=["朝","昼","夜","間食"],FACES=["😣","😟","😐","🙂","😄"],MOODS=[["😞","元気なかった"],["😐","普通"],["😆","機嫌がいい"]],TALKS=[["😢","悪かった"],["🙂","普通"],["💕","ラブラブ"]];
+// 旧5段階(cond 0-4)→3段階: 0-1低,2普通,3-4良 (元データcondは残す)
+const moodOf=o=>o.mood!=null?o.mood:o.cond==null?null:o.cond<=1?0:o.cond==2?1:2;
 const EX=[["なし",0],["散歩(ゆっくり)",3],["自転車",4],["筋トレ",3.5],["ジョギング",7],["水泳",6]];
 const $=id=>document.getElementById(id);
 const pad=n=>String(n).padStart(2,"0");
@@ -161,7 +166,9 @@ function exRender(){const o=get(cur),w=o.wt||S.w,l=$("exList");l.innerHTML="";
  if(o.exMin){const li=document.createElement("li");li.innerHTML=`<span class="m">前の記録</span><span>${EX[o.ex][0]} ${o.exMin}分</span><span class="k">${Math.round(EX[o.ex][1]*w*(o.exMin/60)*1.05)}kcal</span>`;const b=document.createElement("button");b.textContent="🗑";b.onclick=()=>{upd(o=>{o.exMin=0});exRender()};li.appendChild(b);l.appendChild(li)}
  (o.exList||[]).forEach((e,i)=>{const li=document.createElement("li");li.innerHTML=`<span>${EX2[e.t][0]} ${e.n}${EX2[e.t][2]}</span><span class="k">${Math.round(exKcal(e,w))}kcal</span>`;const b=document.createElement("button");b.textContent="🗑";b.onclick=()=>{upd(o=>o.exList.splice(i,1));exRender()};li.appendChild(b);l.appendChild(li)});
  if(!l.children.length)l.innerHTML='<li class="small">まだ運動の記録がないよ💪</li>'}
-FACES.forEach((f,i)=>{const b=document.createElement("button");b.textContent=f;b.onclick=()=>{const o=get(cur);o.cond=i;put(cur,o);segOn("cond",i)};$("cond").appendChild(b)});
+MOODS.forEach((f,i)=>{const b=document.createElement("button");b.innerHTML="<b>"+f[0]+"</b>"+f[1];b.onclick=()=>{const o=get(cur);o.mood=o.mood===i?null:i;if(o.mood==null)o.cond=null;put(cur,o);segOn("cond",moodOf(o))};$("cond").appendChild(b)});
+TALKS.forEach((f,i)=>{const b=document.createElement("button");b.innerHTML="<b>"+f[0]+"</b>"+f[1];b.onclick=()=>{const o=get(cur);o.talk=o.talk===i?null:i;put(cur,o);segOn("talk",o.talk)};$("talk").appendChild(b)});
+[...$("poo").children].forEach((b,i)=>b.onclick=()=>{const o=get(cur),v=i==0;o.poo=o.poo===v?null:v;put(cur,o);segOn("poo",o.poo==null?-1:o.poo?0:1)});
 function segOn(id,i){[...$(id).children].forEach((b,j)=>b.classList.toggle("on",j===i))}
 function setFood(){const f=curFood(),a=$("amt");a.min=f[3];a.max=f[4];a.step=f[5];a.value=f[6];$("customBox").style.display=f[2]=="kcal"&&!f.pre?"block":"none";$("amtLbl").textContent=f[2]=="kcal"?"カロリー":"量";live()}
 function live(){const f=curFood(),v=+$("amt").value;$("amtV").textContent=f[2]=="kcal"?"":v+" "+f[2];$("kcalV").textContent=Math.round(v*f[1])+" kcal"}
@@ -176,7 +183,7 @@ function render(){const o=get(cur);$("date").value=cur;segOn("meal",meal);
  if(!o.foods.length)l.innerHTML='<li class="small">まだ記録がないよ。上のスライダーで追加してね🍙</li>';
  $("sumIn").textContent=intake(o)+" kcal";
  $("steps").value=o.steps;$("dist").value=o.dist;exRender();exLive();
- $("wt").value=o.wt||S.w;$("sleep").value=o.sleep??7;segOn("cond",o.cond);actTxt();
+ $("wt").value=o.wt||S.w;$("sleep").value=o.sleep??7;segOn("cond",moodOf(o));segOn("talk",o.talk);segOn("poo",o.poo==null?-1:o.poo?0:1);actTxt();
  $("sW").value=S.w;$("sH").value=S.h;$("sT").value=S.t;$("sB").value=S.b;draw()}
 function actTxt(){const o=get(cur),b=burn(o);$("stepsV").textContent=(+o.steps).toLocaleString()+" 歩";$("distV").textContent=(+o.dist).toFixed(1)+" km";
  $("wtV").textContent=(o.wt?o.wt:S.w).toFixed(1)+" kg"+(o.wt?"":"（未記録）");$("sleepV").textContent=o.sleep!=null?o.sleep+" 時間":"未記録";
@@ -241,13 +248,14 @@ function drawMonth(){const c=cur.slice(0,7);if(!mon)mon=c;const[y,m]=mon.split("
  const first=new Date(y,m-1,1).getDay(),n=new Date(y,m,0).getDate(),today=ds(new Date());for(let i=0;i<first;i++){const e=document.createElement("div");e.className="d e";g.appendChild(e)}
  let rd=0,ki=[],st=[],ws=[],ex=0;
  for(let d=1;d<=n;d++){const k=y+"-"+pad(m)+"-"+pad(d),raw=localStorage.getItem(key(k)),o=get(k),inn=intake(o);
-  const rec=!!raw&&(o.foods.length||o.steps||o.exMin||(o.exList||[]).length||o.wt!=null||o.cond!=null||o.sleep!=null);
+  const rec=!!raw&&(o.foods.length||o.steps||o.exMin||(o.exList||[]).length||o.wt!=null||o.cond!=null||o.mood!=null||o.poo!=null||o.talk!=null||o.sleep!=null);
   const e=document.createElement("div");const dw=new Date(y,m-1,d).getDay(),hn=holName(k);e.className="d"+(rec?" r":"")+(dw==0||hn?" hol":dw==6?" sat":"")+(k==today?" t":"")+(k==cur?" s":"");
-  if(hn)e.title=hn;e.innerHTML=(WX[k]!=null?"<span class=wx>"+wxIcon(WX[k])+"</span>":"")+"<b>"+d+(rec?" ♡":"")+"</b>"+(inn?"🍚"+inn+"<br>":"")+(o.steps?"👟"+(o.steps/1000).toFixed(1)+"k<br>":"")+(o.wt?"⚖️"+o.wt.toFixed(1)+"<br>":"")+(exTot(o)?"🏃"+exTot(o)+"分<br>":"")+(exReps(o)?"💪"+exReps(o)+"回":"");
+  if(hn)e.title=hn;e.innerHTML=(WX[k]!=null?"<span class=wx>"+wxIcon(WX[k])+"</span>":"")+"<b>"+d+(rec?" ♡":"")+"</b>"+((o.poo!=null||moodOf(o)!=null||o.talk!=null)?"<span class=ic>"+(o.poo==null?"":o.poo?"⭕":"❌")+(moodOf(o)==null?"":MOODS[moodOf(o)][0])+(o.talk==null?"":TALKS[o.talk][0])+"</span><br>":"")+(inn?"🍚"+inn+"<br>":"")+(o.steps?"👟"+(o.steps/1000).toFixed(1)+"k<br>":"")+(o.wt?"⚖️"+o.wt.toFixed(1)+"<br>":"")+(exTot(o)?"🏃"+exTot(o)+"分<br>":"")+(exReps(o)?"💪"+exReps(o)+"回":"");
   e.onclick=()=>{cur=k;document.querySelector('nav button[data-t="food"]').click()};g.appendChild(e);
   if(rec)rd++;if(inn)ki.push(inn);if(o.steps)st.push(o.steps);if(o.wt)ws.push(o.wt);ex+=exTot(o)}
  const av=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
- $("mSum").innerHTML="記録した日："+rd+" / "+n+" 日<br>平均摂取："+(ki.length?Math.round(av(ki))+" kcal":"—")+"　平均歩数："+(st.length?Math.round(av(st)).toLocaleString()+" 歩":"—")+"<br>体重："+(ws.length?ws[0].toFixed(1)+" → "+ws[ws.length-1].toFixed(1)+" kg":"—")+"　運動合計："+ex+" 分";loadWx(y,m)}
+ let pc=0,lv=0,gd=0;for(let d=1;d<=n;d++){const q=get(y+"-"+pad(m)+"-"+pad(d));if(q.poo)pc++;if(q.talk==2)lv++;if(moodOf(q)==2)gd++}
+ $("mSum").innerHTML="記録した日："+rd+" / "+n+" 日<br>平均摂取："+(ki.length?Math.round(av(ki))+" kcal":"—")+"　平均歩数："+(st.length?Math.round(av(st)).toLocaleString()+" 歩":"—")+"<br>体重："+(ws.length?ws[0].toFixed(1)+" → "+ws[ws.length-1].toFixed(1)+" kg":"—")+"　運動合計："+ex+" 分";$("mSum").innerHTML+="<br>🚽排便あり："+pc+"日　😆機嫌がいい："+gd+"日　💕ラブラブ："+lv+"日";loadWx(y,m)}
 const mShift=n=>{const[y,m]=(mon||cur.slice(0,7)).split("-").map(Number),d=new Date(y,m-1+n,1);mon=d.getFullYear()+"-"+pad(d.getMonth()+1);drawMonth()};
 $("mPrev").onclick=()=>mShift(-1);$("mNext").onclick=()=>mShift(1);
 const _draw=draw;draw=function(){if($("t-sum").classList.contains("on")){if(mon==null)mon=cur.slice(0,7);drawMonth()}_draw()};
