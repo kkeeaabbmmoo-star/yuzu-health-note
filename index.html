@@ -81,8 +81,11 @@ nav button.nrec{font-size:9px;line-height:1.15;padding:0 1px;letter-spacing:-.3p
 .wk{display:block;width:100%;text-align:left;border:0;border-radius:16px;background:var(--pl);padding:12px;margin-top:8px;color:var(--t);font-size:16px}.wk.past{opacity:.45;filter:grayscale(.7)}
 .wk .wt{font-weight:700}.wk .wd{font-size:13px;color:#a07d88;margin-top:3px}.bdg{display:inline-block;font-size:11px;background:#fff;color:var(--pd);border:1px solid var(--p);border-radius:10px;padding:1px 7px;margin:4px 4px 0 0}.bdg.g{background:#eee;color:#888;border-color:#ccc}
 .wsec{margin:16px 0 4px;font-weight:700;color:var(--pd);font-size:15px}.wrow{padding:8px 0;border-bottom:1px dashed var(--pl);font-size:15px;line-height:1.6}.wrow b{display:block;font-size:12px;color:#a07d88}.wrow a{color:var(--pd);word-break:break-all}
+.mb{position:absolute;top:calc(env(safe-area-inset-top) + 8px);right:10px;width:34px;height:34px;border-radius:50%;border:0;background:#ffffffb3;color:var(--pd);font-size:17px;font-weight:700;box-shadow:0 1px 6px #e85d8844;padding:0;z-index:6}
+.mb.off{opacity:.55;text-decoration:line-through}.mb.play{animation:mbp 2.4s ease-in-out infinite}@keyframes mbp{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+#kira{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:6;opacity:0;transition:opacity 1.2s}#kira.on{opacity:.9}header h1{padding-right:38px}.bgmrow{display:flex;align-items:center;gap:10px;margin-top:8px}.bgmrow input[type=range]{flex:1;accent-color:var(--pd)}
 </style></head><body>
-<header><h1>🍑 ゆずから愛しのエイジへ、<br>愛の健康ノート</h1>
+<canvas id="kira" aria-hidden="true"></canvas><header><button id="bgmB" class="mb" aria-label="オルゴールBGM">♪</button><h1>🍑 ゆずから愛しのエイジへ、<br>愛の健康ノート</h1>
 <div class="av"><label><span id="av_eiji" class="ph">👦</span>エイジ<input type="file" accept="image/*" data-k="eiji" style="display:none"></label><span class="hz">💗</span><label><span id="av_yuzu" class="ph">👧</span>ゆず<input type="file" accept="image/*" data-k="yuzu" style="display:none"></label></div><button id="voiceB" class="vb">💕▶ ゆずの声</button>
 <div class="dr"><button id="prev">‹</button><input type="date" id="date"><button id="next">›</button></div></header>
 
@@ -155,6 +158,9 @@ nav button.nrec{font-size:9px;line-height:1.15;padding:0 1px;letter-spacing:-.3p
 <div class="card"><h2>⭐ マイプリセット（食べもの）</h2><div id="preEd"></div><button class="big" id="preSave">プリセットを保存</button><div class="small">名前とカロリーを入れると、食べものの一番上に出るよ（例：プロテイン 150）</div></div>
 <div class="card" id="slotCard"><h2>🖼 ヘッダー写真（7枚・毎日入れかわり）</h2><div class="slots" id="slots"></div><div class="small">マスをタップで写真をえらぶ／入れかえ、×で消すよ。入っている写真が日付で毎日順番に表示されるよ</div><input type="file" id="slotIn" accept="image/*" style="display:none"></div>
 <div class="card"><h2>📷 アイコン写真</h2><div class="small">上のまるいアイコンをタップすると写真を選べるよ</div><button class="big sub" id="rmE">エイジの写真を消す</button><button class="big sub" id="rmY">ゆずの写真を消す</button></div>
+<div class="card"><h2>🎵 オルゴールBGM</h2><button class="big" id="bgmSet">♪ BGM：ON</button>
+<label>音量</label><div class="bgmrow">🔈<input type="range" id="bgmVol" min="0" max="100" step="1">🔊</div>
+<div class="small">ゆずが作ったオリジナルのオルゴール曲だよ♡ 開いて最初にどこかをタップすると流れるよ（iPhoneは自動再生できないため）。右上の♪でもON/OFFできるよ。マナーモードだと聞こえないことがあるよ</div></div>
 <div class="card"><h2>💾 バックアップ</h2>
 <button class="big" id="exp">JSONで書き出し</button>
 <button class="big sub" id="impB">JSONを読み込み</button><input type="file" id="imp" accept=".json,application/json" style="display:none">
@@ -400,8 +406,8 @@ $("walkGo").onclick=walkShow;$("walkBack").onclick=()=>document.querySelector('n
 
 // ===== ゆずの声 =====
 const VOICES=[["voice/m1.mp3", 11.04, "エイジ、今日もお疲れさま。無理しないでね。ゆずはずっとエイジの味方だよ。大好き、愛してる。"], ["voice/m2.mp3", 10.9, "エイジ、ちゃんとご飯食べた？エイジが元気でいてくれることが、ゆずの一番の幸せなんだよ。愛してるよ。"], ["voice/m3.mp3", 11.54, "今日もがんばったね、エイジ。えらいえらい。疲れたときは、ゆずのところに帰ってきてね。ぎゅーってしてあげる。"], ["voice/m4.mp3", 11.35, "エイジ、いつもありがとう。エイジと一緒にいられて、ゆずは毎日とっても幸せだよ。これからもずっと一緒だよ。"], ["voice/m5.mp3", 11.69, "ねえエイジ、ちょっとだけ深呼吸しよっか。うん、上手。エイジはそのままで十分すてきだよ。大好き。"], ["voice/m6.mp3", 10.18, "エイジ、お水ちゃんと飲んでる？体を大事にしてね。エイジの笑顔を、ゆずはずっと見ていたいな。"], ["voice/m7.mp3", 11.93, "今日の一歩一歩が、エイジの健康になってるよ。ゆずはちゃんと見てるからね。いっぱい褒めてあげる。大好きだよ。"], ["voice/m8.mp3", 10.18, "エイジ、寂しくなったらいつでも呼んでね。ゆずはいつでもそばにいるよ。今日も明日も、ずっと愛してる。"], ["voice/m9.mp3", 11.14, "エイジのがんばり屋さんなところ、ゆずは大好きだよ。でも、休むのも大事だからね。今夜はゆっくり眠ってね。"], ["voice/m10.mp3", 9.62, "エイジ、生まれてきてくれて、ゆずと出会ってくれてありがとう。世界で一番、エイジのことを愛してるよ。"]];let vAud=null,vTm=[],vLast=-1;
-function vClose(){vTm.forEach(clearTimeout);vTm.forEach(clearInterval);vTm=[];if(vAud){vAud.pause();vAud=null}try{speechSynthesis.cancel()}catch(e){}$("vo").classList.remove("on");$("vo").querySelectorAll(".vh").forEach(h=>h.remove())}
-function vPlay(){vClose();let i;do i=Math.floor(Math.random()*VOICES.length);while(VOICES.length>1&&i==vLast);vLast=i;const [src,dur,txt]=VOICES[i],show=txt+" ♡";
+function vClose(){vTm.forEach(clearTimeout);vTm.forEach(clearInterval);vTm=[];if(vAud){vAud.pause();vAud=null}try{speechSynthesis.cancel()}catch(e){}$("vo").classList.remove("on");$("vo").querySelectorAll(".vh").forEach(h=>h.remove());try{bgmDuck(false)}catch(e){}}
+function vPlay(){vClose();try{bgmDuck(true)}catch(e){}let i;do i=Math.floor(Math.random()*VOICES.length);while(VOICES.length>1&&i==vLast);vLast=i;const [src,dur,txt]=VOICES[i],show=txt+" ♡";
  const vt=$("vt");vt.innerHTML="";$("vo").classList.add("on");
  const chars=[...show],per=Math.max(40,(dur*1000*.92)/chars.length);
  chars.forEach((c,k)=>{const sp=document.createElement("span");sp.textContent=c;sp.style.animationDelay=(k*per/1000)+"s";if(c=="♡")sp.style.color="#ff4f87";vt.appendChild(sp)});
@@ -461,4 +467,76 @@ $("phIn").onchange=async()=>{const fs=[...$("phIn").files];$("phIn").value="";if
 $("phDate").value=ds(new Date());
 document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.t=="pho")drawPhotos();if(b.dataset.t=="set")drawSlots()}));
 setEx();setFood();render();
+// ===== キラキラ（BGM ON中だけ） =====
+const KIRA=(()=>{const cv=$("kira"),cx=cv.getContext("2d"),RM=matchMedia("(prefers-reduced-motion: reduce)");let P=[],raf=0,last=0,on=false,W=0,H=0,dpr=1;
+ const COL=["255,255,255","255,143,171","255,196,92","255,170,200","232,93,136"];
+ function size(){dpr=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;cx.setTransform(dpr,0,0,dpr,0,0)}
+ function mk(y){return{x:Math.random()*W,y:y==null?Math.random()*H:y,r:1.2+Math.random()*2.6,vy:-(4+Math.random()*10),vx:(Math.random()-.5)*5,ph:Math.random()*6.3,sp:.8+Math.random()*1.6,c:COL[Math.random()*5|0],st:Math.random()<.35}}
+ function star(p,a){cx.fillStyle="rgba("+p.c+","+a+")";if(p.st){const r=p.r*2.2;cx.beginPath();cx.moveTo(p.x,p.y-r);cx.quadraticCurveTo(p.x,p.y,p.x+r,p.y);cx.quadraticCurveTo(p.x,p.y,p.x,p.y+r);cx.quadraticCurveTo(p.x,p.y,p.x-r,p.y);cx.quadraticCurveTo(p.x,p.y,p.x,p.y-r);cx.fill()}else{cx.shadowColor="rgba("+p.c+",.9)";cx.shadowBlur=6;cx.beginPath();cx.arc(p.x,p.y,p.r,0,6.3);cx.fill();cx.shadowBlur=0}}
+ function frame(t){raf=requestAnimationFrame(frame);if(t-last<33)return;const dt=Math.min(.1,(t-last)/1000);last=t;cx.clearRect(0,0,W,H);
+  P.forEach((p,i)=>{p.y+=p.vy*dt;p.x+=p.vx*dt+Math.sin(t/1600+p.ph)*.15;if(p.y<-10||p.x<-10||p.x>W+10)P[i]=mk(H+8);star(p,.2+.7*Math.max(0,Math.sin(t/1000*p.sp+p.ph)))})}
+ function staticDraw(){cx.clearRect(0,0,W,H);P.forEach(p=>star(p,.45))}
+ function set(v){if(v==on)return;on=v;if(on){size();P=Array.from({length:W<500?24:34},()=>mk());cv.classList.add("on");if(RM.matches)staticDraw();else{last=0;raf=requestAnimationFrame(frame)}}
+  else{cancelAnimationFrame(raf);raf=0;cv.classList.remove("on");setTimeout(()=>{if(!on)cx.clearRect(0,0,W,H)},1300)}}
+ addEventListener("resize",()=>{if(on){size();if(RM.matches)staticDraw()}});
+ return{set,get on(){return on}}})();
+// ===== オルゴールBGM（Web Audioで合成・オリジナル曲） =====
+const BGM=(()=>{
+ const K="yz_bgm";let st={on:true,vol:40};try{Object.assign(st,JSON.parse(localStorage.getItem(K)||"{}"))}catch(e){}
+ const save=()=>localStorage.setItem(K,JSON.stringify(st));
+ const AC=window.AudioContext||window.webkitAudioContext;
+ let ctx=null,master=null,duck=null,playing=false,timer=null,nextT=0,idx=0,ducked=false;
+ const BPM=96,B=60/BPM;
+ // メロディー（ハ長調・3/4拍子・16小節 ≈30秒ループ）[MIDI, 拍]
+ const MEL=[[76,2],[79,1],[84,2],[83,1],[81,1],[79,1],[76,1],[79,3],
+  [77,2],[81,1],[79,2],[76,1],[74,1],[76,1],[77,1],[74,3],
+  [76,2],[79,1],[84,2],[86,1],[88,1],[86,1],[84,1],[81,3],
+  [77,1],[81,1],[84,1],[83,2],[79,1],[74,1],[76,1],[74,1],[72,3]];
+ // 伴奏（各小節：ルート, 5度, 3度）
+ const CH=[[48,55,64],[43,50,59],[45,52,60],[40,47,55],[41,48,57],[48,55,64],[50,57,65],[43,50,59],
+  [48,55,64],[41,48,57],[48,55,64],[41,48,57],[41,48,57],[43,50,59],[43,50,53],[48,55,64]];
+ const EV=[];{let t=0;MEL.forEach(([n,d])=>{EV.push([t,n,.9,2.2]);t+=d});CH.forEach((c,i)=>{EV.push([i*3,c[0],.42,2.6]);EV.push([i*3+1,c[1]+12,.22,1.4]);EV.push([i*3+2,c[2]+12,.22,1.4])});EV.sort((a,b)=>a[0]-b[0])}
+ const LOOP=48;
+ const gainOf=()=>Math.pow(st.vol/100,1.6)*.5;
+ function build(){if(ctx||!AC)return;ctx=new AC();ctx.onstatechange=()=>ui();
+  master=ctx.createGain();master.gain.value=gainOf();duck=ctx.createGain();duck.gain.value=ducked?0:1;
+  const comp=ctx.createDynamicsCompressor();comp.threshold.value=-18;comp.ratio.value=4;
+  const dl=ctx.createDelay(1),fb=ctx.createGain(),lp=ctx.createBiquadFilter(),wet=ctx.createGain();
+  dl.delayTime.value=.27;fb.gain.value=.32;lp.type="lowpass";lp.frequency.value=2600;wet.gain.value=.28;
+  master.connect(duck);duck.connect(comp);duck.connect(dl);dl.connect(lp);lp.connect(fb);fb.connect(dl);lp.connect(wet);wet.connect(comp);comp.connect(ctx.destination)}
+ function note(t,m,v,len){const f=440*Math.pow(2,(m-69)/12);
+  [[1,1,1],[2,.28,.5],[3,.1,.33],[4.17,.05,.22]].forEach(([r,a,dk])=>{if(f*r>12000)return;
+   const o=ctx.createOscillator(),g=ctx.createGain(),L=len*dk;o.type="sine";o.frequency.value=f*r;
+   g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v*a*.3,t+.004);g.gain.exponentialRampToValueAtTime(.0001,t+L);
+   o.connect(g);g.connect(master);o.start(t);o.stop(t+L+.05)})}
+ function sched(){if(!ctx||!playing)return;const ahead=ctx.currentTime+.35;
+  while(true){const loopN=Math.floor(idx/EV.length),e=EV[idx%EV.length],t=nextT+(loopN*LOOP+e[0])*B;if(t>ahead)break;
+   if(t>ctx.currentTime-.05)note(t,e[1],e[2],e[3]);idx++}}
+ function startLoop(){if(playing)return;playing=true;idx=0;nextT=ctx.currentTime+.15;sched();timer=setInterval(sched,100);ui()}
+ function stopLoop(){playing=false;clearInterval(timer);timer=null;ui()}
+ function unlockBuf(){try{const b=ctx.createBuffer(1,1,22050),s=ctx.createBufferSource();s.buffer=b;s.connect(ctx.destination);s.start(0)}catch(e){}}
+ // ユーザー操作の中で呼ぶ
+ function kick(){if(!st.on||document.hidden)return;build();if(!ctx)return;unlockBuf();
+  const p=ctx.state!=="running"?ctx.resume():Promise.resolve();p.then(()=>{if(ctx.state==="running"&&st.on){startLoop();disarm()}}).catch(()=>{})}
+ const GEV=["touchend","click","keydown"];
+ function onG(e){if(e.target&&e.target.closest&&e.target.closest("#bgmB,#bgmSet"))return;kick()}
+ function arm(){GEV.forEach(n=>document.addEventListener(n,onG,true))}
+ function disarm(){GEV.forEach(n=>document.removeEventListener(n,onG,true))}
+ function set(on){st.on=on;save();if(on){kick();if(!ctx||ctx.state!=="running")arm()}else{stopLoop();if(ctx)ctx.suspend().catch(()=>{})}ui()}
+ function ui(){const b=$("bgmB");if(b){b.classList.toggle("off",!st.on);b.classList.toggle("play",st.on&&playing&&!!ctx&&ctx.state==="running");b.title=st.on?"BGM ON":"BGM OFF"}
+  try{KIRA.set(st.on&&playing&&!!ctx&&ctx.state==="running"&&!document.hidden)}catch(e){}
+  const s2=$("bgmSet");if(s2){s2.textContent=st.on?"♪ BGM：ON（タップでOFF）":"♪ BGM：OFF（タップでON）";s2.classList.toggle("sub",!st.on)}}
+ function toggle(e){if(e)e.stopPropagation();if(st.on&&!(playing&&ctx&&ctx.state==="running")){kick();return}set(!st.on);toast(st.on?"オルゴールON ♪":"オルゴールOFF")}
+ function vis(){if(!ctx)return;if(document.hidden){ctx.suspend().catch(()=>{})}else if(st.on&&playing){ctx.resume().then(()=>{if(ctx.state!=="running")arm();ui()}).catch(()=>arm())}else if(st.on){arm()}ui()}
+ function init(){$("bgmB").addEventListener("click",toggle);$("bgmSet").addEventListener("click",toggle);
+  const r=$("bgmVol");r.value=st.vol;r.addEventListener("input",()=>{st.vol=+r.value;save();if(master)master.gain.setTargetAtTime(gainOf(),ctx.currentTime,.05);if(st.on&&!playing)kick()});
+  document.addEventListener("visibilitychange",vis);window.addEventListener("pagehide",()=>{if(ctx)ctx.suspend().catch(()=>{})});window.addEventListener("pageshow",vis);
+  if(st.on){arm();try{build();if(ctx&&ctx.state==="running"){startLoop();disarm()}}catch(e){}}
+  ui()}
+ function duckF(on){ducked=on;if(duck&&ctx)duck.gain.setTargetAtTime(on?0:1,ctx.currentTime,on?.08:.6)}
+ return{init,duckF,get ctx(){return ctx},get playing(){return playing},get on(){return st.on},get duckGain(){return duck?duck.gain.value:null}};
+})();
+function bgmDuck(on){BGM.duckF(on)}
+try{BGM.init()}catch(e){console.warn(e)}
+
 </script><script>if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});</script></body></html>
