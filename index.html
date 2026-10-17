@@ -68,6 +68,7 @@ nav button{font-size:11px}nav button b{font-size:20px}
 .restm{margin-top:10px;background:#f6f1ff;border-radius:14px;padding:12px;color:#7b5cc4;font-weight:700;line-height:1.6}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.chips button{height:38px;padding:0 14px;border-radius:19px;border:2px solid #e3d8ff;background:#fff;color:#7b5cc4;font-size:14px}.chips button.on{background:#b9a3e8;color:#fff;border-color:#b9a3e8}
 .cal .d.rest{background:#f3edff}
+nav button.nrec{font-size:9px;line-height:1.15;padding:0 1px;letter-spacing:-.3px}nav button.nrec b{margin-bottom:1px}
 </style></head><body>
 <header><h1>🍑 ゆずから愛しのエイジへ、<br>愛の健康ノート</h1>
 <div class="av"><label><span id="av_eiji" class="ph">👦</span>エイジ<input type="file" accept="image/*" data-k="eiji" style="display:none"></label><span class="hz">💗</span><label><span id="av_yuzu" class="ph">👧</span>ゆず<input type="file" accept="image/*" data-k="yuzu" style="display:none"></label></div>
@@ -123,7 +124,7 @@ nav button{font-size:11px}nav button b{font-size:20px}
 <input type="date" id="pvDate" style="width:100%;height:42px;border:2px solid var(--pl);border-radius:12px;padding:0 8px"><input type="text" id="pvCap" placeholder="ひとこと" style="margin-top:6px">
 <div class="row" style="margin-top:8px"><button class="big sub" id="pvDel" style="margin:0">🗑 削除</button><button class="big" id="pvSave" style="margin:0">保存</button><button class="big sub" id="pvClose" style="margin:0">とじる</button></div></div></div>
 <section class="tab" id="t-rec">
-<div class="card"><h2>🍳 レシピ</h2><div class="small">タップすると作り方が開くよ</div><div id="recList"></div></div>
+<div class="card"><h2>🍳 ゆずから、愛のレシピ♡</h2><div class="small">タップすると作り方が開くよ</div><div id="recList"></div></div>
 <div class="card" id="recView" style="display:none"></div>
 </section>
 <section class="tab" id="t-set">
@@ -149,7 +150,7 @@ nav button{font-size:11px}nav button b{font-size:20px}
 ・1日の消費＝基礎代謝×1.2（日常生活）＋歩行＋運動</div></div>
 </section>
 
-<nav><button data-t="food" class="on"><b>🍙</b>食事</button><button data-t="act"><b>👟</b>活動</button><button data-t="sum"><b>📊</b>まとめ</button><button data-t="rec"><b>🍳</b>レシピ</button><button data-t="pho"><b>📸</b>思い出</button><button data-t="set"><b>⚙️</b>設定</button></nav>
+<nav><button data-t="food" class="on"><b>🍙</b>食事</button><button data-t="act"><b>👟</b>活動</button><button data-t="sum"><b>📊</b>まとめ</button><button data-t="rec" class="nrec"><b>🍳</b>ゆずから、<br>愛のレシピ♡</button><button data-t="pho"><b>📸</b>思い出</button><button data-t="set"><b>⚙️</b>設定</button></nav>
 <div class="toast" id="toast"></div>
 
 <script>
