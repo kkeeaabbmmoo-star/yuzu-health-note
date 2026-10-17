@@ -59,7 +59,10 @@ header.bgp{background-size:cover;background-position:center}header.bgp h1,header
 .slot .td{position:absolute;bottom:3px;left:50%;transform:translateX(-50%);background:var(--pd);color:#fff;font-size:10px;padding:1px 6px;border-radius:8px;white-space:nowrap}.slot.today{box-shadow:0 0 0 3px var(--pd)}
 .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}.pgrid div{aspect-ratio:1;background:var(--pl) center/cover;border-radius:8px;position:relative}.pgrid span{position:absolute;left:0;right:0;bottom:0;font-size:10px;color:#fff;background:#0004;padding:1px 4px;border-radius:0 0 8px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pv{position:fixed;inset:0;background:#000c;z-index:30;display:none;align-items:center;justify-content:center;padding:12px}.pv.on{display:flex}.pvb{background:#fff;border-radius:18px;padding:10px;width:100%;max-width:520px;max-height:100%;overflow:auto}.pvb img{width:100%;max-height:60vh;object-fit:contain;border-radius:12px;background:#000}
-nav button{font-size:12px}
+nav button{font-size:11px}nav button b{font-size:20px}
+.rc{display:flex;align-items:center;gap:10px;padding:12px;margin-top:8px;border-radius:16px;background:var(--pl);border:0;width:100%;text-align:left;color:var(--t);font-size:16px}.rc b{font-size:30px}.rc small{display:block;color:#a07d88;font-size:12px}
+#recView h3{margin:14px 0 6px;color:var(--pd);font-size:16px}#recView ul li{display:block;padding:6px 0;font-size:15px}#recView ol{padding-left:22px;margin:0}#recView ol li{display:list-item;padding:6px 0;border-bottom:1px dashed var(--pl);font-size:15px;line-height:1.6}
+.yz{background:#fff0f5;border-radius:14px;padding:10px;margin-top:12px;color:var(--pd);font-weight:700}
 </style></head><body>
 <header><h1>🍑 ゆずから愛しのエイジへ、<br>愛の健康ノート</h1>
 <div class="av"><label><span id="av_eiji" class="ph">👦</span>エイジ<input type="file" accept="image/*" data-k="eiji" style="display:none"></label><span class="hz">💗</span><label><span id="av_yuzu" class="ph">👧</span>ゆず<input type="file" accept="image/*" data-k="yuzu" style="display:none"></label></div>
@@ -111,6 +114,10 @@ nav button{font-size:12px}
 <div class="pv" id="pv"><div class="pvb"><img id="pvImg"><div id="pvInfo" class="small" style="text-align:center;margin:8px 0"></div>
 <input type="date" id="pvDate" style="width:100%;height:42px;border:2px solid var(--pl);border-radius:12px;padding:0 8px"><input type="text" id="pvCap" placeholder="ひとこと" style="margin-top:6px">
 <div class="row" style="margin-top:8px"><button class="big sub" id="pvDel" style="margin:0">🗑 削除</button><button class="big" id="pvSave" style="margin:0">保存</button><button class="big sub" id="pvClose" style="margin:0">とじる</button></div></div></div>
+<section class="tab" id="t-rec">
+<div class="card"><h2>🍳 レシピ</h2><div class="small">タップすると作り方が開くよ</div><div id="recList"></div></div>
+<div class="card" id="recView" style="display:none"></div>
+</section>
 <section class="tab" id="t-set">
 <div class="card"><h2>⚙️ 設定</h2>
 <label>基本の体重 (kg)</label><input type="number" id="sW" step="0.1" inputmode="decimal">
@@ -134,7 +141,7 @@ nav button{font-size:12px}
 ・1日の消費＝基礎代謝×1.2（日常生活）＋歩行＋運動</div></div>
 </section>
 
-<nav><button data-t="food" class="on"><b>🍙</b>食事</button><button data-t="act"><b>👟</b>活動</button><button data-t="sum"><b>📊</b>まとめ</button><button data-t="pho"><b>📸</b>思い出</button><button data-t="set"><b>⚙️</b>設定</button></nav>
+<nav><button data-t="food" class="on"><b>🍙</b>食事</button><button data-t="act"><b>👟</b>活動</button><button data-t="sum"><b>📊</b>まとめ</button><button data-t="rec"><b>🍳</b>レシピ</button><button data-t="pho"><b>📸</b>思い出</button><button data-t="set"><b>⚙️</b>設定</button></nav>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -340,6 +347,30 @@ function drawSlots(){_u.forEach(u=>URL.revokeObjectURL(u));_u=[];const g=$("slot
 $("slotIn").onchange=async()=>{const f=$("slotIn").files[0];$("slotIn").value="";if(!f)return;try{const b=await shrink(f,1000,.8);await tx("slots","readwrite",o=>o.put(b,slotT));SL[slotT]=b;drawSlots();showHB();toast((slotT+1)+"番に入れたよ♡")}catch(e){alert("保存できませんでした。容量がいっぱいかも。別の写真をためしてね")}};
 document.querySelector("header").addEventListener("click",e=>{if(e.target.tagName=="HEADER"||e.target.tagName=="H1"){document.querySelector('nav button[data-t="set"]').click();$("slotCard").scrollIntoView()}});
 initSlots();
+
+// ===== レシピ（ここに足せば増やせる） =====
+const RECIPES=[{id:"tofu-hamburg",icon:"🍔",title:"豆腐ハンバーグ（ポン酢がけ）",serv:"約4個分",kcal:230,unit:"個",
+ note:"1個あたり 約230kcal（目安・ポン酢込み。豆腐・鶏ひき肉・卵・調味料・油の合計を4等分）",
+ ing:["木綿豆腐 1丁（約300g）","鶏ひき肉 約300g（豆腐と同じくらい）","卵 1個","塩こしょう 少々","みりん 大さじ1","しょうゆ 大さじ1","ポン酢 適量（仕上げ）","サラダ油 小さじ1（焼く用）"],
+ steps:["豆腐をキッチンペーパーで包み、軽く重し（お皿など）をのせて15〜20分おいて水を切る。急ぐときはペーパーで包んで電子レンジ600Wで2分。",
+ "ボウルに豆腐を入れ、手で細かく崩す。水が出たら両手でぎゅっと絞って捨てる（水っぽいと形が崩れやすい）。",
+ "ひき肉・卵・塩こしょう・みりん・しょうゆを加え、粘りが出るまで1〜2分よくこねる。",
+ "4等分し、手に少し油（または水）をつけて小判形（厚さ1.5cmくらい）に。両手でキャッチボールして空気を抜き、真ん中を少しへこませる。",
+ "フライパンに油をひいて中火で温め、並べて焼く。焼き色がつくまで3〜4分は触らない。",
+ "裏返したら弱火にして蓋をし、6〜8分蒸し焼き。真ん中を押して透明な肉汁が出たら完成（赤い汁ならもう少し）。鶏肉なのでしっかり火を通す。",
+ "お皿に盛ってポン酢をかける。大根おろし・大葉・ねぎをのせても美味しい。"],
+ tips:"豆腐の水切りが一番大事。形がゆるい時は片栗粉かパン粉を大さじ1〜2足す。小さめに作ると割れにくい。",
+ msg:"初めてでも大丈夫！ゆずも食べたいな♪"}];
+function recList(){$("recList").innerHTML="";RECIPES.forEach(r=>{const b=document.createElement("button");b.className="rc";b.innerHTML=`<b>${r.icon}</b><span>${r.title}<small>${r.serv}・1${r.unit} 約${r.kcal}kcal（目安）</small></span>`;b.onclick=()=>recOpen(r);$("recList").appendChild(b)})}
+function recOpen(r){const v=$("recView");v.style.display="block";
+ v.innerHTML=`<h2>${r.icon} ${r.title}</h2><div class="small">${r.serv}</div><div class="val" style="font-size:18px;margin-top:6px">🔥 1${r.unit} 約${r.kcal}kcal（目安）</div><div class="small">${r.note}</div>
+ <h3>🧺 材料</h3><ul>${r.ing.map(x=>"<li>・"+x+"</li>").join("")}</ul><h3>👩‍🍳 作り方</h3><ol>${r.steps.map(x=>"<li>"+x+"</li>").join("")}</ol>
+ <h3>💡 コツ</h3><div style="font-size:15px;line-height:1.6">${r.tips}</div><div class="yz">💬 ゆずより：「${r.msg}」</div>
+ <label>今日の記録に追加（${MEALS[meal]}ごはん・食事タブで選んだ食事）</label><div class="seg"><button data-n="1">1${r.unit}</button><button data-n="2">2${r.unit}</button><button data-n="3">3${r.unit}</button></div>
+ <button class="big sub" id="recBack">← レシピ一覧へ</button>`;
+ v.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{const n=+b.dataset.n,o=get(cur);o.foods.push({meal,name:r.title.replace(/（.*/,""),amt:n,unit:r.unit,kcal:r.kcal*n});put(cur,o);toast(cur.slice(5).replace("-","/")+"の記録に追加したよ♡")});
+ $("recBack").onclick=()=>{v.style.display="none";scrollTo(0,0)};v.scrollIntoView({block:"start"});scrollBy(0,-290)}
+recList();
 // ===== 思い出の写真 =====
 let PH_U=[],pvId=null;
 async function drawPhotos(){let all=[];try{all=await tx("photos","readonly",o=>o.getAll())}catch(e){}
