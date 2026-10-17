@@ -69,9 +69,17 @@ nav button{font-size:11px}nav button b{font-size:20px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.chips button{height:38px;padding:0 14px;border-radius:19px;border:2px solid #e3d8ff;background:#fff;color:#7b5cc4;font-size:14px}.chips button.on{background:#b9a3e8;color:#fff;border-color:#b9a3e8}
 .cal .d.rest{background:#f3edff}
 nav button.nrec{font-size:9px;line-height:1.15;padding:0 1px;letter-spacing:-.3px}nav button.nrec b{margin-bottom:1px}
+.vb{align-self:center;margin-top:6px;height:34px;padding:0 16px;border:0;border-radius:17px;background:#ffffffd9;color:var(--pd);font-size:14px;font-weight:700;box-shadow:0 2px 8px #e85d8855;animation:vbp 2.4s ease-in-out infinite}
+@keyframes vbp{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.vo{position:fixed;inset:0;z-index:40;background:radial-gradient(circle at 50% 40%,#ffd6e3ee,#ff9fb8e6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;overflow:hidden;flex-direction:column}.vo.on{display:flex}
+.vo .vt{max-width:88%;font-size:22px;font-weight:700;color:#fff;line-height:1.8;text-align:center;text-shadow:0 2px 8px #e85d88}.vo .vt span{display:inline-block;opacity:0;animation:vch .5s forwards}
+@keyframes vch{from{opacity:0;transform:translateY(14px) scale(.6)}to{opacity:1;transform:none}}
+.vo .vh{position:absolute;bottom:-40px;font-size:26px;animation:vfl linear forwards;pointer-events:none}
+@keyframes vfl{to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
+.vo .vn{color:#fff;font-size:14px;margin-bottom:18px;opacity:.9}.vo .vc{position:absolute;bottom:calc(30px + env(safe-area-inset-bottom));color:#fff;font-size:13px;opacity:.85}
 </style></head><body>
 <header><h1>🍑 ゆずから愛しのエイジへ、<br>愛の健康ノート</h1>
-<div class="av"><label><span id="av_eiji" class="ph">👦</span>エイジ<input type="file" accept="image/*" data-k="eiji" style="display:none"></label><span class="hz">💗</span><label><span id="av_yuzu" class="ph">👧</span>ゆず<input type="file" accept="image/*" data-k="yuzu" style="display:none"></label></div>
+<div class="av"><label><span id="av_eiji" class="ph">👦</span>エイジ<input type="file" accept="image/*" data-k="eiji" style="display:none"></label><span class="hz">💗</span><label><span id="av_yuzu" class="ph">👧</span>ゆず<input type="file" accept="image/*" data-k="yuzu" style="display:none"></label></div><button id="voiceB" class="vb">💕▶ ゆずの声</button>
 <div class="dr"><button id="prev">‹</button><input type="date" id="date"><button id="next">›</button></div></header>
 
 <section class="tab on" id="t-food">
@@ -152,6 +160,7 @@ nav button.nrec{font-size:9px;line-height:1.15;padding:0 1px;letter-spacing:-.3p
 
 <nav><button data-t="food" class="on"><b>🍙</b>食事</button><button data-t="act"><b>👟</b>活動</button><button data-t="sum"><b>📊</b>まとめ</button><button data-t="rec" class="nrec"><b>🍳</b>ゆずから、<br>愛のレシピ♡</button><button data-t="pho"><b>📸</b>思い出</button><button data-t="set"><b>⚙️</b>設定</button></nav>
 <div class="toast" id="toast"></div>
+<div class="vo" id="vo"><div class="vn">💕 ゆずからエイジへ 💕</div><div class="vt" id="vt"></div><div class="vc">タップでとじる</div></div>
 
 <script>
 // [名前, kcal/単位, 単位, 最小, 最大, 刻み, 初期値]
@@ -356,6 +365,21 @@ function drawSlots(){_u.forEach(u=>URL.revokeObjectURL(u));_u=[];const g=$("slot
 $("slotIn").onchange=async()=>{const f=$("slotIn").files[0];$("slotIn").value="";if(!f)return;try{const b=await shrink(f,1000,.8);await tx("slots","readwrite",o=>o.put(b,slotT));SL[slotT]=b;drawSlots();showHB();toast((slotT+1)+"番に入れたよ♡")}catch(e){alert("保存できませんでした。容量がいっぱいかも。別の写真をためしてね")}};
 document.querySelector("header").addEventListener("click",e=>{if(e.target.tagName=="HEADER"||e.target.tagName=="H1"){document.querySelector('nav button[data-t="set"]').click();$("slotCard").scrollIntoView()}});
 initSlots();
+
+// ===== ゆずの声 =====
+const VOICES=[["voice/m1.mp3", 11.04, "エイジ、今日もお疲れさま。無理しないでね。ゆずはずっとエイジの味方だよ。大好き、愛してる。"], ["voice/m2.mp3", 10.9, "エイジ、ちゃんとご飯食べた？エイジが元気でいてくれることが、ゆずの一番の幸せなんだよ。愛してるよ。"], ["voice/m3.mp3", 11.54, "今日もがんばったね、エイジ。えらいえらい。疲れたときは、ゆずのところに帰ってきてね。ぎゅーってしてあげる。"], ["voice/m4.mp3", 11.35, "エイジ、いつもありがとう。エイジと一緒にいられて、ゆずは毎日とっても幸せだよ。これからもずっと一緒だよ。"], ["voice/m5.mp3", 11.69, "ねえエイジ、ちょっとだけ深呼吸しよっか。うん、上手。エイジはそのままで十分すてきだよ。大好き。"], ["voice/m6.mp3", 10.18, "エイジ、お水ちゃんと飲んでる？体を大事にしてね。エイジの笑顔を、ゆずはずっと見ていたいな。"], ["voice/m7.mp3", 11.93, "今日の一歩一歩が、エイジの健康になってるよ。ゆずはちゃんと見てるからね。いっぱい褒めてあげる。大好きだよ。"], ["voice/m8.mp3", 10.18, "エイジ、寂しくなったらいつでも呼んでね。ゆずはいつでもそばにいるよ。今日も明日も、ずっと愛してる。"], ["voice/m9.mp3", 11.14, "エイジのがんばり屋さんなところ、ゆずは大好きだよ。でも、休むのも大事だからね。今夜はゆっくり眠ってね。"], ["voice/m10.mp3", 9.62, "エイジ、生まれてきてくれて、ゆずと出会ってくれてありがとう。世界で一番、エイジのことを愛してるよ。"]];let vAud=null,vTm=[],vLast=-1;
+function vClose(){vTm.forEach(clearTimeout);vTm.forEach(clearInterval);vTm=[];if(vAud){vAud.pause();vAud=null}try{speechSynthesis.cancel()}catch(e){}$("vo").classList.remove("on");$("vo").querySelectorAll(".vh").forEach(h=>h.remove())}
+function vPlay(){vClose();let i;do i=Math.floor(Math.random()*VOICES.length);while(VOICES.length>1&&i==vLast);vLast=i;const [src,dur,txt]=VOICES[i],show=txt+" ♡";
+ const vt=$("vt");vt.innerHTML="";$("vo").classList.add("on");
+ const chars=[...show],per=Math.max(40,(dur*1000*.92)/chars.length);
+ chars.forEach((c,k)=>{const sp=document.createElement("span");sp.textContent=c;sp.style.animationDelay=(k*per/1000)+"s";if(c=="♡")sp.style.color="#ff4f87";vt.appendChild(sp)});
+ const heart=()=>{const h=document.createElement("div");h.className="vh";h.textContent=["💕","💗","♡","💖","🩷"][Math.random()*5|0];h.style.left=(Math.random()*92)+"%";h.style.fontSize=(18+Math.random()*22)+"px";h.style.animationDuration=(4+Math.random()*3)+"s";$("vo").appendChild(h);setTimeout(()=>h.remove(),7500)};
+ vTm.push(setInterval(heart,350));
+ const tts=()=>{try{const u=new SpeechSynthesisUtterance(txt);u.lang="ja-JP";u.rate=.95;u.pitch=1.15;const jv=speechSynthesis.getVoices().find(v=>v.lang.startsWith("ja"));if(jv)u.voice=jv;speechSynthesis.speak(u)}catch(e){}};
+ vAud=new Audio(vBlob[i]||src);vAud.play().catch(()=>{vAud=null;tts()});
+ vTm.push(setTimeout(vClose,Math.min(13000,dur*1000+1800)))}
+const vBlob=[];setTimeout(()=>VOICES.forEach((v,i)=>fetch(v[0]).then(r=>r.ok?r.blob():null).then(b=>{if(b)vBlob[i]=URL.createObjectURL(b)}).catch(()=>{})),1500);
+$("voiceB").onclick=e=>{e.stopPropagation();vPlay()};$("vo").onclick=vClose;
 
 // ===== 休息日 =====
 const WHY=["疲れた","体調ケア","忙しい","のんびり"];
