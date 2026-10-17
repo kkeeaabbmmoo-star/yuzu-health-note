@@ -3,14 +3,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#ff8fab">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="ゆずの健康ノート"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#ff8fb1"><link rel="apple-touch-icon" sizes="180x180" href="icon-180.png"><link rel="manifest" href="manifest.webmanifest">
-<title>ゆずの健康ノート</title>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="愛の健康ノート"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#ff8fb1"><link rel="apple-touch-icon" sizes="180x180" href="icon-180.png"><link rel="manifest" href="manifest.webmanifest">
+<title>ゆずから愛しのエイジへ、愛の健康ノート</title>
 <style>
 :root{--p:#ff8fab;--pd:#e85d88;--pl:#ffe3ec;--bg:#fff6f9;--t:#5a3a45}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;background:var(--bg);color:var(--t);padding-bottom:84px}
 header{background:linear-gradient(135deg,#ff9fb8,#ffb7c9);color:#fff;padding:calc(env(safe-area-inset-top) + 12px) 16px 12px;position:sticky;top:0;z-index:5;box-shadow:0 2px 8px #ff8fab55}
-header h1{margin:0;font-size:20px}
+header h1{margin:0;font-size:18px;line-height:1.35}
+header{min-height:calc(272px + env(safe-area-inset-top));display:flex;flex-direction:column;justify-content:space-between}
 .dr{display:flex;gap:8px;align-items:center;margin-top:8px}
 .dr button{width:44px;height:44px;border:0;border-radius:14px;background:#fff8;color:#fff;font-size:20px}
 .dr input{flex:1;height:44px;font-size:17px;border:0;border-radius:14px;padding:0 10px;color:var(--t)}
@@ -53,8 +54,14 @@ nav button.on{color:var(--pd)}
 .cal .w:first-child,.cal .d.hol b{color:#e5484d}.cal .w:nth-child(7),.cal .d.sat b{color:#3b7dd8}.cal .d.hol{background:#fff0f0}.cal .d.sat{background:#f0f6ff}.cal .d.r.hol,.cal .d.r.sat{background:var(--pl)}.cal .wx{float:right;font-size:12px}
 header.bgp{background-size:cover;background-position:center}header.bgp h1,header.bgp .av label{text-shadow:0 1px 3px #e85d88aa}
 .faces3 button{font-size:13px;height:60px;line-height:1.3}.faces3 button b{display:block;font-size:24px}.cal .ic{font-size:11px;letter-spacing:-1px}
+.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.slot{position:relative;aspect-ratio:1;border-radius:14px;border:2px dashed var(--p);background:var(--pl) center/cover;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--pd)}
+.slot.f{border-style:solid}.slot .n{position:absolute;left:4px;top:2px;font-size:12px;font-weight:700;color:#fff;text-shadow:0 0 3px #e85d88}.slot .x{position:absolute;right:-6px;top:-6px;width:28px;height:28px;border-radius:50%;border:0;background:#fff;color:var(--pd);font-size:15px;box-shadow:0 1px 4px #0003}
+.slot .td{position:absolute;bottom:3px;left:50%;transform:translateX(-50%);background:var(--pd);color:#fff;font-size:10px;padding:1px 6px;border-radius:8px;white-space:nowrap}.slot.today{box-shadow:0 0 0 3px var(--pd)}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}.pgrid div{aspect-ratio:1;background:var(--pl) center/cover;border-radius:8px;position:relative}.pgrid span{position:absolute;left:0;right:0;bottom:0;font-size:10px;color:#fff;background:#0004;padding:1px 4px;border-radius:0 0 8px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pv{position:fixed;inset:0;background:#000c;z-index:30;display:none;align-items:center;justify-content:center;padding:12px}.pv.on{display:flex}.pvb{background:#fff;border-radius:18px;padding:10px;width:100%;max-width:520px;max-height:100%;overflow:auto}.pvb img{width:100%;max-height:60vh;object-fit:contain;border-radius:12px;background:#000}
+nav button{font-size:12px}
 </style></head><body>
-<header><h1>🍑 ゆずの健康ノート</h1>
+<header><h1>🍑 ゆずから愛しのエイジへ、<br>愛の健康ノート</h1>
 <div class="av"><label><span id="av_eiji" class="ph">👦</span>エイジ<input type="file" accept="image/*" data-k="eiji" style="display:none"></label><span class="hz">💗</span><label><span id="av_yuzu" class="ph">👧</span>ゆず<input type="file" accept="image/*" data-k="yuzu" style="display:none"></label></div>
 <div class="dr"><button id="prev">‹</button><input type="date" id="date"><button id="next">›</button></div></header>
 
@@ -93,6 +100,17 @@ header.bgp{background-size:cover;background-position:center}header.bgp h1,header
 <div class="card"><h2>📈 7日間のようす</h2><canvas id="trend" data-h="465"></canvas></div>
 </section>
 
+<section class="tab" id="t-pho">
+<div class="card"><h2>📸 思い出の写真コレクション</h2>
+<label>日付</label><input type="date" id="phDate" style="width:100%;height:46px;font-size:17px;border:2px solid var(--pl);border-radius:14px;padding:0 10px">
+<label>ひとこと（なくてもOK）</label><input type="text" id="phCap" placeholder="例：はじめてのデート♡">
+<button class="big" id="phAdd">＋ 写真をえらぶ（何枚でも）</button><input type="file" id="phIn" accept="image/*" multiple style="display:none">
+<div class="small" id="phCount" style="margin-top:8px"></div></div>
+<div class="card"><div class="pgrid" id="pgrid"></div></div>
+</section>
+<div class="pv" id="pv"><div class="pvb"><img id="pvImg"><div id="pvInfo" class="small" style="text-align:center;margin:8px 0"></div>
+<input type="date" id="pvDate" style="width:100%;height:42px;border:2px solid var(--pl);border-radius:12px;padding:0 8px"><input type="text" id="pvCap" placeholder="ひとこと" style="margin-top:6px">
+<div class="row" style="margin-top:8px"><button class="big sub" id="pvDel" style="margin:0">🗑 削除</button><button class="big" id="pvSave" style="margin:0">保存</button><button class="big sub" id="pvClose" style="margin:0">とじる</button></div></div></div>
 <section class="tab" id="t-set">
 <div class="card"><h2>⚙️ 設定</h2>
 <label>基本の体重 (kg)</label><input type="number" id="sW" step="0.1" inputmode="decimal">
@@ -103,7 +121,8 @@ header.bgp{background-size:cover;background-position:center}header.bgp h1,header
 <button class="big" id="saveS">保存</button>
 <div class="small">基礎代謝の推定＝体重×22.5（厚労省「基礎代謝基準値」30〜49歳男性）。</div></div>
 <div class="card"><h2>⭐ マイプリセット（食べもの）</h2><div id="preEd"></div><button class="big" id="preSave">プリセットを保存</button><div class="small">名前とカロリーを入れると、食べものの一番上に出るよ（例：プロテイン 150）</div></div>
-<div class="card"><h2>📷 アイコン写真</h2><div class="small">上のまるいアイコンをタップすると写真を選べるよ</div><button class="big sub" id="rmE">エイジの写真を消す</button><button class="big sub" id="rmY">ゆずの写真を消す</button><button class="big" id="hbSet">ヘッダーの背景写真をえらぶ</button><button class="big sub" id="hbRm">背景写真を消す</button><input type="file" id="hbIn" accept="image/*" style="display:none"></div>
+<div class="card" id="slotCard"><h2>🖼 ヘッダー写真（7枚・毎日入れかわり）</h2><div class="slots" id="slots"></div><div class="small">マスをタップで写真をえらぶ／入れかえ、×で消すよ。入っている写真が日付で毎日順番に表示されるよ</div><input type="file" id="slotIn" accept="image/*" style="display:none"></div>
+<div class="card"><h2>📷 アイコン写真</h2><div class="small">上のまるいアイコンをタップすると写真を選べるよ</div><button class="big sub" id="rmE">エイジの写真を消す</button><button class="big sub" id="rmY">ゆずの写真を消す</button></div>
 <div class="card"><h2>💾 バックアップ</h2>
 <button class="big" id="exp">JSONで書き出し</button>
 <button class="big sub" id="impB">JSONを読み込み</button><input type="file" id="imp" accept=".json,application/json" style="display:none">
@@ -115,7 +134,7 @@ header.bgp{background-size:cover;background-position:center}header.bgp h1,header
 ・1日の消費＝基礎代謝×1.2（日常生活）＋歩行＋運動</div></div>
 </section>
 
-<nav><button data-t="food" class="on"><b>🍙</b>食事</button><button data-t="act"><b>👟</b>活動</button><button data-t="sum"><b>📊</b>まとめ</button><button data-t="set"><b>⚙️</b>設定</button></nav>
+<nav><button data-t="food" class="on"><b>🍙</b>食事</button><button data-t="act"><b>👟</b>活動</button><button data-t="sum"><b>📊</b>まとめ</button><button data-t="pho"><b>📸</b>思い出</button><button data-t="set"><b>⚙️</b>設定</button></nav>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -299,16 +318,43 @@ function loadWx(y,m){if(!navigator.onLine)return;const today=ds(new Date()),mk=y
  _wl[mk]=1;let en=mk+"-"+pad(n);if(en>ds(e2))en=ds(e2);
  fetch("https://archive-api.open-meteo.com/v1/archive?"+LL+"&start_date="+st+"&end_date="+en).then(r=>r.json()).then(j=>{saveWx(j);re()}).catch(()=>_wl[mk]=0)}
 
-// header background
-function showHB(){const h=document.querySelector("header"),d=localStorage.getItem("yz_header_bg");
- if(d){h.style.backgroundImage="linear-gradient(135deg,rgba(255,159,184,.55),rgba(255,183,201,.55)),url("+d+")";h.classList.add("bgp")}else{h.style.backgroundImage="";h.classList.remove("bgp")}}
-$("hbSet").onclick=()=>$("hbIn").click();
-document.querySelector("header").addEventListener("click",e=>{if(e.target.tagName=="HEADER"||e.target.tagName=="H1")$("hbIn").click()});
-$("hbIn").onchange=()=>{const f=$("hbIn").files[0];if(!f)return;const img=new Image();img.onload=()=>{let ok=false;
- for(const [W,q] of [[1000,.8],[800,.65],[600,.55]]){const sc=Math.min(1,W/img.width),c=document.createElement("canvas");c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);
-  c.getContext("2d").drawImage(img,0,0,c.width,c.height);try{localStorage.setItem("yz_header_bg",c.toDataURL("image/jpeg",q));ok=true;break}catch(e){}}
- URL.revokeObjectURL(img.src);$("hbIn").value="";if(ok){showHB();toast("背景にしたよ♡")}else alert("容量がいっぱいで保存できませんでした。別の写真をためしてね")};img.src=URL.createObjectURL(f)};
-$("hbRm").onclick=()=>{localStorage.removeItem("yz_header_bg");showHB();toast("消したよ")};
-showHB();
+// ===== IndexedDB =====
+let _db;function db(){return _db||(_db=new Promise((ok,ng)=>{const r=indexedDB.open("yuzu_db",1);r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore("slots");d.createObjectStore("photos",{keyPath:"id",autoIncrement:true})};r.onsuccess=()=>ok(r.result);r.onerror=()=>ng(r.error)}))}
+async function tx(st,mode,fn){const d=await db();return new Promise((ok,ng)=>{const t=d.transaction(st,mode),o=t.objectStore(st);let res;const q=fn(o);if(q)q.onsuccess=()=>res=q.result;t.oncomplete=()=>ok(res);t.onerror=()=>ng(t.error);t.onabort=()=>ng(t.error)})}
+function shrink(file,W,q){return new Promise((ok,ng)=>{const img=new Image();img.onload=()=>{const sc=Math.min(1,W/Math.max(img.width,img.height)),c=document.createElement("canvas");c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);c.getContext("2d").drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(img.src);c.toBlob(b=>b?ok(b):ng(),"image/jpeg",q)};img.onerror=()=>{URL.revokeObjectURL(img.src);ng(new Error("img"))};img.src=URL.createObjectURL(file)})}
+const dataToBlob=d=>fetch(d).then(r=>r.blob());
+// ===== header slots (7) =====
+let SL=[],_u=[];const doy=()=>{const t=new Date();return Math.floor((t-new Date(t.getFullYear(),0,1))/864e5)};
+function todaySlot(){const f=SL.map((b,i)=>b?i:-1).filter(i=>i>=0);return f.length?f[doy()%f.length]:-1}
+async function initSlots(){try{const old=localStorage.getItem("yz_header_bg");if(!localStorage.getItem("yz_hb_migrated")){if(old){const b=await dataToBlob(old),ex=await tx("slots","readonly",o=>o.get(0));if(!ex)await tx("slots","readwrite",o=>o.put(b,0))}localStorage.setItem("yz_hb_migrated","1")}
+ SL=await Promise.all([0,1,2,3,4,5,6].map(i=>tx("slots","readonly",o=>o.get(i))));}catch(e){SL=[]}drawSlots();showHB()}
+function showHB(){const h=document.querySelector("header"),i=todaySlot();if(h._u)URL.revokeObjectURL(h._u);
+ if(i>=0){h._u=URL.createObjectURL(SL[i]);h.style.backgroundImage="linear-gradient(135deg,rgba(255,159,184,.5),rgba(255,183,201,.5)),url("+h._u+")";h.classList.add("bgp")}else{h._u=null;h.style.backgroundImage="";h.classList.remove("bgp")}}
+let slotT=0;
+function drawSlots(){_u.forEach(u=>URL.revokeObjectURL(u));_u=[];const g=$("slots"),td=todaySlot();g.innerHTML="";
+ for(let i=0;i<7;i++){const e=document.createElement("div");e.className="slot"+(SL[i]?" f":"")+(i==td?" today":"");
+  if(SL[i]){const u=URL.createObjectURL(SL[i]);_u.push(u);e.style.backgroundImage="url("+u+")";e.innerHTML=`<span class="n">${i+1}</span>`+(i==td?'<span class="td">今日の写真</span>':"");
+   const x=document.createElement("button");x.className="x";x.textContent="×";x.onclick=async ev=>{ev.stopPropagation();if(!confirm((i+1)+"番の写真を消す？"))return;await tx("slots","readwrite",o=>o.delete(i));if(i==0)localStorage.removeItem("yz_header_bg");SL[i]=undefined;drawSlots();showHB();toast("消したよ")};e.appendChild(x)}
+  else e.innerHTML=`<span class="n" style="color:var(--pd);text-shadow:none">${i+1}</span>＋`;
+  e.onclick=()=>{slotT=i;$("slotIn").click()};g.appendChild(e)}}
+$("slotIn").onchange=async()=>{const f=$("slotIn").files[0];$("slotIn").value="";if(!f)return;try{const b=await shrink(f,1000,.8);await tx("slots","readwrite",o=>o.put(b,slotT));SL[slotT]=b;drawSlots();showHB();toast((slotT+1)+"番に入れたよ♡")}catch(e){alert("保存できませんでした。容量がいっぱいかも。別の写真をためしてね")}};
+document.querySelector("header").addEventListener("click",e=>{if(e.target.tagName=="HEADER"||e.target.tagName=="H1"){document.querySelector('nav button[data-t="set"]').click();$("slotCard").scrollIntoView()}});
+initSlots();
+// ===== 思い出の写真 =====
+let PH_U=[],pvId=null;
+async function drawPhotos(){let all=[];try{all=await tx("photos","readonly",o=>o.getAll())}catch(e){}
+ all.sort((a,b)=>(b.date||"").localeCompare(a.date||"")||b.id-a.id);PH_U.forEach(u=>URL.revokeObjectURL(u));PH_U=[];
+ const g=$("pgrid");g.innerHTML=all.length?"":'<div class="small" style="grid-column:1/-1;aspect-ratio:auto;background:none">まだ写真がないよ。上からふたりの思い出を入れてね📸</div>';$("phCount").textContent=all.length?all.length+" 枚の思い出♡":"";
+ all.forEach(p=>{const u=URL.createObjectURL(p.thumb||p.blob);PH_U.push(u);const e=document.createElement("div");e.style.backgroundImage="url("+u+")";e.innerHTML="<span>"+p.date.slice(5).replace("-","/")+(p.cap?" "+p.cap.replace(/</g,"&lt;"):"")+"</span>";e.onclick=()=>openPV(p);g.appendChild(e)})}
+function openPV(p){pvId=p.id;const u=URL.createObjectURL(p.blob);$("pvImg").onload=()=>URL.revokeObjectURL(u);$("pvImg").src=u;$("pvInfo").textContent=p.date+(p.cap?"　"+p.cap:"");$("pvDate").value=p.date;$("pvCap").value=p.cap||"";$("pv").classList.add("on")}
+$("pvClose").onclick=()=>$("pv").classList.remove("on");$("pv").onclick=e=>{if(e.target.id=="pv")$("pv").classList.remove("on")};
+$("pvDel").onclick=async()=>{if(!confirm("この写真を削除する？（元にもどせないよ）"))return;await tx("photos","readwrite",o=>o.delete(pvId));$("pv").classList.remove("on");drawPhotos();toast("削除したよ")};
+$("pvSave").onclick=async()=>{const p=await tx("photos","readonly",o=>o.get(pvId));p.date=$("pvDate").value||p.date;p.cap=$("pvCap").value.trim();await tx("photos","readwrite",o=>o.put(p));$("pv").classList.remove("on");drawPhotos();toast("保存したよ♡")};
+$("phAdd").onclick=()=>$("phIn").click();
+$("phIn").onchange=async()=>{const fs=[...$("phIn").files];$("phIn").value="";if(!fs.length)return;const date=$("phDate").value||ds(new Date()),cap=$("phCap").value.trim();let ok=0;
+ for(const [k,f] of fs.entries()){toast("保存中… "+(k+1)+"/"+fs.length);try{const blob=await shrink(f,1280,.8),thumb=await shrink(f,360,.7);await tx("photos","readwrite",o=>o.add({date,cap,blob,thumb,added:Date.now()}));ok++}catch(e){}}
+ drawPhotos();$("phCap").value="";if(ok<fs.length)alert((fs.length-ok)+"枚は保存できませんでした（容量がいっぱいかも）");else toast(ok+"枚追加したよ♡")};
+$("phDate").value=ds(new Date());
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.t=="pho")drawPhotos();if(b.dataset.t=="set")drawSlots()}));
 setEx();setFood();render();
 </script><script>if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});</script></body></html>
