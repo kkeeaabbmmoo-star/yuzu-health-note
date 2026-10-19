@@ -5,32 +5,6 @@
   "iter": 200000,
   "salt": "vgfPASkJyODKplpRGxtbTg=="
  },
- "items": [
-  {
-   "id": "1310e99b69e0f429",
-   "app": "health",
-   "added": "2026-10-20T06:16:00+09:00"
-  },
-  {
-   "id": "edafddbf5399018e",
-   "app": "health",
-   "added": "2026-10-20T06:16:00+09:00"
-  },
-  {
-   "id": "ff756df6352e146d",
-   "app": "health",
-   "added": "2026-10-20T06:16:00+09:00"
-  },
-  {
-   "id": "6c1f1fb5ead85960",
-   "app": "health",
-   "added": "2026-10-20T06:16:00+09:00"
-  },
-  {
-   "id": "741e773fbd53daf0",
-   "app": "health",
-   "added": "2026-10-20T06:16:00+09:00"
-  }
- ],
- "updated": "2026-10-20T06:16:00+09:00"
+ "items": [],
+ "updated": "2026-10-20T06:18:59+09:00"
 }
