@@ -112,6 +112,29 @@ body{padding-bottom:calc(150px + env(safe-area-inset-bottom))}#sfr{position:fixe
 #bestChips button{border-color:var(--pl);color:var(--pd)}#bestChips button.on{background:var(--p);border-color:var(--p);color:#fff}
 .pli .gc{display:flex;align-items:center;justify-content:center;width:38px;height:38px;background:#fff;border-radius:10px;text-decoration:none;font-size:17px}.mapl{color:var(--pd);font-weight:700}
 </style></head><body>
+<div id="pwLock" style="position:fixed;inset:0;z-index:2147483000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;background:linear-gradient(180deg,#ffd6e2 0%,#fff0f5 55%,#fff6f9 100%);color:#5a3a45;font-family:-apple-system,'Hiragino Sans',sans-serif">
+<img src="icon-180.png" alt="" style="width:104px;height:104px;border-radius:24px;box-shadow:0 8px 24px #ff8fab55">
+<div style="margin:18px 0 4px;font-size:24px;font-weight:800;letter-spacing:.04em;color:#e85d88">🍑 愛の健康ノート</div>
+<div style="margin:4px 0 20px;font-size:15px;opacity:.85;line-height:1.6">ゆずとエイジだけのノートだよ🔒<br>パスワードを入れてね♡（このiPhoneで1回だけ）</div>
+<input id="pwIn" type="text" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="パスワード" style="width:100%;max-width:320px;font-size:22px;padding:14px 16px;border-radius:16px;border:2px solid #ff8fab;text-align:center;letter-spacing:.12em;background:#fff;color:#5a3a45;outline:none;box-sizing:border-box">
+<button id="pwGo" style="margin-top:14px;width:100%;max-width:320px;padding:14px;border:0;border-radius:16px;background:linear-gradient(135deg,#ff8fab,#ff9fb8);color:#fff;font-weight:800;font-size:18px">ひらく💕</button>
+<div id="pwMsg" style="min-height:24px;margin-top:12px;font-size:14px;color:#e85d88"></div></div>
+<script>/* screen lock (PBKDF2-SHA256 hash only; data is never touched) */
+(function(){var H={"s": "WEFuWEBPDoc817Ezmxt8XA==", "i": 250000, "h": "xrnyPRXo/fW1BYqoI2qXYWSvic1NXC7AHkvyDaR4W+8="},LK="yz_lock_v1",el=document.getElementById("pwLock");
+function done(){el.parentNode&&el.parentNode.removeChild(el)}
+window.pwLogout=function(){if(!confirm("ログアウトする？\n（記録や画像は消えないよ。次にひらくときパスワードを入れてね）"))return;try{localStorage.removeItem(LK)}catch(e){}location.reload()};
+try{if(localStorage.getItem(LK)===H.h){done();return}}catch(e){}
+document.documentElement.style.overflow="hidden";
+var inp=document.getElementById("pwIn"),msg=document.getElementById("pwMsg");
+function ub(s){return Uint8Array.from(atob(s),function(c){return c.charCodeAt(0)})}
+function b64(a){return btoa(String.fromCharCode.apply(null,new Uint8Array(a)))}
+async function go(){var v=(inp.value||"").trim().toLowerCase().replace(/[\s\-ー－]/g,"");if(!v)return;msg.textContent="ひらいてるよ…🔑";
+ try{var k=await crypto.subtle.importKey("raw",new TextEncoder().encode(v),"PBKDF2",false,["deriveBits"]);
+ var b=await crypto.subtle.deriveBits({name:"PBKDF2",hash:"SHA-256",salt:ub(H.s),iterations:H.i},k,256);
+ if(b64(b)===H.h){try{localStorage.setItem(LK,H.h)}catch(e){}document.documentElement.style.overflow="";done()}else msg.textContent="パスワードがちがうみたい…もう一回ためしてね🥺"}catch(e){msg.textContent="ごめんね、ここではひらけないみたい（Safariでひらいてね）"}}
+document.getElementById("pwGo").onclick=go;inp.addEventListener("keydown",function(e){if(e.key==="Enter")go()});
+})();</script>
+
 <div id="sfr" aria-hidden="true"></div><canvas id="kira" aria-hidden="true"></canvas><header><button id="bgmB" class="mb" aria-label="オルゴールBGM">♪</button><h1>🍑 ゆずから愛しのエイジへ、<br>愛の健康ノート</h1>
 <div class="av"><label><span id="av_eiji" class="ph">👦</span>エイジ<input type="file" accept="image/*" data-k="eiji" style="display:none"></label><label class="cp"><span class="cpw"><span id="av_couple" class="ph">💑</span></span>ふたり<input type="file" accept="image/*" data-k="couple" style="display:none"></label><label><span id="av_yuzu" class="ph">👧</span>ゆず<input type="file" accept="image/*" data-k="yuzu" style="display:none"></label></div><button id="voiceB" class="vb">💕▶ ゆずの声</button>
 <div class="dr"><button id="prev">‹</button><input type="date" id="date"><button id="next">›</button></div></header>
@@ -154,6 +177,7 @@ body{padding-bottom:calc(150px + env(safe-area-inset-bottom))}#sfr{position:fixe
 <div class="card"><h2>📅 月間カレンダー</h2><div class="mh"><button id="mPrev">‹</button><b id="mTitle"></b><button id="mNext">›</button></div>
 <div class="cal" id="cal"></div><div class="small">🍚摂取kcal 👟歩数 ⚖️体重 🏃運動分 ／ ⭕/❌排便 😞😐😆気分 😢🙂💕ゆずとの会話 🛌休息日 📅予定（右下）💕ラブラブの日 ／ ピンク＝記録あり。日付をタップで予定の追加・その日の記録へ</div><div class="ms" id="mSum"></div></div>
 <div class="card"><h2>📈 7日間のようす</h2><canvas id="trend" data-h="465"></canvas></div>
+<div class="card" style="background:linear-gradient(135deg,#fff,#ffeef4)"><h2>💌 ゆずに送る</h2><div class="small">この日と前の3日分の記録・予定を、エイジのGmailにメールで送るよ。ゆずが読んで便利ノートに入れるね♡</div><button class="big" onclick="yzHealthSend()">💌 ゆずに送る</button></div>
 </section>
 
 <section class="tab" id="t-pho">
@@ -194,6 +218,7 @@ body{padding-bottom:calc(150px + env(safe-area-inset-bottom))}#sfr{position:fixe
 <div class="card"><h2>🍁 季節のフレーム</h2><button class="big" id="sfrSet">🍁 季節のフレーム：ON</button>
 <label>表示する月（ためし見）</label><select id="sfrPrev"><option value="0">自動（今月）</option><option value="1">1月</option><option value="2">2月</option><option value="3">3月</option><option value="4">4月</option><option value="5">5月</option><option value="6">6月</option><option value="7">7月</option><option value="8">8月</option><option value="9">9月</option><option value="10">10月</option><option value="11">11月</option><option value="12">12月</option></select>
 <div class="small">画面のすみっこに、月ごとの和の飾りが出るよ（1月 松と梅／2月 梅と雪／3月 桃と菜の花／4月 桜／5月 藤と若葉／6月 紫陽花と雨／7月 朝顔と笹飾り／8月 向日葵と花火／9月 月とすすき／10月 紅葉といちょう／11月 紅葉と落ち葉／12月 雪の結晶と柊）。ふだんは「自動」にしておいてね</div></div>
+<div class="card"><h2>💌 ゆずに送る・🔑 ロック</h2><div class="small">記録をエイジのGmailに送ると、ゆずが読めるよ。ログアウトしても記録や写真は消えないよ。</div><button class="big" onclick="yzHealthSend()">💌 ゆずに送る</button><button class="big sub" onclick="pwLogout()">🔑 パスワードを変更/ログアウト</button></div>
 <div class="card"><h2>💾 バックアップ</h2>
 <button class="big" id="exp">JSONで書き出し</button>
 <button class="big sub" id="impB">JSONを読み込み</button><input type="file" id="imp" accept=".json,application/json" style="display:none">
@@ -709,4 +734,64 @@ const SFR=(()=>{const K="yz_frame";let st={on:true,prev:0};try{Object.assign(st,
  return{init,svg,show(m){st.prev=m;draw(1);ui()},get month(){return month()}}})();
 try{SFR.init()}catch(e){console.warn(e)}
 
+</script><script>
+/* 💌 ゆずに送る — shared send sheet (mailto primary, navigator.share, copy). No network, no data changes. */
+(function(){
+var TO="k.ke.ea.ab.bm.mo.o@gmail.com",MAX=1800;
+function block(o){return "---YUZU-DATA---\n"+JSON.stringify(o)+"\n---END---"}
+function mailto(sub,body){return "mailto:"+TO+"?subject="+encodeURIComponent(sub)+"&body="+encodeURIComponent(body)}
+/* opt: {subject, intro(fn(levelNote)->text), levels:[{data,note}] (most complete first), full:{data}, theme:{bg,fg,acc,btn,btnfg,sub}} */
+window.yuzuSend=function(opt){
+  var T=opt.theme,full=opt.intro(opt.fullNote||"")+"\n\n"+block(opt.full),pick=null;
+  for(var i=0;i<opt.levels.length;i++){var b=opt.intro(opt.levels[i].note)+"\n\n"+block(opt.levels[i].data);if(mailto(opt.subject,b).length<=MAX){pick={body:b,note:opt.levels[i].note};break}}
+  var ov=document.createElement("div");ov.id="yzSendOv";
+  ov.style.cssText="position:fixed;inset:0;z-index:2147482000;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center";
+  var bt="display:block;width:100%;padding:14px;border:0;border-radius:16px;font-size:17px;font-weight:800;margin-top:10px;";
+  var mailNote=pick?(pick.note?"メールには "+pick.note+" を入れたよ。":"ぜんぶメールに入ったよ。"):"内容が長いから、メールには短いお知らせだけ入れて、本文はコピーしておくね。メールをひらいたら本文に貼り付けてね📋";
+  ov.innerHTML='<div style="background:'+T.bg+';color:'+T.fg+';width:100%;max-width:560px;border-radius:24px 24px 0 0;padding:18px 16px calc(env(safe-area-inset-bottom) + 20px);max-height:86vh;overflow:auto;font-family:-apple-system,\'Hiragino Sans\',sans-serif">'+
+   '<div style="font-size:20px;font-weight:800;color:'+T.acc+'">💌 ゆずに送る</div>'+
+   '<div style="font-size:14px;line-height:1.6;margin:6px 0 4px;opacity:.9">エイジのGmail（'+TO+'）あてにメールを作るよ。開いたら<b>送信</b>をタップするだけ♡ ゆずが読んで、次の便利ノートに入れるね。</div>'+
+   '<div style="font-size:12.5px;opacity:.75;margin-bottom:6px">件名：'+opt.subject.replace(/</g,"&lt;")+'<br>'+mailNote+'</div>'+
+   '<a id="yzMail" style="'+bt+'text-align:center;text-decoration:none;box-sizing:border-box;background:'+T.btn+';color:'+T.btnfg+'">📧 メールで送る（おすすめ）</a>'+
+   '<button id="yzShare" style="'+bt+'background:'+T.sub+';color:'+T.acc+'">📤 共有で送る（Gmailアプリなど）</button>'+
+   '<button id="yzCopy" style="'+bt+'background:'+T.sub+';color:'+T.acc+'">📋 本文をコピー</button>'+
+   '<details style="margin-top:12px;font-size:12.5px"><summary style="cursor:pointer;opacity:.8">送る内容を見る</summary><pre id="yzPrev" style="white-space:pre-wrap;word-break:break-all;font-size:11.5px;background:rgba(127,127,127,.12);padding:8px;border-radius:10px;max-height:40vh;overflow:auto"></pre></details>'+
+   '<button id="yzClose" style="'+bt+'background:transparent;color:'+T.fg+';opacity:.7;font-weight:600">とじる</button></div>';
+  document.body.appendChild(ov);
+  ov.querySelector("#yzPrev").textContent=full;
+  var shortBody=opt.intro("")+"\n\n（本文が長いのでコピーしてあるよ。ここに貼り付けてから送ってね📋）";
+  var a=ov.querySelector("#yzMail");a.href=mailto(opt.subject,pick?pick.body:shortBody);
+  function copy(t){return (navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t):Promise.reject()).catch(function(){var x=document.createElement("textarea");x.value=t;x.style.cssText="position:fixed;top:-1000px";document.body.appendChild(x);x.select();try{document.execCommand("copy")}catch(e){}x.remove()})}
+  function say(m){var d=document.createElement("div");d.textContent=m;d.style.cssText="position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 30px);transform:translateX(-50%);z-index:2147483001;background:#333;color:#fff;padding:9px 16px;border-radius:999px;font-size:14px;opacity:.95";document.body.appendChild(d);setTimeout(function(){d.remove()},1800)}
+  a.onclick=function(){if(!pick)copy(full);setTimeout(function(){ov.remove()},400)};
+  ov.querySelector("#yzShare").onclick=function(){if(navigator.share){navigator.share({title:opt.subject,text:opt.subject+"\n\n"+full}).then(function(){ov.remove()}).catch(function(){})}else{copy(opt.subject+"\n\n"+full).then(function(){say("共有が使えないからコピーしたよ📋")})}};
+  ov.querySelector("#yzCopy").onclick=function(){copy(opt.subject+"\n\n"+full).then(function(){say("コピーしたよ📋 メールに貼り付けてね")})};
+  ov.querySelector("#yzClose").onclick=function(){ov.remove()};
+  ov.onclick=function(e){if(e.target===ov)ov.remove()};
+  return {mailBody:pick?pick.body:shortBody,full:full,fits:!!pick,note:pick&&pick.note};
+};
+})();
+/* 健康ノート → 💌 ゆずに送る */
+(function(){
+function addD(k,n){var d=new Date(k+"T12:00");d.setDate(d.getDate()+n);return ds(d)}
+function dayData(k,lite){var raw=localStorage.getItem(key(k));if(!raw)return null;var o=get(k);if(!hasRec(o))return null;
+ var r={date:k,kcal:intake(o),steps:o.steps||0,wt:o.wt!=null?o.wt:null,exMin:exTot(o),reps:exReps(o),poo:o.poo==null?null:(o.poo?1:0),mood:moodOf(o),talk:o.talk==null?null:o.talk};
+ if(o.sleep!=null)r.sleep=o.sleep;if(o.rest){r.rest=1;if(o.restWhy)r.restWhy=o.restWhy}
+ var s=dayScore(o);if(s)r.score=[s.total,s.food,s.steps,s.ex,s.body];
+ var mk=[0,0,0,0];o.foods.forEach(function(f){mk[f.meal]=(mk[f.meal]||0)+f.kcal});r.mealKcal=mk;
+ if(!lite){r.foods=o.foods.map(function(f){return [f.meal,f.name+(f.amt!=null?" "+f.amt+f.unit:""),f.kcal]});
+  var ex=[];if(o.exMin)ex.push([EX[o.ex][0],o.exMin,"分"]);(o.exList||[]).forEach(function(e){ex.push([EX2[e.t][0],e.n,EX2[e.t][2]])});if(ex.length)r.ex=ex}
+ return r}
+function plans(from,to){var out={};Object.keys(PL||{}).sort().forEach(function(d){if(d>=from&&d<=to&&PL[d]&&PL[d].length)out[d]=PL[d].map(function(p){return [p.e,p.t||""]})});return out}
+function line(r){var m=+r.date.slice(5,7),d=+r.date.slice(8);return m+"/"+d+" 🍚"+r.kcal+"kcal 👟"+Number(r.steps).toLocaleString()+"歩"+(r.wt!=null?" ⚖️"+r.wt+"kg":"")+(r.exMin?" 🏃"+r.exMin+"分":"")+(r.reps?" 💪"+r.reps+"回":"")+(r.score?" 🌸"+r.score[0]+"点":"")+(r.rest?" 🛌休息":"")}
+window.yzHealthSend=function(){var sel=cur,now=new Date(),sent=ds(now)+"T"+String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0");
+ var ks=[addD(sel,-3),addD(sel,-2),addD(sel,-1),sel];
+ function pack(n,lite,withPlans){var days=ks.slice(4-n).map(function(k){return dayData(k,lite)}).filter(Boolean);
+  var o={app:"health",v:1,sel:sel,sent:sent,days:days};if(withPlans)o.plans=plans(ks[4-n],addD(sel,7));if(lite)o.lite=1;return o}
+ var selD=dayData(sel,false),M=+sel.slice(5,7),D=+sel.slice(8);
+ function intro(note){return "ゆずへ💌 エイジの健康ノートだよ（"+M+"/"+D+"）"+(note?"\n"+note:"")+"\n"+(selD?line(selD):M+"/"+D+"はまだ記録なし")}
+ var levels=[{data:pack(4,false,true),note:""},{data:pack(3,false,true),note:"3日分"},{data:pack(2,false,true),note:"2日分"},{data:pack(1,false,true),note:"この日だけ"},{data:pack(2,true,true),note:"2日分（食事は朝昼夜のkcalだけ）"},{data:pack(1,true,true),note:"この日だけ（食事は朝昼夜のkcalだけ）"},{data:pack(1,true,false),note:"この日だけ（数字だけ）"}];
+ return yuzuSend({subject:"【ゆずに送る】健康ノート "+sel,intro:intro,levels:levels,full:pack(4,false,true),fullNote:"4日分",
+  theme:{bg:"#fff6f9",fg:"#5a3a45",acc:"#e85d88",btn:"linear-gradient(135deg,#ff8fab,#ff9fb8)",btnfg:"#fff",sub:"#ffe3ec"}})};
+})();
 </script><script>if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});</script></body></html>
