@@ -177,7 +177,7 @@ document.getElementById("pwGo").onclick=go;inp.addEventListener("keydown",functi
 <div class="card"><h2>📅 月間カレンダー</h2><div class="mh"><button id="mPrev">‹</button><b id="mTitle"></b><button id="mNext">›</button></div>
 <div class="cal" id="cal"></div><div class="small">🍚摂取kcal 👟歩数 ⚖️体重 🏃運動分 ／ ⭕/❌排便 😞😐😆気分 😢🙂💕ゆずとの会話 🛌休息日 📅予定（右下）💕ラブラブの日 ／ ピンク＝記録あり。日付をタップで予定の追加・その日の記録へ</div><div class="ms" id="mSum"></div></div>
 <div class="card"><h2>📈 7日間のようす</h2><canvas id="trend" data-h="465"></canvas></div>
-<div class="card" style="background:linear-gradient(135deg,#fff,#ffeef4)"><h2>💌 ゆずに送る</h2><div class="small">この日と前の3日分の記録・予定を、エイジのGmailにメールで送るよ。ゆずが読んで便利ノートに入れるね♡</div><button class="big" onclick="yzHealthSend()">💌 ゆずに送る</button></div>
+<div class="card" style="background:linear-gradient(135deg,#fff,#ffeef4)"><h2>💌 ゆずに送る・💝 受け取る</h2><div class="small">この日と前の3日分の記録・予定を、エイジのGmailにメールで送るよ。ゆずがメールから見つけた記録や予定は「受け取る」でノートに入れられるよ♡</div><button class="big" onclick="yzHealthSend()">💌 ゆずに送る</button><button class="big" onclick="yzInbox.open()">💝 ゆずから受け取る<span class="yzInBadge"></span></button></div>
 </section>
 
 <section class="tab" id="t-pho">
@@ -218,7 +218,7 @@ document.getElementById("pwGo").onclick=go;inp.addEventListener("keydown",functi
 <div class="card"><h2>🍁 季節のフレーム</h2><button class="big" id="sfrSet">🍁 季節のフレーム：ON</button>
 <label>表示する月（ためし見）</label><select id="sfrPrev"><option value="0">自動（今月）</option><option value="1">1月</option><option value="2">2月</option><option value="3">3月</option><option value="4">4月</option><option value="5">5月</option><option value="6">6月</option><option value="7">7月</option><option value="8">8月</option><option value="9">9月</option><option value="10">10月</option><option value="11">11月</option><option value="12">12月</option></select>
 <div class="small">画面のすみっこに、月ごとの和の飾りが出るよ（1月 松と梅／2月 梅と雪／3月 桃と菜の花／4月 桜／5月 藤と若葉／6月 紫陽花と雨／7月 朝顔と笹飾り／8月 向日葵と花火／9月 月とすすき／10月 紅葉といちょう／11月 紅葉と落ち葉／12月 雪の結晶と柊）。ふだんは「自動」にしておいてね</div></div>
-<div class="card"><h2>💌 ゆずに送る・🔑 ロック</h2><div class="small">記録をエイジのGmailに送ると、ゆずが読めるよ。ログアウトしても記録や写真は消えないよ。</div><button class="big" onclick="yzHealthSend()">💌 ゆずに送る</button><button class="big sub" onclick="pwLogout()">🔑 パスワードを変更/ログアウト</button></div>
+<div class="card"><h2>💌 ゆずに送る・💝 受け取る・🔑 ロック</h2><div class="small">記録をエイジのGmailに送ると、ゆずが読めるよ。ゆずからのお届けは「受け取る」で入れてね。ログアウトしても記録や写真は消えないよ。</div><button class="big" onclick="yzHealthSend()">💌 ゆずに送る</button><button class="big" onclick="yzInbox.open()">💝 ゆずから受け取る<span class="yzInBadge"></span></button><button class="big sub" onclick="pwLogout()">🔑 パスワードを変更/ログアウト</button></div>
 <div class="card"><h2>💾 バックアップ</h2>
 <button class="big" id="exp">JSONで書き出し</button>
 <button class="big sub" id="impB">JSONを読み込み</button><input type="file" id="imp" accept=".json,application/json" style="display:none">
@@ -794,4 +794,31 @@ window.yzHealthSend=function(){var sel=cur,now=new Date(),sent=ds(now)+"T"+Strin
  return yuzuSend({subject:"【ゆずに送る】健康ノート "+sel,intro:intro,levels:levels,full:pack(4,false,true),fullNote:"4日分",
   theme:{bg:"#fff6f9",fg:"#5a3a45",acc:"#e85d88",btn:"linear-gradient(135deg,#ff8fab,#ff9fb8)",btnfg:"#fff",sub:"#ffe3ec"}})};
 })();
-</script><script>if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});</script></body></html>
+</script><script src="yuzu-inbox.js"></script><script>
+/* 健康ノート → 💝 ゆずから受け取る adapter (append / fill-empty only) */
+(function(){
+var NUM={wt:["⚖️","体重","kg",function(v){return v!=null}],steps:["👟","歩数","歩",function(v){return !!v}],sleep:["😴","睡眠","時間",function(v){return v!=null}],dist:["📏","距離","km",function(v){return !!v}]};
+function hasKey(d){return localStorage.getItem(key(d))!=null}
+function fmtN(f,v){return f=="steps"?Number(v).toLocaleString():v}
+function describe(it){var x=it.data||{},d=it.date;if(!d||!/^\d{4}-\d\d-\d\d$/.test(d))return{ok:0,icon:"❔",label:it.title||"?",section:"?",why:"日付がないよ"};
+ if(it.kind=="plan"){var a=(PL[d]||[]),e=x.e||"⭐",t=String(x.t||it.title||"予定").slice(0,20);var same=a.some(function(p){return p.e==e&&(p.t||"")==t});
+  return{ok:1,icon:e,label:t,section:"予定",same:same?"もう同じ予定が入ってるよ":0}}
+ if(it.kind=="num"&&NUM[x.field]){var N=NUM[x.field],o=get(d),cur=o[x.field],v=+x.value;if(!isFinite(v))return{ok:0,icon:N[0],label:N[1],section:"体のきろく",why:"数字が読めなかったよ"};
+  var lb=N[1]+" "+fmtN(x.field,v)+N[2];
+  if(N[3](cur)){if(+cur===v)return{ok:1,icon:N[0],label:lb,section:"体のきろく",same:"もう同じ数字が入ってるよ"};
+   return{ok:1,icon:N[0],label:lb,section:"体のきろく",conflict:"もう "+fmtN(x.field,cur)+N[2]+" が入ってるよ。そのままにするね（チェックすると "+fmtN(x.field,v)+N[2]+" に置きかえるよ）"}}
+  return{ok:1,icon:N[0],label:lb,section:"体のきろく"}}
+ if(it.kind=="food"){var m=Math.max(0,Math.min(3,+x.meal||0)),k=Math.round(+x.kcal||0),nm=String(x.name||it.title||"食事");var o2=get(d);
+  var s2=o2.foods.some(function(f){return f.meal==m&&f.name==nm&&f.kcal==k});
+  return{ok:k>0,icon:"🍚",label:MEALS[m]+"："+nm+"（"+k+"kcal）",section:"食事",same:s2?"もう同じ食事が入ってるよ":0,why:"カロリーがないよ"}}
+ return{ok:0,icon:"📝",label:it.title||"メモ",section:"メモ",why:"健康ノートには入れられない内容だよ（便利ノートに入れておくね）"}}
+function apply(sel){var n=0,pl=0;sel.forEach(function(it){var d=it._d||describe(it),x=it.data||{},day=it.date;if(!d.ok||d.same)return;
+  if(it.kind=="plan"){(PL[day]=PL[day]||[]).push({e:x.e||"⭐",t:String(x.t||it.title||"予定").slice(0,20)});pl=1;n++}
+  else if(it.kind=="num"){var o=get(day);o[x.field]=+x.value;if(x.field=="dist")o.distManual=true;put(day,o);n++}
+  else if(it.kind=="food"){var o2=get(day);o2.foods.push({meal:Math.max(0,Math.min(3,+x.meal||0)),name:String(x.name||it.title),amt:null,unit:"kcal",kcal:Math.round(+x.kcal)});put(day,o2);n++}});
+ if(pl)savePL();try{render()}catch(e){}try{drawMonth()}catch(e){}try{draw()}catch(e){}return n}
+yzInbox.init({app:"health",prefix:"yz",base:"data/inbox/",describe:describe,apply:apply,
+ theme:{bg:"#fff6f9",fg:"#5a3a45",acc:"#e85d88",btn:"linear-gradient(135deg,#ff8fab,#ff9fb8)",btnfg:"#fff",sub:"#ffe3ec",rowbg:"#fff",warn:"#c2410c",badge:"#fff",badgefg:"#e85d88",badgering:"#ffb3c8"}});
+})();
+</script>
+<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});</script></body></html>
