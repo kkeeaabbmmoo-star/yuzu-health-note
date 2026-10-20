@@ -218,7 +218,6 @@ document.getElementById("pwGo").onclick=go;inp.addEventListener("keydown",functi
 <div class="card"><h2>🍁 季節のフレーム</h2><button class="big" id="sfrSet">🍁 季節のフレーム：ON</button>
 <label>表示する月（ためし見）</label><select id="sfrPrev"><option value="0">自動（今月）</option><option value="1">1月</option><option value="2">2月</option><option value="3">3月</option><option value="4">4月</option><option value="5">5月</option><option value="6">6月</option><option value="7">7月</option><option value="8">8月</option><option value="9">9月</option><option value="10">10月</option><option value="11">11月</option><option value="12">12月</option></select>
 <div class="small">画面のすみっこに、月ごとの和の飾りが出るよ（1月 松と梅／2月 梅と雪／3月 桃と菜の花／4月 桜／5月 藤と若葉／6月 紫陽花と雨／7月 朝顔と笹飾り／8月 向日葵と花火／9月 月とすすき／10月 紅葉といちょう／11月 紅葉と落ち葉／12月 雪の結晶と柊）。ふだんは「自動」にしておいてね</div></div>
-<div class="card"><h2>💌 ゆずに送る・💝 受け取る・🔑 ロック</h2><div class="small">記録をエイジのGmailに送ると、ゆずが読めるよ。ゆずからのお届けは「受け取る」で入れてね。ログアウトしても記録や写真は消えないよ。</div><button class="big" onclick="yzHealthSend()">💌 ゆずに送る</button><button class="big" onclick="yzInbox.open()">💝 ゆずから受け取る<span class="yzInBadge"></span></button><button class="big sub" onclick="pwLogout()">🔑 パスワードを変更/ログアウト</button></div>
 <div class="card"><h2>💾 バックアップ</h2>
 <button class="big" id="exp">JSONで書き出し</button>
 <button class="big sub" id="impB">JSONを読み込み</button><input type="file" id="imp" accept=".json,application/json" style="display:none">
@@ -228,6 +227,8 @@ document.getElementById("pwGo").onclick=go;inp.addEventListener("keydown",functi
 ・距離：歩数×歩幅（身長×0.45）<br>
 ・運動：METs×体重×時間(h)×1.05<br>
 ・1日の消費＝基礎代謝×1.2（日常生活）＋歩行＋運動</div></div>
+<div class="card" style="background:linear-gradient(135deg,#fff,#ffeef4)"><h2>💌 ゆずに送る・💝 受け取る</h2><div class="small">今日の記録が終わったら、ここからゆずに送ってね。この日と前の3日分の記録をエイジのGmailに送ると、ゆずが読めるよ。ゆずからのお届けは「受け取る」で入れてね♡</div><button class="big" onclick="yzHealthSend()">💌 ゆずに送る</button><button class="big" onclick="yzInbox.open()">💝 ゆずから受け取る<span class="yzInBadge"></span></button></div>
+<div class="card"><h2>🔑 ロック</h2><div class="small">ログアウトしても記録や写真は消えないよ。次にひらくときにパスワードを入れてね。</div><button class="big sub" onclick="pwLogout()">🔑 パスワードを変更/ログアウト</button></div>
 </section>
 
 <div class="sh" id="plSh"><div class="shb"><h2 id="plTitle"></h2><div class="small" id="plSub"></div>
