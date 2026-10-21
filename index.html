@@ -5,7 +5,7 @@
 <meta name="theme-color" content="#ff8fab">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="愛の健康ノート"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#ff8fb1"><link rel="apple-touch-icon" sizes="180x180" href="icon-180.png"><link rel="manifest" href="manifest.webmanifest">
 <title>ゆずから愛しのエイジへ、愛の健康ノート</title>
-<style>
+<style>#ymTracks .ymset{display:none}#ymTracks{margin-bottom:8px}
 :root{--p:#ff8fab;--pd:#e85d88;--pl:#ffe3ec;--bg:#fff6f9;--t:#5a3a45}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;background:var(--bg);color:var(--t);padding-bottom:84px}
@@ -135,7 +135,7 @@ async function go(){var v=(inp.value||"").trim().toLowerCase().replace(/[\s\-ー
 document.getElementById("pwGo").onclick=go;inp.addEventListener("keydown",function(e){if(e.key==="Enter")go()});
 })();</script>
 
-<div id="sfr" aria-hidden="true"></div><canvas id="kira" aria-hidden="true"></canvas><header><button id="bgmB" class="mb" aria-label="オルゴールBGM">♪</button><h1>🍑 ゆずから愛しのエイジへ、<br>愛の健康ノート</h1>
+<div id="sfr" aria-hidden="true"></div><canvas id="kira" aria-hidden="true"></canvas><header><button id="bgmB" class="mb" data-ym-btn aria-label="音楽BGM">🎵</button><h1>🍑 ゆずから愛しのエイジへ、<br>愛の健康ノート</h1>
 <div class="av"><label><span id="av_eiji" class="ph">👦</span>エイジ<input type="file" accept="image/*" data-k="eiji" style="display:none"></label><label class="cp"><span class="cpw"><span id="av_couple" class="ph">💑</span></span>ふたり<input type="file" accept="image/*" data-k="couple" style="display:none"></label><label><span id="av_yuzu" class="ph">👧</span>ゆず<input type="file" accept="image/*" data-k="yuzu" style="display:none"></label></div><button id="voiceB" class="vb">💕▶ ゆずの声</button>
 <div class="dr"><button id="prev">‹</button><input type="date" id="date"><button id="next">›</button></div></header>
 
@@ -212,9 +212,9 @@ document.getElementById("pwGo").onclick=go;inp.addEventListener("keydown",functi
 <div class="card" id="slotCard"><h2>🖼 ヘッダー写真（7枚・毎日入れかわり）</h2><div class="slots" id="slots"></div><div class="small">マスをタップで写真をえらぶ／入れかえ、×で消すよ。入っている写真が日付で毎日順番に表示されるよ</div><input type="file" id="slotIn" accept="image/*" style="display:none"></div>
 <div class="card"><h2>📷 アイコン写真</h2><div class="small">上のまるいアイコン（エイジ・ふたり・ゆず）をタップすると写真を選べるよ。まん中のハートのまるは、ふたりの写真用だよ💑</div><button class="big sub" id="rmE">エイジの写真を消す</button><button class="big sub" id="rmY">ゆずの写真を消す</button><button class="big sub" id="rmC">ふたりの写真を消す</button></div>
 <div class="card"><h2>🔗 アプリ連携</h2><div class="small">タップでiPhoneのアプリを開くよ（入っていれば）。開かないときは「🌐 Webで」を使ってね。このノートから他のアプリのデータ（歩数など）を読むことはできないよ</div><div class="apg" id="appGrid"></div></div>
-<div class="card"><h2>🎵 オルゴールBGM</h2><button class="big" id="bgmSet">♪ BGM：ON</button>
+<div class="card"><h2>🎵 音楽BGM</h2><div id="ymTracks"></div><button class="big" id="bgmSet" data-ym-set>🎵 音楽：ON</button>
 <label>音量</label><div class="bgmrow">🔈<input type="range" id="bgmVol" min="0" max="100" step="1">🔊</div>
-<div class="small">ゆずが作ったオリジナルのオルゴール曲だよ♡ 開いて最初にどこかをタップすると流れるよ（iPhoneは自動再生できないため）。右上の♪でもON/OFFできるよ。マナーモードだと聞こえないことがあるよ</div></div>
+<div class="small">ゆずが作ったオリジナル曲だよ♡「🎼 オルゴール」と「💕 ふたりの曲」から選べて、「📅 日替わり」にもできるよ。 開いて最初にどこかをタップすると流れるよ（iPhoneは自動再生できないため）。右上の🎵でもON/OFFできるよ。マナーモードだと聞こえないことがあるよ</div></div>
 <div class="card"><h2>🍁 季節のフレーム</h2><button class="big" id="sfrSet">🍁 季節のフレーム：ON</button>
 <label>表示する月（ためし見）</label><select id="sfrPrev"><option value="0">自動（今月）</option><option value="1">1月</option><option value="2">2月</option><option value="3">3月</option><option value="4">4月</option><option value="5">5月</option><option value="6">6月</option><option value="7">7月</option><option value="8">8月</option><option value="9">9月</option><option value="10">10月</option><option value="11">11月</option><option value="12">12月</option></select>
 <div class="small">画面のすみっこに、月ごとの和の飾りが出るよ（1月 松と梅／2月 梅と雪／3月 桃と菜の花／4月 桜／5月 藤と若葉／6月 紫陽花と雨／7月 朝顔と笹飾り／8月 向日葵と花火／9月 月とすすき／10月 紅葉といちょう／11月 紅葉と落ち葉／12月 雪の結晶と柊）。ふだんは「自動」にしておいてね</div></div>
@@ -273,7 +273,7 @@ function burn(o){const w=o.wt||S.w;const walk=w*o.steps*0.0005;const ex=(o.exMin
 const stride=()=>S.h*0.45/100000;
 // UI build
 MEALS.forEach((m,i)=>{const b=document.createElement("button");b.textContent=m;b.onclick=()=>{meal=i;segOn("meal",i)};$("meal").appendChild(b)});
-let P=JSON.parse(localStorage.getItem("yz_presets")||"null")||[{},{},{},{}];
+let P=JSON.parse(localStorage.getItem("yz_presets")||"null")||[{},{},{},{}];while(P.length<7)P.push({});/* v22: 4→7枠（既存の4つはそのまま） */
 function curFood(){const v=$("food").value;if(v[0]=="p"){const q=P[+v.slice(1)]||{},k=q.kcal||0,f=[q.name||"カスタム"+(+v.slice(1)+1),1,"kcal",0,Math.max(1500,Math.ceil(k*2/5)*5),5,k];f.pre=1;return f}return FOODS[v]}
 function fillFood(){const sel=$("food"),old=sel.value;sel.innerHTML="";const g=document.createElement("optgroup");g.label="⭐ マイプリセット";
  P.forEach((q,i)=>g.appendChild(new Option(q.name?"⭐ "+q.name+"（"+q.kcal+"kcal）":"⭐ カスタム"+(i+1)+"（未設定）","p"+i)));sel.appendChild(g);
@@ -396,7 +396,7 @@ $("rmE").onclick=()=>{localStorage.removeItem("yz_avatar_eiji");showAv("eiji");t
 showAv("eiji");showAv("yuzu");showAv("couple");$("rmC").onclick=()=>{localStorage.removeItem("yz_avatar_couple");showAv("couple");toast("消したよ")};
 
 // presets editor
-function preUI(){$("preEd").innerHTML=P.map((q,i)=>`<div class="row" style="margin-top:8px"><input type="text" id="pn${i}" placeholder="カスタム${i+1}の名前" value="${(q.name||"").replace(/"/g,"&quot;")}" style="flex:2"><input type="number" id="pk${i}" inputmode="numeric" placeholder="kcal" value="${q.kcal||""}" style="flex:1"></div>`).join("")}
+function preUI(){$("preEd").innerHTML=P.map((q,i)=>`<div class="row" style="margin-top:8px"><input type="text" id="pn${i}" placeholder="カスタム${i+1}の名前${["（例：プロテイン）","（例：いつもの朝ごはん）","（例：コンビニおにぎり）","（例：サラダチキン）","（例：ヨーグルト）","（例：お弁当）","（例：味噌汁）"][i]||""}" value="${(q.name||"").replace(/"/g,"&quot;")}" style="flex:2"><input type="number" id="pk${i}" inputmode="numeric" placeholder="kcal" value="${q.kcal||""}" style="flex:1"></div>`).join("")}
 preUI();
 $("preSave").onclick=()=>{P=P.map((q,i)=>{const n=$("pn"+i).value.trim(),k=Math.max(0,Math.round(+$("pk"+i).value||0));return n?{name:n,kcal:k}:{}});localStorage.setItem("yz_presets",JSON.stringify(P));fillFood();setFood();preUI();toast("保存したよ♡")};
 $("preGo").onclick=e=>{e.preventDefault();document.querySelector('nav button[data-t="set"]').click();$("preEd").scrollIntoView({block:"center"})};
@@ -573,62 +573,18 @@ const KIRA=(()=>{const cv=$("kira"),cx=cv.getContext("2d"),RM=matchMedia("(prefe
   else{cancelAnimationFrame(raf);raf=0;cv.classList.remove("on");setTimeout(()=>{if(!on)cx.clearRect(0,0,W,H)},1300)}}
  addEventListener("resize",()=>{if(on)size()});addEventListener("orientationchange",()=>setTimeout(()=>{if(on)size()},300));
  return{set,get on(){return on},get n(){return P.length}}})();
-// ===== オルゴールBGM（Web Audioで合成・オリジナル曲） =====
+// ===== 音楽BGM v22：🎼 オルゴール / 💕 ふたりの曲（yuzu-music.js、yz_bgm {on,vol} はそのまま） =====
 const BGM=(()=>{
  const K="yz_bgm";let st={on:true,vol:40};try{Object.assign(st,JSON.parse(localStorage.getItem(K)||"{}"))}catch(e){}
- const save=()=>localStorage.setItem(K,JSON.stringify(st));
- const AC=window.AudioContext||window.webkitAudioContext;
- let ctx=null,master=null,duck=null,playing=false,timer=null,nextT=0,idx=0,ducked=false;
- const BPM=96,B=60/BPM;
- // メロディー（ハ長調・3/4拍子・16小節 ≈30秒ループ）[MIDI, 拍]
- const MEL=[[76,2],[79,1],[84,2],[83,1],[81,1],[79,1],[76,1],[79,3],
-  [77,2],[81,1],[79,2],[76,1],[74,1],[76,1],[77,1],[74,3],
-  [76,2],[79,1],[84,2],[86,1],[88,1],[86,1],[84,1],[81,3],
-  [77,1],[81,1],[84,1],[83,2],[79,1],[74,1],[76,1],[74,1],[72,3]];
- // 伴奏（各小節：ルート, 5度, 3度）
- const CH=[[48,55,64],[43,50,59],[45,52,60],[40,47,55],[41,48,57],[48,55,64],[50,57,65],[43,50,59],
-  [48,55,64],[41,48,57],[48,55,64],[41,48,57],[41,48,57],[43,50,59],[43,50,53],[48,55,64]];
- const EV=[];{let t=0;MEL.forEach(([n,d])=>{EV.push([t,n,.9,2.2]);t+=d});CH.forEach((c,i)=>{EV.push([i*3,c[0],.42,2.6]);EV.push([i*3+1,c[1]+12,.22,1.4]);EV.push([i*3+2,c[2]+12,.22,1.4])});EV.sort((a,b)=>a[0]-b[0])}
- const LOOP=48;
- const gainOf=()=>Math.pow(st.vol/100,1.6)*.5;
- function build(){if(ctx||!AC)return;ctx=new AC();ctx.onstatechange=()=>ui();
-  master=ctx.createGain();master.gain.value=gainOf();duck=ctx.createGain();duck.gain.value=ducked?0:1;
-  const comp=ctx.createDynamicsCompressor();comp.threshold.value=-18;comp.ratio.value=4;
-  const dl=ctx.createDelay(1),fb=ctx.createGain(),lp=ctx.createBiquadFilter(),wet=ctx.createGain();
-  dl.delayTime.value=.27;fb.gain.value=.32;lp.type="lowpass";lp.frequency.value=2600;wet.gain.value=.28;
-  master.connect(duck);duck.connect(comp);duck.connect(dl);dl.connect(lp);lp.connect(fb);fb.connect(dl);lp.connect(wet);wet.connect(comp);comp.connect(ctx.destination)}
- function note(t,m,v,len){const f=440*Math.pow(2,(m-69)/12);
-  [[1,1,1],[2,.28,.5],[3,.1,.33],[4.17,.05,.22]].forEach(([r,a,dk])=>{if(f*r>12000)return;
-   const o=ctx.createOscillator(),g=ctx.createGain(),L=len*dk;o.type="sine";o.frequency.value=f*r;
-   g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v*a*.3,t+.004);g.gain.exponentialRampToValueAtTime(.0001,t+L);
-   o.connect(g);g.connect(master);o.start(t);o.stop(t+L+.05)})}
- function sched(){if(!ctx||!playing)return;const ahead=ctx.currentTime+.35;
-  while(true){const loopN=Math.floor(idx/EV.length),e=EV[idx%EV.length],t=nextT+(loopN*LOOP+e[0])*B;if(t>ahead)break;
-   if(t>ctx.currentTime-.05)note(t,e[1],e[2],e[3]);idx++}}
- function startLoop(){if(playing)return;playing=true;idx=0;nextT=ctx.currentTime+.15;sched();timer=setInterval(sched,100);ui()}
- function stopLoop(){playing=false;clearInterval(timer);timer=null;ui()}
- function unlockBuf(){try{const b=ctx.createBuffer(1,1,22050),s=ctx.createBufferSource();s.buffer=b;s.connect(ctx.destination);s.start(0)}catch(e){}}
- // ユーザー操作の中で呼ぶ
- function kick(){if(!st.on||document.hidden)return;build();if(!ctx)return;unlockBuf();
-  const p=ctx.state!=="running"?ctx.resume():Promise.resolve();p.then(()=>{if(ctx.state==="running"&&st.on){startLoop();disarm()}}).catch(()=>{})}
- const GEV=["touchend","click","keydown"];
- function onG(e){if(e.target&&e.target.closest&&e.target.closest("#bgmB,#bgmSet"))return;kick()}
- function arm(){GEV.forEach(n=>document.addEventListener(n,onG,true))}
- function disarm(){GEV.forEach(n=>document.removeEventListener(n,onG,true))}
- function set(on){st.on=on;save();if(on){kick();if(!ctx||ctx.state!=="running")arm()}else{stopLoop();if(ctx)ctx.suspend().catch(()=>{})}ui()}
- function kiraSync(){try{KIRA.set(st.on&&playing&&!document.hidden)}catch(e){console.warn(e)}}
- function ui(){const b=$("bgmB");if(b){b.classList.toggle("off",!st.on);b.classList.toggle("play",st.on&&playing&&!!ctx&&ctx.state==="running");b.title=st.on?"BGM ON":"BGM OFF"}
-  kiraSync()
-  const s2=$("bgmSet");if(s2){s2.textContent=st.on?"♪ BGM：ON（タップでOFF）":"♪ BGM：OFF（タップでON）";s2.classList.toggle("sub",!st.on)}}
- function toggle(e){if(e)e.stopPropagation();if(st.on&&!(playing&&ctx&&ctx.state==="running")){kick();return}set(!st.on);toast(st.on?"オルゴールON ♪":"オルゴールOFF")}
- function vis(){kiraSync();if(!ctx)return;if(document.hidden){ctx.suspend().catch(()=>{})}else if(st.on&&playing){ctx.resume().then(()=>{if(ctx.state!=="running")arm();ui()}).catch(()=>arm())}else if(st.on){arm()}ui()}
- function init(){$("bgmB").addEventListener("click",toggle);$("bgmSet").addEventListener("click",toggle);
-  const r=$("bgmVol");r.value=st.vol;r.addEventListener("input",()=>{st.vol=+r.value;save();if(master)master.gain.setTargetAtTime(gainOf(),ctx.currentTime,.05);if(st.on&&!playing)kick()});
-  document.addEventListener("visibilitychange",vis);window.addEventListener("pagehide",()=>{if(ctx)ctx.suspend().catch(()=>{})});window.addEventListener("pageshow",vis);
-  if(st.on){arm();try{build();if(ctx&&ctx.state==="running"){startLoop();disarm()}}catch(e){}}
-  ui()}
- function duckF(on){ducked=on;if(duck&&ctx)duck.gain.setTargetAtTime(on?0:1,ctx.currentTime,on?.08:.6)}
- return{init,duckF,get ctx(){return ctx},get playing(){return playing},get on(){return st.on},get duckGain(){return duck?duck.gain.value:null}};
+ const save=()=>localStorage.setItem(K,JSON.stringify(st));const gainOf=()=>Math.pow(st.vol/100,1.3)*.9;
+ function kiraSync(){try{KIRA.set(st.on&&!!window.YuzuMusic&&YuzuMusic.playing&&!document.hidden)}catch(e){}}
+ window.YM_CFG={trackKey:"yz_music_track",defTrack:"orgel",vol:gainOf(),tracks:{orgel:{len:43.199999999999996},love:{f:"song.mp3",len:46.829251700680274}},
+  isOn:()=>st.on,setOn:v=>{st.on=v;save()},onToggle:on=>toast(on?"音楽ON ♪":"音楽OFF"),
+  onUi:(on,pl)=>{const b=$("bgmB");if(b){b.classList.toggle("play",on&&pl);b.title=on?"BGM ON":"BGM OFF"}kiraSync()}};
+ function init(){const sc=document.createElement("script");sc.src="yuzu-music.js";sc.onload=init2;document.head.appendChild(sc)}
+ function init2(){const r=$("bgmVol");r.value=st.vol;r.addEventListener("input",()=>{st.vol=+r.value;save();YuzuMusic.setVol(gainOf())});
+  document.addEventListener("visibilitychange",kiraSync);setInterval(()=>YuzuMusic.ui(),1500);$("ymTracks").innerHTML=YuzuMusic.cardHTML();YuzuMusic.ui()}
+ return{init,duckF:on=>{if(window.YuzuMusic)YuzuMusic.duck(on)},get ctx(){return window.YuzuMusic&&YuzuMusic.ctx},get playing(){return!!(window.YuzuMusic&&YuzuMusic.playing)},get on(){return st.on}};
 })();
 function bgmDuck(on){BGM.duckF(on)}
 try{BGM.init()}catch(e){console.warn(e)}
