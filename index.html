@@ -177,7 +177,7 @@ document.getElementById("pwGo").onclick=go;inp.addEventListener("keydown",functi
 <div class="card"><h2>📅 月間カレンダー</h2><div class="mh"><button id="mPrev">‹</button><b id="mTitle"></b><button id="mNext">›</button></div>
 <div class="cal" id="cal"></div><div class="small">🍚摂取kcal 👟歩数 ⚖️体重 🏃運動分 ／ ⭕/❌排便 😞😐😆気分 😢🙂💕ゆずとの会話 🛌休息日 📅予定（右下）💕ラブラブの日 ／ ピンク＝記録あり。日付をタップで予定の追加・その日の記録へ</div><div class="ms" id="mSum"></div></div>
 <div class="card"><h2>📈 7日間のようす</h2><canvas id="trend" data-h="465"></canvas></div>
-<div class="card" style="background:linear-gradient(135deg,#fff,#ffeef4)"><h2>💌 ゆずに送る・💝 受け取る</h2><div class="small">この日と前の3日分の記録・予定を、エイジのGmailにメールで送るよ。ゆずがメールから見つけた記録や予定は「受け取る」でノートに入れられるよ♡</div><button class="big" onclick="yzHealthSend()">💌 ゆずに送る</button><button class="big" onclick="yzInbox.open()">💝 ゆずから受け取る<span class="yzInBadge"></span></button></div>
+<div data-gy></div><div class="card" style="background:linear-gradient(135deg,#fff,#ffeef4)"><h2>💌 ゆずに送る・💝 受け取る</h2><div class="small">この日と前の3日分の記録・予定を、エイジのGmailにメールで送るよ。ゆずがメールから見つけた記録や予定は「受け取る」でノートに入れられるよ♡</div><button class="big" onclick="yzHealthSend()">💌 ゆずに送る</button><button class="big" onclick="yzInbox.open()">💝 ゆずから受け取る<span class="yzInBadge"></span></button></div>
 </section>
 
 <section class="tab" id="t-pho">
@@ -229,7 +229,7 @@ document.getElementById("pwGo").onclick=go;inp.addEventListener("keydown",functi
 ・1日の消費＝基礎代謝×1.2（日常生活）＋歩行＋運動</div></div>
 <div class="card" style="background:linear-gradient(135deg,#fff,#ffeef4)"><h2>💌 ゆずに送る・💝 受け取る</h2><div class="small">今日の記録が終わったら、ここからゆずに送ってね。この日と前の3日分の記録をエイジのGmailに送ると、ゆずが読めるよ。ゆずからのお届けは「受け取る」で入れてね♡</div><button class="big" onclick="yzHealthSend()">💌 ゆずに送る</button><button class="big" onclick="yzInbox.open()">💝 ゆずから受け取る<span class="yzInBadge"></span></button></div>
 <div class="card"><h2>🔑 ロック</h2><div class="small">ログアウトしても記録や写真は消えないよ。次にひらくときにパスワードを入れてね。</div><button class="big sub" onclick="pwLogout()">🔑 パスワードを変更/ログアウト</button></div>
-<div class="card" style="margin-bottom:96px"><h2>⚠️ データ</h2><div class="small">2回確認するよ。記録・予定・写真・設定が消えて、パスワードとアプリ本体は残るよ。</div><button class="big" style="background:#d9534f" onclick="yzWipe()">⚠️ データをすべて消す</button><div class="small" style="text-align:center;margin-top:8px">バージョン v21</div></div>
+<div class="card" style="margin-bottom:96px"><h2>⚠️ データ</h2><div class="small">2回確認するよ。記録・予定・写真・設定が消えて、パスワードとアプリ本体は残るよ。</div><button class="big" style="background:#d9534f" onclick="yzWipe()">⚠️ データをすべて消す</button><div class="small" style="text-align:center;margin-top:8px">バージョン v23</div></div>
 </section>
 
 <div class="sh" id="plSh"><div class="shb"><h2 id="plTitle"></h2><div class="small" id="plSub"></div>
@@ -784,4 +784,5 @@ async function yzWipe(){if(!confirm("このノートに入力した中身をす�
 var del=[];for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if((/^yz_|^yuzu_/).test(k)&&k!=="yz_lock_v1"&&k.indexOf("_inbox_")<0)del.push(k)}del.forEach(function(k){localStorage.removeItem(k)});
 try{await new Promise(function(ok){var r=indexedDB.open("yuzu_db",1);r.onupgradeneeded=function(){var d=r.result;d.createObjectStore("slots");d.createObjectStore("photos",{keyPath:"id",autoIncrement:true})};r.onsuccess=function(){var d=r.result,t=d.transaction(["slots","photos"],"readwrite");t.objectStore("slots").clear();t.objectStore("photos").clear();t.oncomplete=t.onerror=t.onabort=function(){d.close();ok()}};r.onerror=function(){ok()}})}catch(e){}
 location.reload()}</script>
+<script>window.GY_CFG={key:"yz_grok_yuzu",theme:{acc:"#e85d88",btn:"linear-gradient(135deg,#ff8fab,#ff9fb8)"}};</script><script src="grok-yuzu.js"></script>
 </body></html>
