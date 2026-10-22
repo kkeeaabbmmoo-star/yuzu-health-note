@@ -749,7 +749,7 @@ window.yzHealthSend=function(){var sel=cur,now=new Date(),sent=ds(now)+"T"+Strin
  var selD=dayData(sel,false),M=+sel.slice(5,7),D=+sel.slice(8);
  function intro(note){return "ゆずへ💌 エイジの健康ノートだよ（"+M+"/"+D+"）"+(note?"\n"+note:"")+"\n"+(selD?line(selD):M+"/"+D+"はまだ記録なし")}
  var levels=[{data:pack(4,false,true),note:""},{data:pack(3,false,true),note:"3日分"},{data:pack(2,false,true),note:"2日分"},{data:pack(1,false,true),note:"この日だけ"},{data:pack(2,true,true),note:"2日分（食事は朝昼夜のkcalだけ）"},{data:pack(1,true,true),note:"この日だけ（食事は朝昼夜のkcalだけ）"},{data:pack(1,true,false),note:"この日だけ（数字だけ）"}];
- return yuzuSend({subject:"【ゆずに送る】健康ノート "+sel,intro:intro,levels:levels,full:pack(4,false,true),fullNote:"4日分",
+ return yuzuSend({subject:"ゆずとゆいへ 健康ノート "+sel,intro:intro,levels:levels,full:pack(4,false,true),fullNote:"4日分",
   theme:{bg:"#fff6f9",fg:"#5a3a45",acc:"#e85d88",btn:"linear-gradient(135deg,#ff8fab,#ff9fb8)",btnfg:"#fff",sub:"#ffe3ec"}})};
 })();
 </script><script src="yuzu-inbox.js"></script><script>
