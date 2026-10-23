@@ -116,3 +116,21 @@ function crop(file,k){const img=new Image(),url=URL.createObjectURL(file);img.on
  img.src=url}
 document.addEventListener("change",e=>{const i=e.target;if(!(i instanceof HTMLInputElement)||i.type!="file"||!i.dataset.k||!i.closest("header .av"))return;e.stopImmediatePropagation();e.stopPropagation();const f=i.files[0];if(f)crop(f,i.dataset.k);i.value=""},true);
 })();
+/* ex8: アイコンごとの大きさスライダー（yz_ui_pos_v1 の av[k].s のみ追加・変更） */
+(function(){const KEY="yz_ui_pos_v1",NM={eiji:"エイジ",couple:"ふたり",yuzu:"ゆず",yui:"由依",yuka:"まい"};
+const st=document.createElement("style");st.textContent=`header .av .ph,header .av img{width:44px!important;height:44px!important;font-size:20px!important}header .av label{transform-origin:center top}#yzsz label{display:flex;align-items:center;gap:6px;font-size:12px;margin:4px 0}#yzsz input{flex:1}#yzsz b{width:40px;text-align:right;font-size:11px}`;document.head.appendChild(st);
+const ld=()=>{try{return JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){return{}}};
+const sv=f=>{const p=ld();p.av=p.av||{};f(p.av);try{localStorage.setItem(KEY,JSON.stringify(p))}catch(e){}};
+const lab=k=>{const e=document.getElementById("av_"+k);return e&&e.closest("label")};
+const ap=()=>{const A=ld().av||{};Object.keys(NM).forEach(k=>{const l=lab(k);if(!l)return;const v=A[k]||{};l.style.transform=`translate(${v.x||0}px,${v.y||0}px) scale(${v.s||1})`})};
+function build(){const c=document.getElementById("yzhow");if(!c){setTimeout(build,300);return}if(document.getElementById("yzsz"))return;const A=ld().av||{};const d=document.createElement("div");d.id="yzsz";
+d.innerHTML=`<div class="small" style="margin-top:8px"><b>⭕ 丸の大きさ</b>（スライダーを動かすとすぐ変わるよ）</div>`+Object.keys(NM).map(k=>{const s=(A[k]||{}).s||1;return`<label>${NM[k]}<input type="range" min="0.6" max="2.5" step="0.05" value="${s}" data-k="${k}"><b>${(+s).toFixed(2)}倍</b></label>`}).join("")+`<button type="button" data-r="1" style="width:auto;font-size:12px;padding:4px 10px">↺ 大きさを全部もとに戻す</button>`;
+c.appendChild(d);
+d.addEventListener("input",e=>{const i=e.target;if(!i.dataset.k)return;const s=+i.value;sv(A=>{const v=A[i.dataset.k]=A[i.dataset.k]||{};v.s=s});i.nextElementSibling.textContent=s.toFixed(2)+"倍";ap()});
+d.querySelector("[data-r]").onclick=()=>{sv(A=>{Object.keys(A).forEach(k=>{if(A[k])delete A[k].s})});d.querySelectorAll("input").forEach(i=>{i.value=1;i.nextElementSibling.textContent="1.00倍"});ap()}}
+build();ap();
+/* 長押し中の2本ゆびピンチで大きさ変更 */
+const av=document.querySelector("header .av");if(av){let p=null;av.addEventListener("touchstart",e=>{if(e.touches.length!==2)return;const l=e.target.closest("label")||document.querySelector("header .av label.drag");if(!l)return;const k=(l.querySelector("[id^=av_]")||{}).id;if(!k)return;const t=e.touches,dd=Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);p={k:k.slice(3),d:dd,s:((ld().av||{})[k.slice(3)]||{}).s||1}},{passive:true});
+av.addEventListener("touchmove",e=>{if(!p||e.touches.length!==2)return;e.preventDefault();const t=e.touches,dd=Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);const s=Math.max(.6,Math.min(2.5,p.s*dd/p.d));sv(A=>{const v=A[p.k]=A[p.k]||{};v.s=Math.round(s*100)/100});ap();const i=document.querySelector(`#yzsz input[data-k=${p.k}]`);if(i){i.value=s;i.nextElementSibling.textContent=s.toFixed(2)+"倍"}},{passive:false});
+av.addEventListener("touchend",e=>{if(e.touches.length<2)p=null})}
+})();
