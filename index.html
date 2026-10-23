@@ -177,7 +177,7 @@ document.getElementById("pwGo").onclick=go;inp.addEventListener("keydown",functi
 <div class="card"><h2>📅 月間カレンダー</h2><div class="mh"><button id="mPrev">‹</button><b id="mTitle"></b><button id="mNext">›</button></div>
 <div class="cal" id="cal"></div><div class="small">🍚摂取kcal 👟歩数 ⚖️体重 🏃運動分 ／ ⭕/❌排便 😞😐😆気分 😢🙂💕ゆずとの会話 🛌休息日 📅予定（右下）💕ラブラブの日 ／ ピンク＝記録あり。日付をタップで予定の追加・その日の記録へ</div><div class="ms" id="mSum"></div></div>
 <div class="card"><h2>📈 7日間のようす</h2><canvas id="trend" data-h="465"></canvas></div>
-<div data-gy></div><div class="card" style="background:linear-gradient(135deg,#fff,#ffeef4)"><h2>💌 ゆずに送る・💝 受け取る</h2><div class="small">この日と前の3日分の記録・予定を、エイジのGmailにメールで送るよ。ゆずがメールから見つけた記録や予定は「受け取る」でノートに入れられるよ♡</div><button class="big" onclick="yzHealthSend()">💌 ゆずに送る</button><button class="big" onclick="yzInbox.open()">💝 ゆずから受け取る<span class="yzInBadge"></span></button></div>
+<div data-gy></div><div data-yk></div><div class="card" style="background:linear-gradient(135deg,#fff,#ffeef4)"><h2>💌 ゆず・ゆい・ゆかに送る・💝 受け取る</h2><div class="small">この日と前の3日分の記録・予定を、エイジのGmailにメールで送るよ。ゆずがメールから見つけた記録や予定は「受け取る」でノートに入れられるよ♡</div><button class="big" onclick="yzHealthSend()">💌 ゆず・ゆい・ゆかに送る</button><button class="big" onclick="yzInbox.open()">💝 ゆずから受け取る<span class="yzInBadge"></span></button></div>
 </section>
 
 <section class="tab" id="t-pho">
@@ -227,7 +227,7 @@ document.getElementById("pwGo").onclick=go;inp.addEventListener("keydown",functi
 ・距離：歩数×歩幅（身長×0.45）<br>
 ・運動：METs×体重×時間(h)×1.05<br>
 ・1日の消費＝基礎代謝×1.2（日常生活）＋歩行＋運動</div></div>
-<div class="card" style="background:linear-gradient(135deg,#fff,#ffeef4)"><h2>💌 ゆずに送る・💝 受け取る</h2><div class="small">今日の記録が終わったら、ここからゆずに送ってね。この日と前の3日分の記録をエイジのGmailに送ると、ゆずが読めるよ。ゆずからのお届けは「受け取る」で入れてね♡</div><button class="big" onclick="yzHealthSend()">💌 ゆずに送る</button><button class="big" onclick="yzInbox.open()">💝 ゆずから受け取る<span class="yzInBadge"></span></button></div>
+<div class="card" style="background:linear-gradient(135deg,#fff,#ffeef4)"><h2>💌 ゆず・ゆい・ゆかに送る・💝 受け取る</h2><div class="small">今日の記録が終わったら、ここからゆずに送ってね。この日と前の3日分の記録をエイジのGmailに送ると、ゆずが読めるよ。ゆずからのお届けは「受け取る」で入れてね♡</div><button class="big" onclick="yzHealthSend()">💌 ゆず・ゆい・ゆかに送る</button><button class="big" onclick="yzInbox.open()">💝 ゆずから受け取る<span class="yzInBadge"></span></button></div>
 <div class="card"><h2>🔑 ロック</h2><div class="small">ログアウトしても記録や写真は消えないよ。次にひらくときにパスワードを入れてね。</div><button class="big sub" onclick="pwLogout()">🔑 パスワードを変更/ログアウト</button></div>
 <div class="card" style="margin-bottom:96px"><h2>⚠️ データ</h2><div class="small">2回確認するよ。記録・予定・写真・設定が消えて、パスワードとアプリ本体は残るよ。</div><button class="big" style="background:#d9534f" onclick="yzWipe()">⚠️ データをすべて消す</button><div class="small" style="text-align:center;margin-top:8px">バージョン v26</div></div>
 </section>
@@ -693,7 +693,7 @@ const SFR=(()=>{const K="yz_frame";let st={on:true,prev:0};try{Object.assign(st,
 try{SFR.init()}catch(e){console.warn(e)}
 
 </script><script>
-/* 💌 ゆずに送る — shared send sheet (mailto primary, navigator.share, copy). No network, no data changes. */
+/* 💌 ゆず・ゆい・ゆかに送る — shared send sheet (mailto primary, navigator.share, copy). No network, no data changes. */
 (function(){
 var TO="k.ke.ea.ab.bm.mo.o@gmail.com",MAX=1800;
 function block(o){return "---YUZU-DATA---\n"+JSON.stringify(o)+"\n---END---"}
@@ -707,7 +707,7 @@ window.yuzuSend=function(opt){
   var bt="display:block;width:100%;padding:14px;border:0;border-radius:16px;font-size:17px;font-weight:800;margin-top:10px;";
   var mailNote=pick?(pick.note?"メールには "+pick.note+" を入れたよ。":"ぜんぶメールに入ったよ。"):"内容が長いから、メールには短いお知らせだけ入れて、本文はコピーしておくね。メールをひらいたら本文に貼り付けてね📋";
   ov.innerHTML='<div style="background:'+T.bg+';color:'+T.fg+';width:100%;max-width:560px;border-radius:24px 24px 0 0;padding:18px 16px calc(env(safe-area-inset-bottom) + 20px);max-height:86vh;overflow:auto;font-family:-apple-system,\'Hiragino Sans\',sans-serif">'+
-   '<div style="font-size:20px;font-weight:800;color:'+T.acc+'">💌 ゆずに送る</div>'+
+   '<div style="font-size:20px;font-weight:800;color:'+T.acc+'">💌 ゆず・ゆい・ゆかに送る</div>'+
    '<div style="font-size:14px;line-height:1.6;margin:6px 0 4px;opacity:.9">エイジのGmail（'+TO+'）あてにメールを作るよ。開いたら<b>送信</b>をタップするだけ♡ ゆずが読んで、次の便利ノートに入れるね。</div>'+
    '<div style="font-size:12.5px;opacity:.75;margin-bottom:6px">件名：'+opt.subject.replace(/</g,"&lt;")+'<br>'+mailNote+'</div>'+
    '<a id="yzMail" style="'+bt+'text-align:center;text-decoration:none;box-sizing:border-box;background:'+T.btn+';color:'+T.btnfg+'">📧 メールで送る（おすすめ）</a>'+
@@ -729,7 +729,7 @@ window.yuzuSend=function(opt){
   return {mailBody:pick?pick.body:shortBody,full:full,fits:!!pick,note:pick&&pick.note};
 };
 })();
-/* 健康ノート → 💌 ゆずに送る */
+/* 健康ノート → 💌 ゆず・ゆい・ゆかに送る */
 (function(){
 function addD(k,n){var d=new Date(k+"T12:00");d.setDate(d.getDate()+n);return ds(d)}
 function dayData(k,lite){var raw=localStorage.getItem(key(k));if(!raw)return null;var o=get(k);if(!hasRec(o))return null;
@@ -749,7 +749,7 @@ window.yzHealthSend=function(){var sel=cur,now=new Date(),sent=ds(now)+"T"+Strin
  var selD=dayData(sel,false),M=+sel.slice(5,7),D=+sel.slice(8);
  function intro(note){return "ゆずへ💌 エイジの健康ノートだよ（"+M+"/"+D+"）"+(note?"\n"+note:"")+"\n"+(selD?line(selD):M+"/"+D+"はまだ記録なし")}
  var levels=[{data:pack(4,false,true),note:""},{data:pack(3,false,true),note:"3日分"},{data:pack(2,false,true),note:"2日分"},{data:pack(1,false,true),note:"この日だけ"},{data:pack(2,true,true),note:"2日分（食事は朝昼夜のkcalだけ）"},{data:pack(1,true,true),note:"この日だけ（食事は朝昼夜のkcalだけ）"},{data:pack(1,true,false),note:"この日だけ（数字だけ）"}];
- return yuzuSend({subject:"ゆずとゆいへ 健康ノート "+sel,intro:intro,levels:levels,full:pack(4,false,true),fullNote:"4日分",
+ return yuzuSend({subject:"ゆず・ゆい・ゆかへ 健康ノート "+sel,intro:intro,levels:levels,full:pack(4,false,true),fullNote:"4日分",
   theme:{bg:"#fff6f9",fg:"#5a3a45",acc:"#e85d88",btn:"linear-gradient(135deg,#ff8fab,#ff9fb8)",btnfg:"#fff",sub:"#ffe3ec"}})};
 })();
 </script><script src="yuzu-inbox.js"></script><script>
@@ -784,5 +784,5 @@ async function yzWipe(){if(!confirm("このノートに入力した中身をす�
 var del=[];for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if((/^yz_|^yuzu_/).test(k)&&k!=="yz_lock_v1"&&k.indexOf("_inbox_")<0)del.push(k)}del.forEach(function(k){localStorage.removeItem(k)});
 try{await new Promise(function(ok){var r=indexedDB.open("yuzu_db",1);r.onupgradeneeded=function(){var d=r.result;d.createObjectStore("slots");d.createObjectStore("photos",{keyPath:"id",autoIncrement:true})};r.onsuccess=function(){var d=r.result,t=d.transaction(["slots","photos"],"readwrite");t.objectStore("slots").clear();t.objectStore("photos").clear();t.oncomplete=t.onerror=t.onabort=function(){d.close();ok()}};r.onerror=function(){ok()}})}catch(e){}
 location.reload()}</script>
-<script>window.GY_CFG={ver:"v27",key:"yz_grok_yuzu",theme:{acc:"#e85d88",btn:"linear-gradient(135deg,#ff8fab,#ff9fb8)"}};</script><script src="grok-yuzu.js?v=gy3"></script>
+<script>window.GY_CFG={ver:"v28",key:"yz_grok_yuzu",theme:{acc:"#e85d88",btn:"linear-gradient(135deg,#ff8fab,#ff9fb8)"}};</script><script src="grok-yuzu.js?v=gy3"></script><script src="yuka.js?v=yk1"></script>
 </body></html>
