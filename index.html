@@ -330,8 +330,8 @@ $("saveS").onclick=()=>{S={w:+$("sW").value||70,h:+$("sH").value||170,t:+$("sT")
 $("exp").onclick=()=>{const all={settings:S,days:{},plans:PL};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith("yz_day_"))all.days[k.slice(7)]=JSON.parse(localStorage.getItem(k))}
  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(all,null,1)],{type:"application/json"}));a.download="yuzu_health_"+ds(new Date())+".json";a.click()};
 $("impB").onclick=()=>$("imp").click();
-$("imp").onchange=e=>{const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);if(j.settings){S=j.settings;localStorage.setItem("yz_settings",JSON.stringify(S))}
- Object.entries(j.days||{}).forEach(([d,o])=>put(d,o));if(j.plans&&typeof j.plans=="object"){Object.entries(j.plans).forEach(([d,a])=>{if(Array.isArray(a)&&a.length)PL[d]=a});savePL()}render();toast("読み込んだよ♡")}catch(x){alert("ファイルが読めませんでした")}};r.readAsText(e.target.files[0])};
+$("imp").onchange=e=>{const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);if(j.settings&&!localStorage.getItem("yz_settings")){S=j.settings;localStorage.setItem("yz_settings",JSON.stringify(S))}
+ let _sk=0,_ad=0;Object.entries(j.days||{}).forEach(([d,o])=>{if(localStorage.getItem(key(d))&&hasRec(get(d))){_sk++;return}put(d,o);_ad++});if(j.plans&&typeof j.plans=="object"){Object.entries(j.plans).forEach(([d,a])=>{if(Array.isArray(a)&&a.length&&!(PL[d]&&PL[d].length))PL[d]=a});savePL()}render();toast("読み込んだよ♡ 追加"+_ad+"日"+(_sk?"・今ある"+_sk+"日はそのまま":""))}catch(x){alert("ファイルが読めませんでした")}};r.readAsText(e.target.files[0])};
 // charts
 function cv(id){const c=$(id),r=devicePixelRatio||1,w=c.clientWidth,h=+c.dataset.h;if(!w)return null;c.width=w*r;c.height=h*r;c.style.height=h+"px";const x=c.getContext("2d");x.scale(r,r);x.font="13px sans-serif";x.textBaseline="middle";return[x,w,h]}
 function draw(){if(!$("t-sum").classList.contains("on"))return;const o=get(cur),inn=intake(o),b=burn(o);
@@ -784,5 +784,6 @@ async function yzWipe(){if(!confirm("このノートに入力した中身をす�
 var del=[];for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if((/^yz_|^yuzu_/).test(k)&&k!=="yz_lock_v1"&&k.indexOf("_inbox_")<0)del.push(k)}del.forEach(function(k){localStorage.removeItem(k)});
 try{await new Promise(function(ok){var r=indexedDB.open("yuzu_db",1);r.onupgradeneeded=function(){var d=r.result;d.createObjectStore("slots");d.createObjectStore("photos",{keyPath:"id",autoIncrement:true})};r.onsuccess=function(){var d=r.result,t=d.transaction(["slots","photos"],"readwrite");t.objectStore("slots").clear();t.objectStore("photos").clear();t.oncomplete=t.onerror=t.onabort=function(){d.close();ok()}};r.onerror=function(){ok()}})}catch(e){}
 location.reload()}</script>
-<script>window.GY_CFG={ver:"v28",key:"yz_grok_yuzu",theme:{acc:"#e85d88",btn:"linear-gradient(135deg,#ff8fab,#ff9fb8)"}};</script><script src="grok-yuzu.js?v=gy3"></script><script src="yuka.js?v=yk1"></script><script src="nav.js?v=nv2"></script>
+<script>window.GY_CFG={ver:"v28",key:"yz_grok_yuzu",theme:{acc:"#e85d88",btn:"linear-gradient(135deg,#ff8fab,#ff9fb8)"}};</script><script src="grok-yuzu.js?v=gy3"></script><script src="yuka.js?v=yk1"></script><script src="nav.js?v=nv2"></script><script src="backup.js?v=bk1"></script>
+<script>try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}</script>
 </body></html>
