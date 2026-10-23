@@ -17,7 +17,7 @@ let pos={};try{pos=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){}
 pos=(pos&&typeof pos=="object"&&!Array.isArray(pos))?pos:{};["x","y"].forEach(k=>{if(typeof pos[k]!="number"||!isFinite(pos[k])||pos[k]<0||pos[k]>4000)delete pos[k]});["w","h","s","size","mini"].forEach(k=>delete pos[k]);if(pos.open!==true)delete pos.open;
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(pos))}catch(e){}};
 const w=document.createElement("div");w.id="yzx";
-const mem=[["ゆず💖","👧","#ff9ab8"],["エイジ","👦","#8ec5ff"],["ゆい🌸","🌸","#ffc2d4"],["ゆか🍊","🍊","#ffc77a"]];
+const mem=[["ゆず💖","👧","#ff9ab8"],["エイジ","👦","#8ec5ff"],["由依🌸","🌸","#ffc2d4"],["まい🍊","🍊","#ffc77a"]];
 w.innerHTML=`<button class="pill" data-a="mini">💕 みんな</button><img class="ts" alt="ゆずとエイジ"><div class="mem">${mem.map(m=>`<div><span style="--r:${m[2]}">${m[1]}</span>${m[0]}</div>`).join("")}</div><div class="ctl"><button data-a="edit">✋ 位置を動かす</button><select data-a="pre"><option value="">📍 場所</option><option>左上</option><option>右上</option><option>中央</option><option>左下</option><option>右下</option></select><select data-a="hav"><option value="">👤 上のアイコン</option><option value="tl">左上</option><option value="tr">右上</option><option value="bl">左下</option><option value="br">右下</option></select><button data-a="mini">－ たたむ</button><button data-a="reset">初期位置に戻す</button></div><div id="yzsel" style="display:none;font-size:10px;color:#c0306a;text-align:center"></div>`;
 (function place(){const h=document.getElementById("yzhow");if(h){h.appendChild(w);w.classList.add("inset");pos.open=true}else setTimeout(place,300)})();
 const img=w.querySelector(".ts");const cp=localStorage.getItem("yz_avatar_couple");img.src=cp||"img/twoshot.svg";
@@ -46,16 +46,16 @@ header .av{flex-wrap:nowrap}`;document.head.appendChild(s);
 const av=document.querySelector("header .av");if(!av)return;
 const EM={yui:"🌸",yuka:"🍊"};
 function show(k){const el=document.getElementById("av_"+k),d=localStorage.getItem("yz_avatar_"+k);let n;if(d){n=document.createElement("img");n.src=d}else{n=document.createElement("span");n.className="ph";n.textContent=EM[k]}n.id="av_"+k;el.replaceWith(n);hint()}
-[["yui","ゆい"],["yuka","ゆか"]].forEach(([k,nm])=>{if(document.getElementById("av_"+k))return;const l=document.createElement("label");l.innerHTML=`<span id="av_${k}" class="ph"></span>${nm}<input type="file" accept="image/*" data-k="${k}" style="display:none">`;av.appendChild(l);
+[["yui","由依"],["yuka","まい"]].forEach(([k,nm])=>{if(document.getElementById("av_"+k))return;const l=document.createElement("label");l.innerHTML=`<span id="av_${k}" class="ph"></span>${nm}<input type="file" accept="image/*" data-k="${k}" style="display:none">`;av.appendChild(l);
  const inp=l.querySelector("input");inp.onchange=()=>{const f=inp.files[0];if(!f)return;const img=new Image();img.onload=()=>{const c=document.createElement("canvas");c.width=c.height=200;const m=Math.min(img.width,img.height);c.getContext("2d").drawImage(img,(img.width-m)/2,(img.height-m)/2,m,m,0,0,200,200);try{localStorage.setItem("yz_avatar_"+k,c.toDataURL("image/jpeg",0.85))}catch(e){alert("保存できませんでした")}show(k);URL.revokeObjectURL(img.src);inp.value=""};img.src=URL.createObjectURL(f)};show(k)});
 function hint(){let h=av.querySelector(".yzhint");const empty=av.querySelector(".ph");if(empty&&!h){h=document.createElement("div");h.className="yzhint";h.textContent="📷 タップで写真をえらんでね";av.appendChild(h)}else if(!empty&&h)h.remove()}
 new MutationObserver(hint).observe(av,{childList:true,subtree:true});hint();
-const set=document.getElementById("t-set");if(set&&!document.getElementById("yzhow")){const c=document.createElement("div");c.className="card";c.id="yzhow";c.innerHTML=`<h2>📷 みんなのアイコン写真</h2><div class="small">いちばん上の丸いアイコン（エイジ・ふたり・ゆず・ゆい・ゆか）を<b>タップ</b>→写真をえらぶ→丸い枠の中で指で動かす・2本ゆびで拡大→「決定」で保存だよ。<b>長押し</b>したまま指を動かすと、上の写真の中で好きな場所に動かせるよ♡ 下のボタンで大きさ変更や初期位置に戻すこともできるよ。</div>`;set.insertBefore(c,set.firstChild)}
+const set=document.getElementById("t-set");if(set&&!document.getElementById("yzhow")){const c=document.createElement("div");c.className="card";c.id="yzhow";c.innerHTML=`<h2>📷 みんなのアイコン写真</h2><div class="small">いちばん上の丸いアイコン（エイジ・ふたり・ゆず・由依・まい）を<b>タップ</b>→写真をえらぶ→丸い枠の中で指で動かす・2本ゆびで拡大→「決定」で保存だよ。<b>長押し</b>したまま指を動かすと、上の写真の中で好きな場所に動かせるよ♡ 下のボタンで大きさ変更や初期位置に戻すこともできるよ。</div>`;set.insertBefore(c,set.firstChild)}
 })();
 
 /* 4人のアイコンを1つずつ動かす・大きさ変更・リセット（yz_ui_pos_v1 の av のみ） */
 (function(){
-const KEY="yz_ui_pos_v1",NM={eiji:"エイジ",couple:"ふたり",yuzu:"ゆず",yui:"ゆい",yuka:"ゆか"};
+const KEY="yz_ui_pos_v1",NM={eiji:"エイジ",couple:"ふたり",yuzu:"ゆず",yui:"由依",yuka:"まい"};
 const ld=()=>{try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return{}}};
 const sv=f=>{const p=ld();p.av=p.av||{};f(p.av);try{localStorage.setItem(KEY,JSON.stringify(p))}catch(e){}};
 const lab=k=>{const el=document.getElementById("av_"+k);return el&&el.closest("label")};
@@ -73,7 +73,7 @@ document.addEventListener("yzedit",()=>{if(!window.yzEdit)sel=null;if(av)av.styl
 document.querySelector('#yzx [data-a=reset]')?.addEventListener("click",()=>{sv(A=>{for(const k in A)delete A[k]});ap()});
 new MutationObserver(ap).observe(av||document.body,{childList:true,subtree:true});ap();ui();
 // パネルのメンバー欄も写真を使う
-const mp={"ゆず💖":"yuzu","エイジ":"eiji","ゆい🌸":"yui","ゆか🍊":"yuka"};document.querySelectorAll("#yzx .mem div").forEach(dv=>{const k=mp[dv.lastChild.textContent];const ph=k&&localStorage.getItem("yz_avatar_"+k);if(ph){const sp=dv.querySelector("span");sp.innerHTML=`<img src="${ph}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`}});
+const mp={"ゆず💖":"yuzu","エイジ":"eiji","由依🌸":"yui","まい🍊":"yuka"};document.querySelectorAll("#yzx .mem div").forEach(dv=>{const k=mp[dv.lastChild.textContent];const ph=k&&localStorage.getItem("yz_avatar_"+k);if(ph){const sp=dv.querySelector("span");sp.innerHTML=`<img src="${ph}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`}});
 })();
 /* 長押しドラッグ（ヘッダー内）・丸トリミング */
 (function(){
