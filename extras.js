@@ -17,13 +17,13 @@ let pos={};try{pos=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(pos))}catch(e){}};
 const w=document.createElement("div");w.id="yzx";
 const mem=[["ゆず💖","👧","#ff9ab8"],["エイジ","👦","#8ec5ff"],["ゆい🌸","🌸","#ffc2d4"],["ゆか🍊","🍊","#ffc77a"]];
-w.innerHTML=`<button class="pill" data-a="mini">💕 みんな</button><img class="ts" alt="ゆずとエイジ"><div class="mem">${mem.map(m=>`<div><span style="--r:${m[2]}">${m[1]}</span>${m[0]}</div>`).join("")}</div><div class="ctl"><button data-a="edit">✋ 位置を動かす</button><select data-a="pre"><option value="">📍 場所</option><option>左上</option><option>右上</option><option>中央</option><option>左下</option><option>右下</option></select><select data-a="hav"><option value="">👤 上のアイコン</option><option value="tl">左上</option><option value="tr">右上</option><option value="bl">左下</option><option value="br">右下</option></select><button data-a="mini">－ たたむ</button><button data-a="reset">初期位置に戻す</button></div>`;
+w.innerHTML=`<button class="pill" data-a="mini">💕 みんな</button><img class="ts" alt="ゆずとエイジ"><div class="mem">${mem.map(m=>`<div><span style="--r:${m[2]}">${m[1]}</span>${m[0]}</div>`).join("")}</div><div class="ctl"><button data-a="edit">✋ 位置を動かす</button><select data-a="pre"><option value="">📍 場所</option><option>左上</option><option>右上</option><option>中央</option><option>左下</option><option>右下</option></select><select data-a="hav"><option value="">👤 上のアイコン</option><option value="tl">左上</option><option value="tr">右上</option><option value="bl">左下</option><option value="br">右下</option></select><button data-a="mini">－ たたむ</button><button data-a="reset">初期位置に戻す</button></div><div id="yzsel" style="display:none;font-size:10px;color:#c0306a;text-align:center"></div>`;
 document.body.appendChild(w);
 const img=w.querySelector(".ts");const cp=localStorage.getItem("yz_avatar_couple");img.src=cp||"img/twoshot.svg";
 function apply(){if(pos.x!=null){const r=w.getBoundingClientRect();const x=Math.max(0,Math.min(innerWidth-r.width,pos.x)),y=Math.max(0,Math.min(innerHeight-r.height,pos.y));w.style.left=x+"px";w.style.top=y+"px";w.style.transform="none"}else{w.style.left="";w.style.top="";w.style.transform=""}w.classList.toggle("mini",!pos.open);const hd=document.querySelector("header");if(hd){hd.classList.remove("hv-bl","hv-br","hv-tl","hv-tr");hd.classList.add("hv-"+(pos.hav||"tr"))}}
 apply();addEventListener("resize",apply);
 let edit=false,d=null;
-w.addEventListener("click",e=>{const a=e.target.dataset&&e.target.dataset.a;if(a=="edit"){edit=!edit;w.classList.toggle("edit",edit);e.target.textContent=edit?"✅ 完了":"✋ 位置を動かす"}else if(a=="mini"){pos.open=!pos.open;delete pos.x;delete pos.y;save();apply()}else if(a=="reset"){const m=pos.open;pos={};if(m)pos.open=m;save();apply()}});
+w.addEventListener("click",e=>{const a=e.target.dataset&&e.target.dataset.a;if(a=="edit"){edit=!edit;w.classList.toggle("edit",edit);e.target.textContent=edit?"✅ 完了":"✋ 位置を動かす";window.yzEdit=edit;document.dispatchEvent(new Event("yzedit"))}else if(a=="mini"){pos.open=!pos.open;delete pos.x;delete pos.y;save();apply()}else if(a=="reset"){const m=pos.open;pos={};if(m)pos.open=m;save();apply()}});
 w.querySelector("[data-a=hav]").onchange=e=>{if(e.target.value){pos.hav=e.target.value;save();apply()}e.target.value=""};
 w.querySelector("[data-a=pre]").onchange=e=>{const v=e.target.value;if(!v)return;const r=w.getBoundingClientRect(),m=10,W=innerWidth-r.width,H=innerHeight-r.height;const P={"左上":[m,m],"右上":[W-m,m],"中央":[W/2,H/2],"左下":[m,H-90],"右下":[W-m,H-90]}[v];pos.x=P[0];pos.y=P[1];save();apply();e.target.value=""};
 w.addEventListener("pointerdown",e=>{if(!edit||/BUTTON|SELECT|OPTION/.test(e.target.tagName))return;const r=w.getBoundingClientRect();d={dx:e.clientX-r.left,dy:e.clientY-r.top};w.setPointerCapture(e.pointerId);e.preventDefault()});
@@ -50,4 +50,27 @@ function show(k){const el=document.getElementById("av_"+k),d=localStorage.getIte
 function hint(){let h=av.querySelector(".yzhint");const empty=av.querySelector(".ph");if(empty&&!h){h=document.createElement("div");h.className="yzhint";h.textContent="📷 タップで写真をえらんでね";av.appendChild(h)}else if(!empty&&h)h.remove()}
 new MutationObserver(hint).observe(av,{childList:true,subtree:true});hint();
 const set=document.getElementById("t-set");if(set&&!document.getElementById("yzhow")){const c=document.createElement("div");c.className="card";c.id="yzhow";c.innerHTML=`<h2>📷 みんなのアイコン写真</h2><div class="small">いちばん上の丸いアイコン（エイジ・ふたり・ゆず・ゆい・ゆか）をタップすると写真をえらべるよ。えらんだ写真は自動で丸く切り取られて、このiPhoneに保存されるよ♡ 場所は右下の「💕 みんな」→「👤 上のアイコン」で変えられるよ。</div>`;set.insertBefore(c,set.firstChild)}
+})();
+
+/* 4人のアイコンを1つずつ動かす・大きさ変更・リセット（yz_ui_pos_v1 の av のみ） */
+(function(){
+const KEY="yz_ui_pos_v1",NM={eiji:"エイジ",couple:"ふたり",yuzu:"ゆず",yui:"ゆい",yuka:"ゆか"};
+const ld=()=>{try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return{}}};
+const sv=f=>{const p=ld();p.av=p.av||{};f(p.av);try{localStorage.setItem(KEY,JSON.stringify(p))}catch(e){}};
+const lab=k=>{const el=document.getElementById("av_"+k);return el&&el.closest("label")};
+function ap(){const A=ld().av||{};Object.keys(NM).forEach(k=>{const l=lab(k);if(!l)return;const v=A[k]||{};l.style.transform=`translate(${v.x||0}px,${v.y||0}px) scale(${v.s||1})`;l.style.zIndex=v.x||v.y?7:""})}
+let sel=null,d=null;const box=document.getElementById("yzsel");
+function ui(){if(!box)return;box.style.display=window.yzEdit?"block":"none";box.innerHTML=sel?`えらんだ: <b>${NM[sel]}</b> <button data-b="+">＋大きく</button><button data-b="-">－小さく</button><button data-b="r">↺ この子を戻す</button>`:"上のアイコンを指で動かしてね（タップでえらぶ）";document.querySelectorAll("header .av label").forEach(l=>l.style.outline=window.yzEdit?(l===lab(sel)?"2px solid #ff4f86":"1px dashed #fff"):"")}
+box&&box.addEventListener("click",e=>{const b=e.target.dataset.b;if(!b||!sel)return;sv(A=>{const v=A[sel]=A[sel]||{};if(b=="+")v.s=Math.min(2.5,(v.s||1)+.2);if(b=="-")v.s=Math.max(.5,(v.s||1)-.2);if(b=="r")delete A[sel]});ap()});
+const av=document.querySelector("header .av");
+if(av){av.addEventListener("click",e=>{if(window.yzEdit){e.preventDefault();e.stopPropagation()}},true);
+av.addEventListener("pointerdown",e=>{if(!window.yzEdit)return;const l=e.target.closest("label");if(!l)return;const k=(l.querySelector("[id^=av_]")||{}).id;if(!k)return;sel=k.slice(3);const v=(ld().av||{})[sel]||{};d={l,sx:e.clientX-(v.x||0),sy:e.clientY-(v.y||0)};l.setPointerCapture(e.pointerId);e.preventDefault();ui()});
+av.addEventListener("pointermove",e=>{if(!d)return;const x=Math.max(-innerWidth+40,Math.min(innerWidth-40,e.clientX-d.sx)),y=Math.max(-60,Math.min(innerHeight-80,e.clientY-d.sy));sv(A=>{const v=A[sel]=A[sel]||{};v.x=x;v.y=y});ap()});
+const end=()=>{d=null};av.addEventListener("pointerup",end);av.addEventListener("pointercancel",end)}
+document.addEventListener("yzedit",()=>{if(!window.yzEdit)sel=null;if(av)av.style.touchAction=window.yzEdit?"none":"";ui()});
+// 全体の「初期位置に戻す」で4人も戻す
+document.querySelector('#yzx [data-a=reset]')?.addEventListener("click",()=>{sv(A=>{for(const k in A)delete A[k]});ap()});
+new MutationObserver(ap).observe(av||document.body,{childList:true,subtree:true});ap();ui();
+// パネルのメンバー欄も写真を使う
+const mp={"ゆず💖":"yuzu","エイジ":"eiji","ゆい🌸":"yui","ゆか🍊":"yuka"};document.querySelectorAll("#yzx .mem div").forEach(dv=>{const k=mp[dv.lastChild.textContent];const ph=k&&localStorage.getItem("yz_avatar_"+k);if(ph){const sp=dv.querySelector("span");sp.innerHTML=`<img src="${ph}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`}});
 })();
