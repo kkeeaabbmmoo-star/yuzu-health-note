@@ -784,7 +784,7 @@ async function yzWipe(){if(!confirm("このノートに入力した中身をす�
 var del=[];for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if((/^yz_|^yuzu_/).test(k)&&k!=="yz_lock_v1"&&k.indexOf("_inbox_")<0)del.push(k)}del.forEach(function(k){localStorage.removeItem(k)});
 try{await new Promise(function(ok){var r=indexedDB.open("yuzu_db",1);r.onupgradeneeded=function(){var d=r.result;d.createObjectStore("slots");d.createObjectStore("photos",{keyPath:"id",autoIncrement:true})};r.onsuccess=function(){var d=r.result,t=d.transaction(["slots","photos"],"readwrite");t.objectStore("slots").clear();t.objectStore("photos").clear();t.oncomplete=t.onerror=t.onabort=function(){d.close();ok()}};r.onerror=function(){ok()}})}catch(e){}
 location.reload()}</script>
-<script>window.GY_CFG={ver:"v28",key:"yz_grok_yuzu",theme:{acc:"#e85d88",btn:"linear-gradient(135deg,#ff8fab,#ff9fb8)"}};</script><script src="grok-yuzu.js?v=gy4"></script><script src="yuka.js?v=yk2"></script><script src="nav.js?v=nv2"></script><script src="backup.js?v=bk4"></script>
+<script>window.GY_CFG={ver:"v28",key:"yz_grok_yuzu",theme:{acc:"#e85d88",btn:"linear-gradient(135deg,#ff8fab,#ff9fb8)"}};</script><script src="grok-yuzu.js?v=gy4"></script><script src="yuka.js?v=yk2"></script><script src="nav.js?v=nv2"></script><script src="backup.js?v=bk5"></script>
 <script>try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}</script>
 <script src="extras.js?v=ex8"></script>
 </body></html>
