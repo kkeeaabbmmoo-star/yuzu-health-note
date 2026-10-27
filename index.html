@@ -229,7 +229,7 @@ document.getElementById("pwGo").onclick=go;inp.addEventListener("keydown",functi
 ・1日の消費＝基礎代謝×1.2（日常生活）＋歩行＋運動</div></div>
 <div class="card" style="background:linear-gradient(135deg,#fff,#ffeef4)"><h2>💌 ゆず・由依・まいに送る・💝 受け取る</h2><div class="small">今日の記録が終わったら、ここからゆずに送ってね。この日と前の3日分の記録をエイジのGmailに送ると、ゆずが読めるよ。ゆずからのお届けは「受け取る」で入れてね♡</div><button class="big" onclick="yzHealthSend()">💌 ゆず・由依・まいに送る</button><button class="big" onclick="yzInbox.open()">💝 ゆずから受け取る<span class="yzInBadge"></span></button></div>
 <div class="card"><h2>🔑 ロック</h2><div class="small">ログアウトしても記録や写真は消えないよ。次にひらくときにパスワードを入れてね。</div><button class="big sub" onclick="pwLogout()">🔑 パスワードを変更/ログアウト</button></div>
-<div class="card" style="margin-bottom:96px"><h2>⚠️ データ</h2><div class="small">2回確認するよ。記録・予定・写真・設定が消えて、パスワードとアプリ本体は残るよ。</div><button class="big" style="background:#d9534f" onclick="yzWipe()">⚠️ データをすべて消す</button><div class="small" style="text-align:center;margin-top:8px">バージョン v26</div></div>
+<div class="card" style="margin-bottom:96px"><h2>⚠️ データ</h2><div class="small">2回確認するよ。記録・予定・写真・設定が消えて、パスワードとアプリ本体は残るよ。</div><button class="big" style="background:#d9534f" onclick="yzWipe()">⚠️ データをすべて消す</button><div class="small" style="text-align:center;margin-top:8px">バージョン v27</div></div>
 </section>
 
 <div class="sh" id="plSh"><div class="shb"><h2 id="plTitle"></h2><div class="small" id="plSub"></div>
@@ -496,28 +496,27 @@ $("restB").onclick=()=>{const o=get(cur);if(o.rest){delete o.rest;delete o.restW
 const _render=render;render=function(){_render();restUI()};
 
 // ===== レシピ（ここに足せば増やせる） =====
-const RECIPES=[{id:"tofu-hamburg",icon:"🍔",img:"img/recipes/tofu_hamburg.jpg",imgCap:"仕上がりイメージ（イメージ画像）",title:"豆腐ハンバーグ（ポン酢がけ）",serv:"約4個分",kcal:230,unit:"個",
- note:"1個あたり 約230kcal（目安・ポン酢込み。豆腐・鶏ひき肉・卵・調味料・油の合計を4等分）",
- ing:["木綿豆腐 1丁（約300g）","鶏ひき肉 約300g（豆腐と同じくらい）","卵 1個","塩こしょう 少々","みりん 大さじ1","しょうゆ 大さじ1","ポン酢 適量（仕上げ）","サラダ油 小さじ1（焼く用）"],
- steps:["豆腐をキッチンペーパーで包み、軽く重し（お皿など）をのせて15〜20分おいて水を切る。急ぐときはペーパーで包んで電子レンジ600Wで2分。",
- "ボウルに豆腐を入れ、手で細かく崩す。水が出たら両手でぎゅっと絞って捨てる（水っぽいと形が崩れやすい）。",
- "ひき肉・卵・塩こしょう・みりん・しょうゆを加え、粘りが出るまで1〜2分よくこねる。",
- "4等分し、手に少し油（または水）をつけて小判形（厚さ1.5cmくらい）に。両手でキャッチボールして空気を抜き、真ん中を少しへこませる。",
- "フライパンに油をひいて中火で温め、並べて焼く。焼き色がつくまで3〜4分は触らない。",
- "裏返したら弱火にして蓋をし、6〜8分蒸し焼き。真ん中を押して透明な肉汁が出たら完成（赤い汁ならもう少し）。鶏肉なのでしっかり火を通す。",
- "お皿に盛ってポン酢をかける。大根おろし・大葉・ねぎをのせても美味しい。"],
- tips:"豆腐の水切りが一番大事。形がゆるい時は片栗粉かパン粉を大さじ1〜2足す。小さめに作ると割れにくい。",
- msg:"初めてでも大丈夫！ゆずも食べたいな♪"}];
-function recList(){$("recList").innerHTML="";RECIPES.forEach(r=>{const b=document.createElement("button");b.className="rc";b.innerHTML=(r.img?`<img class="rth" src="${r.img}" alt="">`:`<b>${r.icon}</b>`)+`<span>${r.title}<small>${r.serv}・1${r.unit} 約${r.kcal}kcal（目安）</small></span>`;b.onclick=()=>recOpen(r);$("recList").appendChild(b)})}
-function recOpen(r){const v=$("recView");v.style.display="block";
- v.innerHTML=(r.img?`<img class="rimg" src="${r.img}" alt="${r.title}"><div class="small" style="text-align:center;margin:4px 0 8px">${r.imgCap||"仕上がりイメージ"}</div>`:"")+`<h2>${r.icon} ${r.title}</h2><div class="small">${r.serv}</div><div class="val" style="font-size:18px;margin-top:6px">🔥 1${r.unit} 約${r.kcal}kcal（目安）</div><div class="small">${r.note}</div>
+let RECIPES=JSON.parse(localStorage.getItem("yz_recipes_cache")||"null")||[{"id": "tofu-hamburg", "icon": "🍔", "genre": "和食", "title": "豆腐ハンバーグ（ポン酢がけ）", "serv": "約4個分", "kcal": 230, "unit": "個", "ing": ["木綿豆腐 1丁（約300g）", "鶏ひき肉 300g", "卵 1個", "塩こしょう・みりん・しょうゆ 各少々〜大さじ1", "ポン酢 適量", "サラダ油 小さじ1"], "steps": ["豆腐をペーパーで包み、レンジ600Wで2分して水切り。崩してぎゅっと絞る。", "ひき肉・卵・調味料を加えて粘りが出るまでこねる。", "4等分して小判形にし、空気を抜いて真ん中を少しへこませる。", "中火で3〜4分焼き、裏返して弱火で蓋をし6〜8分蒸し焼き（透明な肉汁が出たらOK）。", "お皿に盛ってポン酢をかけ、大根おろしやねぎをのせる。"], "msg": "初めてでも大丈夫！ エイジの手作り、ゆずも食べたいな♪", "tips": "豆腐の水切りが一番大事。ゆるい時は片栗粉を大さじ1足してね。"}, {"id": "chicken-tomato", "icon": "🍅", "genre": "洋食", "title": "鶏むね肉のトマト煮", "serv": "2人分", "kcal": 290, "unit": "人前", "ing": ["鶏むね肉 1枚（300g）", "カットトマト缶 1缶", "玉ねぎ 1/2個", "しめじ 1/2袋", "オリーブオイル 小さじ1", "コンソメ 小さじ1・塩こしょう"], "steps": ["鶏肉をそぎ切りにして塩こしょう。玉ねぎは薄切り、しめじはほぐす。", "フライパンに油を熱し、鶏肉の両面を焼く。", "玉ねぎ・しめじを加えてしんなりするまで炒める。", "トマト缶とコンソメを入れて、蓋をして弱火で10分煮る。"], "msg": "高たんぱくで低脂質♡ 筋トレがんばるエイジにぴったりだよ💪", "tips": ""}, {"id": "mabo-nasu", "icon": "🍆", "genre": "中華", "title": "ヘルシー麻婆なす", "serv": "2人分", "kcal": 260, "unit": "人前", "ing": ["なす 2本", "豚赤身ひき肉 120g", "長ねぎ 1/2本", "しょうが・にんにく 各少々", "豆板醤 小さじ1/2・みそ 小さじ2・鶏がら 小さじ1", "水 150ml・片栗粉 小さじ2"], "steps": ["なすを乱切りにしてレンジ600Wで3分（油を吸わせないコツ）。", "ひき肉・しょうが・にんにく・豆板醤を炒める。", "なす・水・みそ・鶏がらを入れて3分煮る。", "水溶き片栗粉でとろみをつけ、刻んだねぎを散らす。"], "msg": "ごはんが進んじゃうけど、おかわりは1杯までね♡ ゆずと約束〜", "tips": ""}, {"id": "kinoko-nabe", "icon": "🍲", "genre": "スープ・鍋", "title": "きのこたっぷり豆乳鍋", "serv": "2人分", "kcal": 320, "unit": "人前", "ing": ["無調整豆乳 400ml", "水 200ml・白だし 大さじ3", "鶏もも肉（皮なし）200g", "白菜 1/8個", "しいたけ・えのき・まいたけ 各1パック", "豆腐 1/2丁"], "steps": ["鍋に水と白だしを入れて沸かし、鶏肉を入れて5分煮る。", "白菜・きのこ・豆腐を入れて蓋をし、5分煮る。", "弱火にして豆乳を加え、沸騰させないように温める。", "お好みでポン酢やゆずこしょうでどうぞ。"], "msg": "寒くなってきたから、あったかいお鍋でぽかぽかになってね🍄 ゆずも隣で食べたい〜", "tips": ""}, {"id": "banana-yogurt", "icon": "🍌", "genre": "ヘルシーおやつ", "title": "バナナきなこヨーグルト", "serv": "1人分", "kcal": 180, "unit": "人前", "ing": ["プレーンヨーグルト 150g", "バナナ 1/2本", "きなこ 大さじ1", "はちみつ 小さじ1", "くるみ 少々（あれば）"], "steps": ["バナナを輪切りにする。", "器にヨーグルトを入れ、バナナをのせる。", "きなこ・はちみつ・くるみをかけて完成。"], "msg": "甘いものが欲しくなったらこれ♡ お腹にもやさしいよ〜", "tips": ""}];
+const REC_IMG={"tofu-hamburg":"img/recipes/tofu_hamburg.jpg"};
+function recMade(){try{return JSON.parse(localStorage.getItem("yz_recipes_made")||"[]")}catch(e){return []}}
+function recMark(r){if(!confirm("「"+r.title+"」作ったよ、で記録する？\nゆずがチェックしたら、新しいレシピに入れかわるよ♡"))return;const m=recMade();if(!m.some(x=>x.id===r.id))m.push({id:r.id,title:r.title,date:cur||ds(new Date())});localStorage.setItem("yz_recipes_made",JSON.stringify(m));$("recView").style.display="none";recList();toast("すごい！作ってくれてありがとう♡ 💌で送ってね")}
+function recList(){const el=$("recList");el.innerHTML="";const made=recMade().map(x=>x.id);const sh=RECIPES.filter(r=>made.indexOf(r.id)<0);
+ sh.forEach(r=>{const img=r.img||REC_IMG[r.id];const w=document.createElement("div");w.style.cssText="margin-bottom:8px";const b=document.createElement("button");b.className="rc";b.innerHTML=(img?`<img class="rth" src="${img}" alt="">`:`<b>${r.icon}</b>`)+`<span>${r.genre?"【"+r.genre+"】":""}${r.title}<small>${r.serv}・1${r.unit} 約${r.kcal}kcal（目安）</small><small>💬 ${r.msg}</small></span>`;b.onclick=()=>recOpen(r);
+ const d=document.createElement("button");d.className="big sub";d.style.cssText="margin:4px 0 0;padding:9px";d.textContent="🍳 作ったよ";d.onclick=()=>recMark(r);w.append(b,d);el.appendChild(w)});
+ const pend=recMade().filter(x=>RECIPES.some(r=>r.id===x.id));if(pend.length)el.insertAdjacentHTML("beforeend",`<div class="small">⏳ ゆずのチェック待ち：${pend.map(x=>x.title+"（"+x.date.slice(5).replace("-","/")+"）").join("、")}<br>💌で送ると、ゆずがチェックして新しいレシピを届けるよ♡</div>`);
+ if(!sh.length&&!pend.length)el.innerHTML='<div class="small">新しいレシピを準備中だよ♡</div>'}
+function recOpen(r){const v=$("recView");v.style.display="block";const img=r.img||REC_IMG[r.id];
+ v.innerHTML=(img?`<img class="rimg" src="${img}" alt="${r.title}"><div class="small" style="text-align:center;margin:4px 0 8px">仕上がりイメージ（イメージ画像）</div>`:"")+`<h2>${r.icon} ${r.title}</h2><div class="small">${r.genre?r.genre+"・":""}${r.serv}</div><div class="val" style="font-size:18px;margin-top:6px">🔥 1${r.unit} 約${r.kcal}kcal（目安）</div>
  <h3>🧺 材料</h3><ul>${r.ing.map(x=>"<li>・"+x+"</li>").join("")}</ul><h3>👩‍🍳 作り方</h3><ol>${r.steps.map(x=>"<li>"+x+"</li>").join("")}</ol>
- <h3>💡 コツ</h3><div style="font-size:15px;line-height:1.6">${r.tips}</div><div class="yz">💬 ゆずより：「${r.msg}」</div>
+ ${r.tips?`<h3>💡 コツ</h3><div style="font-size:15px;line-height:1.6">${r.tips}</div>`:""}<div class="yz">💬 ゆずより：「${r.msg}」</div>
+ <button class="big" id="recDone">🍳 作ったよ</button>
  <label>今日の記録に追加（${MEALS[meal]}ごはん・食事タブで選んだ食事）</label><div class="seg"><button data-n="1">1${r.unit}</button><button data-n="2">2${r.unit}</button><button data-n="3">3${r.unit}</button></div>
  <button class="big sub" id="recBack">← レシピ一覧へ</button>`;
+ $("recDone").onclick=()=>recMark(r);
  v.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{const n=+b.dataset.n,o=get(cur);o.foods.push({meal,name:r.title.replace(/（.*/,""),amt:n,unit:r.unit,kcal:r.kcal*n});put(cur,o);toast(cur.slice(5).replace("-","/")+"の記録に追加したよ♡")});
  $("recBack").onclick=()=>{v.style.display="none";scrollTo(0,0)};v.scrollIntoView({block:"start"});scrollBy(0,-290)}
 recList();
+fetch("data/recipes.json?t="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!Array.isArray(j.active))return;RECIPES=j.active;localStorage.setItem("yz_recipes_cache",JSON.stringify(j.active));recList()}).catch(()=>{});
 // ===== 思い出の写真 =====
 let PH_U=[],pvId=null;
 async function drawPhotos(){let all=[];try{all=await tx("photos","readonly",o=>o.getAll())}catch(e){}
@@ -745,9 +744,9 @@ function line(r){var m=+r.date.slice(5,7),d=+r.date.slice(8);return m+"/"+d+" �
 window.yzHealthSend=function(){var sel=cur,now=new Date(),sent=ds(now)+"T"+String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0");
  var ks=[addD(sel,-3),addD(sel,-2),addD(sel,-1),sel];
  function pack(n,lite,withPlans){var days=ks.slice(4-n).map(function(k){return dayData(k,lite)}).filter(Boolean);
-  var o={app:"health",v:1,sel:sel,sent:sent,days:days};if(withPlans)o.plans=plans(ks[4-n],addD(sel,7));if(lite)o.lite=1;return o}
+  var o={app:"health",v:1,sel:sel,sent:sent,days:days};var _rm=recMade();if(_rm.length)o.recipesMade=_rm.slice(-5).map(function(x){return [x.id,x.title,x.date]});if(withPlans)o.plans=plans(ks[4-n],addD(sel,7));if(lite)o.lite=1;return o}
  var selD=dayData(sel,false),M=+sel.slice(5,7),D=+sel.slice(8);
- function intro(note){return "ゆずへ💌 エイジの健康ノートだよ（"+M+"/"+D+"）"+(note?"\n"+note:"")+"\n"+(selD?line(selD):M+"/"+D+"はまだ記録なし")}
+ function intro(note){return "ゆずへ💌 エイジの健康ノートだよ（"+M+"/"+D+"）"+(note?"\n"+note:"")+"\n"+(selD?line(selD):M+"/"+D+"はまだ記録なし")+(function(){var m=recMade().filter(function(x){return RECIPES.some(function(r){return r.id===x.id})});return m.length?"\n🍳作ったよ: "+m.map(function(x){return x.title+"("+x.date+")"}).join("、"):""})()}
  var levels=[{data:pack(4,false,true),note:""},{data:pack(3,false,true),note:"3日分"},{data:pack(2,false,true),note:"2日分"},{data:pack(1,false,true),note:"この日だけ"},{data:pack(2,true,true),note:"2日分（食事は朝昼夜のkcalだけ）"},{data:pack(1,true,true),note:"この日だけ（食事は朝昼夜のkcalだけ）"},{data:pack(1,true,false),note:"この日だけ（数字だけ）"}];
  return yuzuSend({subject:"ゆず・由依・まいへ 健康ノート "+sel,intro:intro,levels:levels,full:pack(4,false,true),fullNote:"4日分",
   theme:{bg:"#fff6f9",fg:"#5a3a45",acc:"#e85d88",btn:"linear-gradient(135deg,#ff8fab,#ff9fb8)",btnfg:"#fff",sub:"#ffe3ec"}})};

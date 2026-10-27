@@ -1,4 +1,4 @@
-const C='yuzu-v45';
+const C='yuzu-v46';
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>c.addAll(['./','index.html','yuzu-inbox.js','grok-yuzu.js?v=gy4','yuka.js?v=yk2','nav.js?v=nv2','backup.js?v=bk4','manifest.webmanifest','icon-180.png','yuzu-music.js','orgel.mp3','song.mp3','voice/m1.mp3','voice/m2.mp3','voice/m3.mp3','voice/m4.mp3','voice/m5.mp3','voice/m6.mp3','voice/m7.mp3','voice/m8.mp3','voice/m9.mp3','voice/m10.mp3','img/recipes/tofu_hamburg.jpg','data/walk_events.json','extras.js?v=ex8','img/twoshot.svg'])))});
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',e=>{if(/grok-yuzu\.json|yuka\.json|restore\/latest\.json/.test(e.request.url))return;if(e.request.method!=='GET'||e.request.headers.has('range')||new URL(e.request.url).origin!==location.origin)return;e.respondWith(fetch(e.request,{cache:'no-cache'}).then(r=>{const cp=r.clone();caches.open(C).then(c=>c.put(e.request,cp));return r}).catch(()=>caches.match(e.request)))});
