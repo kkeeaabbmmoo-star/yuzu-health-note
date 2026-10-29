@@ -68,7 +68,7 @@ nav button{font-size:11px}nav button b{font-size:20px}
 .restm{margin-top:10px;background:#f6f1ff;border-radius:14px;padding:12px;color:#7b5cc4;font-weight:700;line-height:1.6}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.chips button{height:38px;padding:0 14px;border-radius:19px;border:2px solid #e3d8ff;background:#fff;color:#7b5cc4;font-size:14px}.chips button.on{background:#b9a3e8;color:#fff;border-color:#b9a3e8}
 .cal .d.rest{background:#f3edff}
-nav button.nrec{font-size:9px;line-height:1.15;padding:0 1px;letter-spacing:-.3px}nav button.nrec b{margin-bottom:1px}
+nav button.nrec{font-size:11px}
 .vb{align-self:center;margin-top:6px;height:34px;padding:0 16px;border:0;border-radius:17px;background:#ffffffd9;color:var(--pd);font-size:14px;font-weight:700;box-shadow:0 2px 8px #e85d8855;animation:vbp 2.4s ease-in-out infinite}
 @keyframes vbp{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
 .vo{position:fixed;inset:0;z-index:40;background:radial-gradient(circle at 50% 40%,#ffd6e3ee,#ff9fb8e6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;overflow:hidden;flex-direction:column}.vo.on{display:flex}
@@ -240,7 +240,7 @@ document.getElementById("pwGo").onclick=go;inp.addEventListener("keydown",functi
 <button class="big" id="plAdd">＋ 予定を追加</button>
 <button class="big sub" id="plGo">この日の記録をひらく ›</button>
 <button class="big sub" id="plClose">閉じる</button></div></div>
-<nav><button data-t="food" class="on"><b>🍙</b>食事</button><button data-t="act"><b>👟</b>活動</button><button data-t="sum"><b>📊</b>まとめ</button><button data-t="rec" class="nrec"><b>🍳</b>ゆずから、<br>愛のレシピ♡</button><button data-t="pho"><b>📸</b>思い出</button><button data-t="set"><b>⚙️</b>設定</button></nav>
+<nav><button data-t="food" class="on"><b>🍙</b>食事</button><button data-t="act"><b>👟</b>活動</button><button data-t="sum"><b>📊</b>まとめ</button><button data-t="rec" class="nrec"><b>🍳</b>レシピ</button><button data-t="pho"><b>📸</b>思い出</button><button data-t="set"><b>⚙️</b>設定</button></nav>
 <div class="toast" id="toast"></div>
 <div class="vo" id="vo"><div class="vn">💕 ゆずからエイジへ 💕</div><div class="vt" id="vt"></div><div class="vc">タップでとじる</div></div>
 
